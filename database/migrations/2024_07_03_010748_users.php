@@ -7,15 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Run the migrations
      */
-    public function up(): void
-    {
+    public function up(): void {
         Schema::create('users', function(Blueprint $table) {
             $table->uuid('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
+            $table->string('name', 64);
+            $table->string('email', 255)->unique();
+            $table->string('password', 64);
             $table->string('type');
             $table->timestamps();
         });
@@ -24,8 +23,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
+    public function down(): void {
         Schema::dropIfExists('users');
     }
 };
