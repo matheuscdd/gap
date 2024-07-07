@@ -5,7 +5,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -38,6 +40,14 @@ return Application::configure(basePath: dirname(__DIR__))
                     'msg' => 'Não encontrado'
                 ], 404);
             }
+
+            if ($error instanceof AccessDeniedHttpException) {
+                return response()->json([
+                    'msg' => 'Não autorizado'
+                ], 403);
+            }
+
+            Log::error('Internal', [$error]);
             
             return response()->json([
                 'msg' => 'Ocorreu um erro interno no servidor'
