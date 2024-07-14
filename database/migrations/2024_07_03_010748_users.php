@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('email', 255)->unique();
             $table->string('password', 64);
             $table->string('type');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

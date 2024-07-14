@@ -3,7 +3,6 @@
 namespace App\Services\Auth;
 
 use App\Exceptions\AppError;
-use Illuminate\Support\Facades\Log;
 
 class LoginService {
     public function execute(array $data) {

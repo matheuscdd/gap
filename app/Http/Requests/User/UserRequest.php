@@ -5,6 +5,7 @@ namespace App\Http\Requests\User;
 use App\Enums\TypeUser;
 use App\Http\Requests\Request;
 use App\Utils\Utils;
+use Exception;
 use Illuminate\Validation\Rules\Enum;
 
 class UserRequest extends Request {
@@ -22,7 +23,11 @@ class UserRequest extends Request {
             'password' => ['required', 'min:' . $this::PASSWD_MIN, 'max:' . $this::PASSWD_MAX],
             'type' => ['required', new Enum(TypeUser::class)],
         ];
-        return array_filter($ref, fn($key) => in_array($key, $keys), ARRAY_FILTER_USE_KEY);
+        $rules = array_filter($ref, fn($key) => in_array($key, $keys), ARRAY_FILTER_USE_KEY);
+        if (count($rules) === 0) {
+            throw new Exception('getRules: No key found');
+        }
+        return $rules;
     }
 
     public function messages(): array {

@@ -10,6 +10,6 @@ class EditUserRequest extends UserRequest {
     }
 
     public function rules(): array {
-        return $this->getRules('name, email');
+        return $this->getRules('name', 'email');
     }
 }

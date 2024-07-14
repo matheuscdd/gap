@@ -6,6 +6,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 
+
 class Request extends FormRequest {
     protected const MAX_HOURS = 1;
 
