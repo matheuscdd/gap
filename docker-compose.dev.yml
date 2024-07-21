@@ -1,3 +1,4 @@
+name: 'gap-dev'
 services:
     laravel:
         build:
@@ -52,11 +53,16 @@ services:
     vue:
         build:
             context: ./vue
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.dev
         ports:
-            - '8080:80'
+            - '8080:8080'
         volumes:
             - './vue:/app'
+        environment:
+            - CHOKIDAR_USEPOLLING=true
+        tty: true
+        networks:
+            - sail
     selenium:
         image: selenium/standalone-chrome
         extra_hosts:

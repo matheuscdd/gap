@@ -11,7 +11,7 @@ class LoginService {
         }
 
         return response()->json([
-            'token' => $token
+            'token' => $token,
         ]);
     }
 }

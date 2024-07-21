@@ -16,7 +16,7 @@ class AdminCommand extends Command {
             'type' => 'admin',
             'password' => '12345678',
         ]);
-        $this->info('Success create admin');
+        $this->info('Admin successfully created');
     }
 
 }

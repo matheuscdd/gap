@@ -1,0 +1,10 @@
+:root {
+    --gray-1: #808080; 
+    --blue-1: #76B6DC;
+    --red-1: #F4001F;
+    --trans-1: 0.8s;
+}
+
+body {
+    font-family: 'Jost', 'Arial', 'sans-serif';
+}
