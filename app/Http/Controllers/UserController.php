@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Request;
 use App\Http\Requests\User\{CreateUserRequest, EditUserRequest, GetUserRequest, UserRequest};
-use App\Services\User\{GetUserService, CreateUserService, DelUserService, EditUserService};
+use App\Http\Services\User\UserService;
 
 class UserController extends Controller {
     public function create(CreateUserRequest $request) {
-        $createUserService = new CreateUserService();
-        return $createUserService->execute($request->validated());
+        $userService = new UserService();
+        return $userService->create($request->validated());
     }
 
-    public function get(UserRequest $request) {
-        $getUserService = new GetUserService();
-        return $getUserService->execute($request->route('id'));
+    public function get(Request $request) {
+        $userService = new UserService();
+        return $userService->get($request->route('id'));
     }
 
     public function edit(EditUserRequest $request) {
-        $editUserService = new EditUserService();
-        return $editUserService->execute($request->route('id'), $request->validated());
+        $userService = new UserService();
+        return $userService->edit($request->route('id'), $request->validated());
     }
 
-    public function del(UserRequest $request) {
-        $delUserRequest= new DelUserService();
-        return $delUserRequest->execute($request->route('id'));
+    public function del(Request $request) {
+        $userService = new UserService();
+        return $userService->del($request->route('id'));
     }
 }

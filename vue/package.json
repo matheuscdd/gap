@@ -13,7 +13,8 @@
     "vue": "^3.2.13",
     "vue-inline-svg": "^3.1.2",
     "vue-router": "^4.4.0",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -21,7 +22,6 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
-    "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3"
   },
@@ -38,6 +38,7 @@
       "parser": "@babel/eslint-parser"
     },
     "rules": {
+      "mode": "auto",
       "vue/multi-word-component-names": "off",
       "no-unused-vars": "off",
       "semi": [
