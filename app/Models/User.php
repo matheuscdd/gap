@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Constraints\UserKeysConstraints as Keys;
+
 
 class User extends Authenticatable implements JWTSubject {
     use HasFactory, Notifiable;
@@ -19,10 +20,10 @@ class User extends Authenticatable implements JWTSubject {
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'type',
+        Keys::NAME,
+        Keys::EMAIL,
+        Keys::PASSWORD,
+        Keys::TYPE,
     ];
 
     /**
@@ -31,7 +32,8 @@ class User extends Authenticatable implements JWTSubject {
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        Keys::PASSWORD,
+        keys::ACTIVE
     ];
 
     /**
@@ -42,7 +44,7 @@ class User extends Authenticatable implements JWTSubject {
     protected function casts(): array
     {
         return [
-            'password' => 'hashed',
+            Keys::PASSWORD => 'hashed',
         ];
     }
 

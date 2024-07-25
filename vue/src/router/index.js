@@ -1,5 +1,6 @@
 import { consts, endpoints, methods } from "@/common/consts";
-import { api } from "@/common/utils";
+import { api, refreshToken } from "@/common/utils";
+import store from "@/store";
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
@@ -19,6 +20,11 @@ const routes = [
         component: () => import("../views/Home.vue")
     },
     {
+        path: endpoints.routes.USERS,
+        name: endpoints.names.USERS,
+        component: () => import("../views/Users.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/NotFound.vue")
@@ -36,14 +42,16 @@ router.beforeEach(async (to, from, next) => {
     const path = !isLogin ? endpoints.routes.LOGIN : undefined;
     if (!token) return next(path);
 
-    const res = await api("/auth/refresh", methods.PUT, {token});
-    if (!res.token) {
-        localStorage.removeItem(consts.TOKEN);
-        return next(path);
-    }
-
-    localStorage.setItem(consts.TOKEN, res.token);
+    await refreshToken();
+    if (!localStorage.getItem(consts.TOKEN)) return next(path);
+    
     if (isLogin) return next(endpoints.routes.HOME);
+
+    const protectedRoutes = [endpoints.routes.USERS];
+    if (!protectedRoutes.includes(to.path)) return next();
+    const userId = localStorage.getItem(consts.USER_ID);
+    await store.dispatch("storeUser", userId);
+    if (store.state.user.type !== "admin") return next(endpoints.routes.HOME);
     return next();
 });
 

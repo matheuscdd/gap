@@ -13,7 +13,8 @@ Route::group([
 
 Route::middleware([JWTMiddleware::class, UserMiddleware::class])->group(function() {
     Route::post('/users', [UserController::class, 'create']);
-    Route::get('/users/{id}', [UserController::class, 'get']);
+    Route::get('/users', [UserController::class, 'list']);
+    Route::get('/users/{id}', [UserController::class, 'find']);
     Route::patch('/users/{id}', [UserController::class, 'edit']);
     Route::delete('/users/{id}', [UserController::class, 'del']);
 });

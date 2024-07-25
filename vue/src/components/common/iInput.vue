@@ -1,5 +1,5 @@
 <template>
-    <div :class="['external', {focused}]">
+    <div :class="['external', {focused}, {invalid: empty || errors.length}]">
         <label :for="id">{{ label }}</label>
         <div class="internal">
             <iSvg 
@@ -14,10 +14,15 @@
                 :type="type" 
                 :value="modelValue" 
                 @focusin="onFocus" 
-                @focusout="outFocus" 
+                @blur="outFocus" 
                 @input="updateValue"
             />
         </div>
+        <ul v-show="errors.length" class="errors">
+            <li v-for="el in errors" :key="el + getUUID()">
+                <legend>{{ el }}</legend>
+            </li>
+        </ul>
     </div>
 </template>
 
@@ -28,6 +33,7 @@ export default {
     data: () => ({
         id: getUUID(),
         focused: false,
+        empty: false,
     }),
     props: [
         "placeholder", 
@@ -35,10 +41,13 @@ export default {
         "label", 
         "name", 
         "modelValue", 
-        "type"
+        "type",
+        "errors",
     ],
-    components: {
-        
+    watch: {
+        modelValue(value) {
+            this.empty = !value.length;
+        }
     },
     methods: {
         onFocus() {
@@ -46,10 +55,13 @@ export default {
         },
         outFocus() {
             this.focused = false;
+            this.empty = !this.modelValue.length;
+            this.$emit("validate", this.name);
         },
         updateValue(e) {
-            this.$emit("update:modelValue", e.target.value);
-        }
+            this.$emit("update:modelValue", e.target.value.trim());
+        },
+        getUUID
     }
 };
 
@@ -61,10 +73,7 @@ export default {
     margin-bottom: 16px;
 }
 
-.external.focused {
-    color: var(--blue-1);
-}
-
+.external.focused,
 .external.focused input, 
 .external.focused input::placeholder,
 .external.focused svg,
@@ -72,13 +81,24 @@ export default {
     color: var(--blue-1);
 }
 
-input, input::placeholder, svg {
+.external.invalid input, 
+.external.invalid input::placeholder,
+.external.invalid svg,
+.external.invalid label {
+    color: var(--red-1);
+}
+
+.external, input, input::placeholder, svg {
     transition: var(--trans-1);
     color: var(--gray-1);
 }
 
 .external.focused .internal {
     box-shadow: 0px 0px 0px 1px var(--blue-1);
+}
+
+.external.invalid .internal {
+    box-shadow: 0px 0px 0px 1px var(--red-1);
 }
 
 .internal {
@@ -107,5 +127,16 @@ input:focus {
 
 img {
     width: 12px;
+}
+
+.errors {
+    font-weight: 500;
+    margin-top: 5px;
+    font-size: 14px;
+    color: var(--red-1);
+}
+
+.errors li {
+    margin-bottom: 5px;
 }
 </style>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\{LoginRequest, RefreshRequest};
-use App\Services\Auth\{RefreshService, LoginService};
+use App\Http\Services\Auth\{LoginService, RefreshService};
 
 class AuthController extends Controller {
     public function login(LoginRequest $request) {
@@ -13,6 +13,6 @@ class AuthController extends Controller {
 
     public function refresh(RefreshRequest $request) {
         $refreshService = new RefreshService();
-        return $refreshService->execute($request->validated());
+        return $refreshService->put($request->validated());
     }
 }

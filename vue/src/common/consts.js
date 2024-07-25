@@ -1,5 +1,6 @@
 export const consts = Object.freeze({
-    TOKEN: "token"
+    TOKEN: "token",
+    USER_ID: "userId",
 });
 
 export const methods = Object.freeze({
@@ -15,12 +16,36 @@ export const endpoints = Object.freeze({
         INITIAL: "/",
         LOGIN: "/login",
         HOME: "/home",
+        USERS: "/users",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
     names: Object.freeze({
         INITIAL: "initial",
         LOGIN: "login",
         HOME: "home",
+        USERS: "users",
         NOT_FOUND: "not found",
     })
+});
+
+export const user = Object.freeze({
+    keys: Object.freeze({
+        NAME: "name",
+        EMAIL: "email",
+        PASSWORD: "password",
+        CONFIRM_PASSWORD: "confirmPassword",
+        CREATED_AT: "createdAt",
+        UPDATED_AT: "updatedAt",
+        type: Object.freeze({
+            THIS: "type",
+            ADMIN: "admin",
+            COMMON: "common"
+        }),
+    }),
+    trans: Object.freeze({
+        NAME: "nome",
+        EMAIL: "email",
+        PASSWORD: "senha",
+        TYPE: "tipo"
+    }),
 });

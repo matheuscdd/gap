@@ -3,6 +3,7 @@
 namespace App\Http\Requests\User;
 
 use App\Models\User;
+use App\Constraints\UserKeysConstraints as Keys;
 
 class EditUserRequest extends UserRequest {
     public function authorize(): bool {
@@ -10,6 +11,7 @@ class EditUserRequest extends UserRequest {
     }
 
     public function rules(): array {
-        return $this->getRules('name', 'email');
+        $userRequest = new UserRequest();
+        return $userRequest->getRules(true, Keys::NAME, Keys::EMAIL);
     }
 }
