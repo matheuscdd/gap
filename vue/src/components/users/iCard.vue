@@ -1,29 +1,29 @@
 <template>
     <li>
-        <div :class="NAME">{{ name }}</div>
-        <div :class="EMAIL">{{ email }}</div>
-        <div :class="CREATED_AT">{{ createdAt }}</div>
-        <div :class="UPDATED_AT">{{ updatedAt }}</div>
+        <div :class="keys.NAME">{{ name }}</div>
+        <div :class="keys.EMAIL">{{ email }}</div>
+        <div :class="keys.CREATED_AT">{{ createdAt }}</div>
+        <div :class="keys.UPDATED_AT">{{ updatedAt }}</div>
         <div><button>Edit</button></div>
         <div><button @click="del">Delete</button></div>
     </li>
 </template>
 <script>
-import consts from "@/common/mixins";
+import mixins from "@/common/mixins";
 
 export default {
-    mixins: [consts],
+    mixins: [mixins],
     props: [
         "id",
         "name",
         "email",
         "createdAt",
         "updatedAt",
-        "isAdmin"
+        "isAdmin",
     ],
     methods: {
         del() {
-            console.log(this.id);
+            this.$emit("del", this.id);
         }
     }
 };
@@ -42,6 +42,7 @@ li {
 
 li > div {
     line-height: 2;
+    width: max-content
 }
 
 .name {

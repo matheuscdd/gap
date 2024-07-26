@@ -36,7 +36,7 @@ export const user = Object.freeze({
         CONFIRM_PASSWORD: "confirmPassword",
         CREATED_AT: "createdAt",
         UPDATED_AT: "updatedAt",
-        type: Object.freeze({
+        TYPE: Object.freeze({
             THIS: "type",
             ADMIN: "admin",
             COMMON: "common"

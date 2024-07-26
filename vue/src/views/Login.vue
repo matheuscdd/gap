@@ -1,28 +1,28 @@
 <template>
     <h1>Login</h1>
+    {{ $store.state.userMod.user }}
     <form>
         <iInput 
-            label="Email"
+            :label="trans.EMAIL"
             placeholder="Digite seu email"
             icon="envelope-solid"
             type="text"
-            :name="EMAIL"
+            :name="keys.EMAIL"
             :errors="email.errors"
             v-model="email.value"
             @validate="verify"
         />
         <iInput 
-            label="Senha"
+            :label="trans.PASSWORD"
             placeholder="Digite sua senha"
             icon="key-solid"
             type="password"
-            :name="PASSWORD"
+            :name="keys.PASSWORD"
             :errors="password.errors"
             v-model="password.value"
             @validate="verify"
         />
         <button type="button" @click="login">Logar</button>
-        <button type="button" @click="user">User</button>
     </form>
 
 </template>
@@ -30,11 +30,11 @@
 <script>
 import iInput from "@/components/common/iInput.vue";
 import * as validator from "@/common/validators";
-import consts from "@/common/mixins";
+import mixins from "@/common/mixins";
 
 
 export default {
-    mixins: [consts],
+    mixins: [mixins],
     components: {
         iInput
     },
@@ -48,15 +48,18 @@ export default {
             errors: []
         },
     }),
+    computed: {
+        rola() {
+            return this.$store.state.userMod.user;
+        }
+    },
     methods: {
         login() {
-            this.$store.dispatch("storeLogin", {
+            console.log(this.$store);
+            this.$store.dispatch("userMod/storeLogin", {
                 email: this.email.value, 
                 password: this.password.value,
             });
-        },
-        user() {
-            this.$store.dispatch("storeUser");
         },
         verify(name) {
             const field = this[name];

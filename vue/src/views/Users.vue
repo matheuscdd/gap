@@ -1,8 +1,8 @@
 <template>
     <h1>Usuários</h1>
-    <ul v-if="$store.state.users.length">
+    <ul v-if="$store.state.userMod.users.length">
         <iCard
-            v-for="el in $store.state.users" 
+            v-for="el in $store.state.userMod.users" 
             :key="el.id"
             :id="el.id"
             :name="el.name"
@@ -10,22 +10,28 @@
             :createdAt="el.created_at"
             :updatedAt="el.updated_at"
             :isAdmin="el.type === ADMIN"
+            @del="del"
         />
     </ul>
 </template>
-
+f
 <script>
 import iCard from "@/components/users/iCard.vue";
-import consts from "@/common/mixins";
+import mixins from "@/common/mixins";
 
 
 export default {
-    mixins: [consts],
+    mixins: [mixins],
     beforeCreate() {
-        this.$store.dispatch("storeUsers");
+        this.$store.dispatch("userMod/storeUsers");
     },
     components: {
         iCard, 
     },
+    methods: {
+        del(selUserId) {
+            console.log(selUserId);
+        }
+    }
 };
 </script>

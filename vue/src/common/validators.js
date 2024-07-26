@@ -62,7 +62,7 @@ export const user = login.merge(z.object({
 
     [CONFIRM_PASSWORD]: z.string(),
 
-    [cUser.keys.type.THIS]: z.enum([cUser.keys.type.ADMIN, cUser.keys.type.COMMON]) 
+    [cUser.keys.TYPE.THIS]: z.enum([cUser.keys.TYPE.ADMIN, cUser.keys.TYPE.COMMON]) 
 }).superRefine((schema, ctx) => {
     if (schema[CONFIRM_PASSWORD] === schema[PASSWORD]) return;
     ctx.addIssue({

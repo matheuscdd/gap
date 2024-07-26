@@ -115,6 +115,7 @@ export default {
 label {
     display: block;
     margin-bottom: 10px;
+    text-transform: capitalize;
 }
 
 input {

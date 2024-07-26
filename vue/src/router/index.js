@@ -1,5 +1,5 @@
-import { consts, endpoints, methods } from "@/common/consts";
-import { api, refreshToken } from "@/common/utils";
+import { consts, endpoints, user as cUser } from "@/common/consts";
+import { refreshToken } from "@/common/utils";
 import store from "@/store";
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -50,8 +50,8 @@ router.beforeEach(async (to, from, next) => {
     const protectedRoutes = [endpoints.routes.USERS];
     if (!protectedRoutes.includes(to.path)) return next();
     const userId = localStorage.getItem(consts.USER_ID);
-    await store.dispatch("storeUser", userId);
-    if (store.state.user.type !== "admin") return next(endpoints.routes.HOME);
+    await store.dispatch("userMod/storeUser", userId);
+    if (store.state.userMod.user.type !== cUser.keys.TYPE.ADMIN) return next(endpoints.routes.HOME);
     return next();
 });
 
