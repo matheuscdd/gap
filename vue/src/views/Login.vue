@@ -10,7 +10,7 @@
             :name="keys.EMAIL"
             :errors="email.errors"
             v-model="email.value"
-            @validate="verify"
+            @validate="verifyUser"
         />
         <iInput 
             :label="trans.PASSWORD"
@@ -20,7 +20,7 @@
             :name="keys.PASSWORD"
             :errors="password.errors"
             v-model="password.value"
-            @validate="verify"
+            @validate="verifyUser"
         />
         <button type="button" @click="login">Logar</button>
     </form>
@@ -29,8 +29,9 @@
 
 <script>
 import iInput from "@/components/common/iInput.vue";
-import * as validator from "@/common/validators";
+import { verifyUser } from "@/common/validators";
 import mixins from "@/common/mixins";
+import { getErrors, getValues } from "@/common/utils";
 
 
 export default {
@@ -39,34 +40,23 @@ export default {
         iInput
     },
     data: () => ({
-        email: {
+        [mixins.data().keys.EMAIL]: {
             value: "",
             errors: []
         },
-        password: {
+        [mixins.data().keys.PASSWORD]: {
             value: "",
             errors: []
         },
     }),
-    computed: {
-        rola() {
-            return this.$store.state.userMod.user;
-        }
-    },
     methods: {
         login() {
-            console.log(this.$store);
-            this.$store.dispatch("userMod/storeLogin", {
-                email: this.email.value, 
-                password: this.password.value,
-            });
+            const { email, password } = this;
+            const data = { email, password };
+            if (getErrors(data)) return alert("Ajuste os erros antes de continuar");
+            this.$store.dispatch("userMod/storeLogin", getValues(data));
         },
-        verify(name) {
-            const field = this[name];
-            const schema = validator.login.pick({[name]: true});
-            const errors = validator.validate(schema, {[name]: field.value})[name];
-            field.errors = errors || {};
-        }
+        verifyUser
     },
 };
 </script>

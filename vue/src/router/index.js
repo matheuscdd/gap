@@ -22,7 +22,17 @@ const routes = [
     {
         path: endpoints.routes.USERS,
         name: endpoints.names.USERS,
-        component: () => import("../views/Users.vue")
+        component: () => import("../views/UsersList.vue")
+    },
+    {
+        path: endpoints.routes.USER_EDIT,
+        name: encodeURI.name.USER_EDIT,
+        component: () => import("@/views/UsersEdit.vue")
+    },
+    {
+        path: endpoints.routes.USER_CREATE,
+        name: encodeURI.name.USER_CREATE,
+        component: () => import("@/views/UsersCreate.vue")
     },
     {
         path: endpoints.routes.NOT_FOUND,
@@ -47,11 +57,11 @@ router.beforeEach(async (to, from, next) => {
     
     if (isLogin) return next(endpoints.routes.HOME);
 
-    const protectedRoutes = [endpoints.routes.USERS];
+    const protectedRoutes = [endpoints.routes.USERS, endpoints.routes.USER_EDIT, endpoints.routes.USER_CREATE];
     if (!protectedRoutes.includes(to.path)) return next();
     const userId = localStorage.getItem(consts.USER_ID);
-    await store.dispatch("userMod/storeUser", userId);
-    if (store.state.userMod.user.type !== cUser.keys.TYPE.ADMIN) return next(endpoints.routes.HOME);
+    await store.dispatch("userMod/storeLogged", userId);
+    if (store.state.userMod.logged.type !== cUser.keys.TYPE.ADMIN) return next(endpoints.routes.HOME);
     return next();
 });
 

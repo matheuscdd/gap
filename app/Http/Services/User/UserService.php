@@ -4,6 +4,7 @@ namespace App\Http\Services\User;
 
 use App\Models\User;
 use App\Constraints\UserKeysConstraints as Keys;
+use App\Exceptions\AppError;
 use Illuminate\Support\Facades\Log;
 
 class UserService {
@@ -27,6 +28,9 @@ class UserService {
     }
 
     public static function del(int $id) {
+        if (auth()->user()->id === $id) {
+            throw new AppError("O usuário não pode excluir a si mesmo", 403);
+        }
         $user = User::find($id);
         $user->active = false;
         $user->save();
@@ -34,6 +38,6 @@ class UserService {
     }
 
     public static function list() {
-        return User::all();
+        return User::where(Keys::ACTIVE, '=', true)->get();
     }
 }

@@ -1,10 +1,14 @@
 :root {
     --gray-1: #808080; 
+    --gray-2: #f2f2f2;
     --blue-1: #76B6DC;
+    --blue-2: #76b7dc32;
     --red-1: #F4001F;
     --trans-1: 0.8s;
+    --radius-1: 30px;
+    --radius-2: 10px;
 }
 
 body {
-    font-family: 'Jost', 'Arial', 'sans-serif';
+    font-family: 'Jost', 'Arial', sans-serif;
 }

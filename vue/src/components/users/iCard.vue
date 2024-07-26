@@ -2,14 +2,30 @@
     <li>
         <div :class="keys.NAME">{{ name }}</div>
         <div :class="keys.EMAIL">{{ email }}</div>
-        <div :class="keys.CREATED_AT">{{ createdAt }}</div>
-        <div :class="keys.UPDATED_AT">{{ updatedAt }}</div>
-        <div><button>Edit</button></div>
-        <div><button @click="del">Delete</button></div>
+        <div :class="keys.CREATED_AT">{{ createdAtHandle }}</div>
+        <div :class="keys.UPDATED_AT">{{ updatedAtHandle }}</div>
+        <div>
+            <button
+                @click="edit"
+                :disabled="((getNow() - createdAt) / (1000 * 60)) > 60"
+            >
+                Edit
+            </button>
+        </div>
+        <div>
+            <button 
+                @click="del" 
+                :disabled="$store.state.userMod.logged.id === id"
+            >
+                Delete
+            </button>
+        </div>
     </li>
 </template>
 <script>
 import mixins from "@/common/mixins";
+import { getNow } from "@/common/utils";
+
 
 export default {
     mixins: [mixins],
@@ -21,10 +37,28 @@ export default {
         "updatedAt",
         "isAdmin",
     ],
+    computed: {
+        createdAtHandle() {
+            return this.handleDate(this.createdAt);
+        },
+
+        updatedAtHandle() {
+            return this.handleDate(this.updatedAt);
+        }
+    },
     methods: {
+        edit() {
+            this.$emit("edit", this.id);
+        },
+
         del() {
             this.$emit("del", this.id);
-        }
+        },
+
+        handleDate(date) {
+            return date.toLocaleString("pt-BR");
+        },
+        getNow,
     }
 };
 </script>

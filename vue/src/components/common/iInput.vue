@@ -1,24 +1,39 @@
 <template>
-    <div :class="['external', {focused}, {invalid: empty || errors.length}]">
-        <label :for="id">{{ label }}</label>
-        <div class="internal">
-            <iSvg 
-                :src="require(`@/assets/icons/${icon}.svg`)"
-                width="16" 
-                height="16"
-                fill="currentColor"
-            />
-            <input 
-                :id="id" 
-                :placeholder="placeholder" 
-                :type="type" 
-                :value="modelValue" 
-                @focusin="onFocus" 
-                @blur="outFocus" 
-                @input="updateValue"
-            />
-        </div>
-        <ul v-show="errors.length" class="errors">
+    <div :class="[$style.external, {[$style.focused]: focused}, {[$style.invalid]: empty || errors.length}]">
+        <label :class="$style.intermediary" :for="id">
+            <legend>{{ label }}</legend>
+            <div :class="$style.internal">
+                <iSvg 
+                    :src="require(`@/assets/icons/${icon}.svg`)"
+                    width="16" 
+                    height="16"
+                    fill="currentColor"
+                />
+                <input 
+                    :id="id" 
+                    :placeholder="placeholder" 
+                    :type="kind" 
+                    :value="modelValue" 
+                    @focusin="onFocus" 
+                    @blur="outFocus" 
+                    @input="updateValue"
+                />
+                <button 
+                    type="button"
+                    v-show="type === 'password'" 
+                    @click="showPassword = !showPassword"
+                >
+                    <iSvg 
+                        :src="require(`@/assets/icons/${showPassword ? 'eye-slash-solid' : 'eye-solid'}.svg`)"
+                        width="16" 
+                        height="16"
+                        fill="currentColor"
+                    />
+                </button>
+            </div>
+        </label>
+        
+        <ul v-show="errors.length" :class="$style.errors">
             <li v-for="el in errors" :key="el + getUUID()">
                 <legend>{{ el }}</legend>
             </li>
@@ -28,12 +43,14 @@
 
 <script>
 import { getUUID } from "@/common/utils";
+import styles from "@/global/bInput.module.css";
 
 export default {
     data: () => ({
         id: getUUID(),
         focused: false,
         empty: false,
+        showPassword: false,
     }),
     props: [
         "placeholder", 
@@ -49,7 +66,18 @@ export default {
             this.empty = !value.length;
         }
     },
-    methods: {
+    computed: {
+        $style() {
+            return styles;
+        },
+ 
+        kind() {
+            if (this.type !== "password") return this.type;
+            return this.showPassword ? "text" : "password";
+        }
+
+    },
+    methods: {   
         onFocus() {
             this.focused = true;
         },
@@ -67,77 +95,6 @@ export default {
 
 </script>
 
-<style scoped>
-.external {
-    color: var(--gray-1);
-    margin-bottom: 16px;
-}
-
-.external.focused,
-.external.focused input, 
-.external.focused input::placeholder,
-.external.focused svg,
-.external.focused label {
-    color: var(--blue-1);
-}
-
-.external.invalid input, 
-.external.invalid input::placeholder,
-.external.invalid svg,
-.external.invalid label {
-    color: var(--red-1);
-}
-
-.external, input, input::placeholder, svg {
-    transition: var(--trans-1);
-    color: var(--gray-1);
-}
-
-.external.focused .internal {
-    box-shadow: 0px 0px 0px 1px var(--blue-1);
-}
-
-.external.invalid .internal {
-    box-shadow: 0px 0px 0px 1px var(--red-1);
-}
-
-.internal {
-    transition: var(--trans-1) box-shadow;
-    box-shadow: 0px 0px 0px 1px var(--gray-1);
-    width: max-content;
-    border-radius: 30px;
-    padding: 5px 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-label {
-    display: block;
-    margin-bottom: 10px;
-    text-transform: capitalize;
-}
-
-input {
-    border: none;
-}
-
-input:focus {
-    outline: none;
-}
-
-img {
-    width: 12px;
-}
-
-.errors {
-    font-weight: 500;
-    margin-top: 5px;
-    font-size: 14px;
-    color: var(--red-1);
-}
-
-.errors li {
-    margin-bottom: 5px;
-}
+<style module>
+@import "@/global/bInput.module.css";
 </style>

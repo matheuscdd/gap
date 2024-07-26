@@ -1,0 +1,127 @@
+.external {
+    color: var(--gray-1);
+    margin-bottom: 16px;
+}
+
+.external.focused,
+.external.focused .internal input, 
+.external.focused .internal input::placeholder,
+.external.focused .internal svg,
+.external.focused svg,
+.external.focused .internal label {
+    color: var(--blue-1);
+}
+
+.external.invalid .internal input, 
+.external.invalid .internal input::placeholder,
+.external.invalid .internal svg,
+.external.invalid .internal label {
+    color: var(--red-1);
+}
+
+.external, input, input::placeholder, svg {
+    transition: var(--trans-1);
+    color: var(--gray-1);
+}
+
+.external.focused .internal {
+    box-shadow: 0px 0px 0px 1px var(--blue-1);
+}
+
+.external.invalid .internal {
+    box-shadow: 0px 0px 0px 1px var(--red-1);
+}
+
+.internal {
+    transition: var(--trans-1) box-shadow;
+    box-shadow: 0px 0px 0px 1px var(--gray-1);
+    border-radius: var(--radius-1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 18px;
+    cursor: pointer;
+    background-color: #FFF;
+    padding: 5px 10px;
+    width: 230px;
+}
+
+.intermediary > legend {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.intermediary > legend:first-letter  {
+    text-transform: capitalize;
+}
+
+.internal input {
+    cursor: pointer;
+    border: none;
+}
+
+.internal input:focus {
+    outline: none;
+}
+
+.internal input.selected::placeholder {
+    opacity: 1;
+}
+
+.internal button {
+    background-color: transparent;
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.external .errors {
+    font-weight: 500;
+    margin-top: 5px;
+    font-size: 14px;
+    color: var(--red-1);
+}
+
+.external .errors li {
+    margin-bottom: 5px;
+}
+
+.container-list-opts {
+    position: relative;
+}
+
+.list-opts {
+    position: absolute;
+    background-color: var(--gray-2);
+    top: 5px;
+    border-radius: 0 0 var(--radius-2) var(--radius-2);
+    width: max-content;
+}
+
+.list-opts > li {
+    padding: 10px;
+    width: 230px;
+    display: flex;
+    gap: 10px;
+}
+
+.list-opts > li:last-child {
+    border-radius: 0 0 var(--radius-2) var(--radius-2);
+}
+
+.list-opts > li:hover {
+    background-color: var(--blue-2);
+    cursor: pointer;
+}
+
+.list-opts::before {
+    position: absolute;
+    top: -20px;
+    content: "";
+    left: 0;
+    height: 20px;
+    background-color: var(--gray-2);
+    z-index: -1;
+    width: 230px;
+    padding: 10px;
+}
