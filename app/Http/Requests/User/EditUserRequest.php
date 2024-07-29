@@ -11,7 +11,6 @@ class EditUserRequest extends UserRequest {
     }
 
     public function rules(): array {
-        $userRequest = new UserRequest();
-        return $userRequest->getRules(true, Keys::NAME, Keys::EMAIL);
+        return $this->getRules(true, Keys::NAME, Keys::EMAIL);
     }
 }

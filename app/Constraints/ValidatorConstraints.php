@@ -8,6 +8,7 @@ class ValidatorConstraints {
     public const MAX = 'max';
     public const UNIQUE = 'unique';
     public const EMAIL = 'email';
+    public const DIGITS = 'digits';
 
     private static function dot($field, $key): string {
         return "$field.$key";
@@ -37,6 +38,10 @@ class ValidatorConstraints {
         return self::dot($field, self::REQUIRED);
     }
 
+    public static function dDigits($field): string {
+        return self::dot($field, self::DIGITS);
+    }
+
     public static function cMax($field): string {
         return self::colon($field, self::MAX);
     }
@@ -55,5 +60,9 @@ class ValidatorConstraints {
 
     public static function cRequired($field): string {
         return self::colon($field, self::REQUIRED);
+    }
+
+    public static function cDigits($field): string {
+        return self::colon($field, self::DIGITS);
     }
 }

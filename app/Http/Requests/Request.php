@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
-
+use App\Constraints\ValidatorConstraints as Schema;
 
 class Request extends FormRequest {
     protected const MAX_HOURS = 1;
@@ -46,6 +46,10 @@ class Request extends FormRequest {
         return "O campo $field deve ser válido";
     }
 
+    protected function getMsgSize(string $field, int $val): string {
+        return "O campo $field deve ter o exato tamanho de dígitos de $val";
+    }
+
     protected function getMsgEnum(string $column, $enum): array {
         $key = "$column.Illuminate\Validation\Rules\Enum";
 
@@ -56,6 +60,15 @@ class Request extends FormRequest {
         $handleCases = join(', ', $rawCases);
 
         return [$key => "Seleção inválida, as opções são [$handleCases]"];
+    }
+
+    protected function retrieveRules(bool $partial, array $ref, array $keys): array {
+        if (!$partial) return $ref;
+        $handle = array_filter($ref, fn($el) => in_array($el, $keys), ARRAY_FILTER_USE_KEY);
+        foreach($handle as $key => $value) {
+            $handle[$key] = array_filter($value, fn($el) => $el !== Schema::REQUIRED);
+        }
+        return $handle;
     }
     
 }

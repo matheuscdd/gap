@@ -19,7 +19,7 @@ class UserRequest extends Request {
     protected const PASSWD_MIN = 8;
     protected const PASSWD_MAX = 64;
     
-    protected function retrieveRules($partial, $keys): array {
+    public function getRules($partial, ...$keys): array {
         $ref = [
             Keys::EMAIL => [
                 Schema::REQUIRED,
@@ -42,17 +42,7 @@ class UserRequest extends Request {
                 Schema::REQUIRED, new Enum(TypeUser::class)
             ],
         ];
-        if (!$partial) return $ref;
-        $handle = array_filter($ref, fn($el) => in_array($el, $keys), ARRAY_FILTER_USE_KEY);
-        foreach($handle as $key => $value) {
-            $handle[$key] = array_filter($value, fn($el) => $el !== Schema::REQUIRED);
-        }
-        return $handle;
-    }
-
-    public function getRules($partial, ...$keys): array {
-        $ref = self::retrieveRules($partial, $keys);
-        $rules = array_filter($ref, fn($key) => in_array($key, $keys), ARRAY_FILTER_USE_KEY);
+        $rules = self::retrieveRules($partial, $ref, $keys);
         if (count($rules) === 0) {
             throw new Exception('getRules: No key found');
         }
@@ -65,9 +55,9 @@ class UserRequest extends Request {
             Schema::dRequired(Keys::TYPE) => self::getMsgRequired(Trans::TYPE),
             Schema::dRequired(Keys::EMAIL) => self::getMsgRequired(Trans::TYPE),
             Schema::dEmail(Keys::EMAIL) => self::getMsgValid(Trans::TYPE),
-            Schema::dUnique(Keys::EMAIL) => self::getMsgUnique(Keys::EMAIL),
-            Schema::dMin(Keys::EMAIL) => self::getMsgSizeMin(Trans::TYPE, self::EMAIL_MIN),
-            Schema::dMax(Keys::EMAIL) => self::getMsgSizeMax(Trans::TYPE, self::EMAIL_MAX),
+            Schema::dUnique(Keys::EMAIL) => self::getMsgUnique(Trans::EMAIL),
+            Schema::dMin(Keys::EMAIL) => self::getMsgSizeMin(Trans::EMAIL, self::EMAIL_MIN),
+            Schema::dMax(Keys::EMAIL) => self::getMsgSizeMax(Trans::EMAIL, self::EMAIL_MAX),
             Schema::dRequired(Keys::NAME) => self::getMsgRequired(Trans::NAME),
             Schema::dMin(Keys::NAME) => self::getMsgSizeMin(Trans::NAME, self::NAME_MIN),
             Schema::dMax(Keys::NAME) => self::getMsgSizeMax(Trans::NAME, self::NAME_MAX),

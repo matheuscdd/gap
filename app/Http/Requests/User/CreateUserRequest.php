@@ -10,7 +10,6 @@ class CreateUserRequest extends UserRequest {
     }
 
     public function rules(): array {
-        $userRequest = new UserRequest();
-        return $userRequest->getRules(false, ...Keys::ALL);
+        return $this->getRules(false, ...Keys::ALL);
     }
 }
