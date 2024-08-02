@@ -78,23 +78,23 @@ export default {
             },
         ],
 
-        [mixins.data().keys.EMAIL]: {
+        [mixins.data().user.keys.EMAIL]: {
             errors: [],
             value: ""
         },
-        [mixins.data().keys.NAME]: {
+        [mixins.data().user.keys.NAME]: {
             errors: [],
             value: ""
         },
-        [mixins.data().keys.PASSWORD]: {
+        [mixins.data().user.keys.PASSWORD]: {
             errors: [],
             value: ""
         },
-        [mixins.data().keys.CONFIRM_PASSWORD]: {
+        [mixins.data().user.keys.CONFIRM_PASSWORD]: {
             errors: [],
             value: ""
         },
-        [mixins.data().keys.TYPE.THIS]: {
+        [mixins.data().user.keys.TYPE.THIS]: {
             errors: [],
             value: "",
             text: mixins.data().userForm.TYPE.PLACEHOLDER,

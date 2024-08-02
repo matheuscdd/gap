@@ -19,6 +19,7 @@ export const endpoints = Object.freeze({
         USERS: "/users/list",
         USER_EDIT: "/users/edit/:id",
         USER_CREATE: "/users/create",
+        CLIENT_CREATE: "/clients/create",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
     names: Object.freeze({
@@ -28,6 +29,7 @@ export const endpoints = Object.freeze({
         USERS: "users-list",
         USER_EDIT: "users-edit",
         USER_CREATE: "users-create",
+        CLIENT_CREATE: "clients-create",
         NOT_FOUND: "not found",
     })
 });
@@ -88,4 +90,59 @@ export const userForm = Object.freeze({
         NAME: user.keys.TYPE.THIS,
         LABEL: "Tipo de usuário",
     })
+});
+
+export const client = Object.freeze({
+    keys: Object.freeze({
+        NAME: "name",
+        CNPJ: "CNPJ",
+        CEP: "CEP",
+        ADDRESS: "address",
+        CELLPHONE: "cellphone",
+    }),
+    trans: Object.freeze({
+        NAME: "nome",
+        CNPJ: "CNPJ",
+        CEP: "CEP",
+        ADDRESS: "endereço",
+        CELLPHONE: "celular",
+    })
+});
+
+export const clientForm = Object.freeze({
+    NAME: Object.freeze({
+        PLACEHOLDER: "Digite o nome",
+        ICON: "building-solid",
+        TYPE: "text",
+        NAME: client.keys.NAME,
+        LABEL: client.trans.NAME
+    }),
+    CNPJ: Object.freeze({
+        PLACEHOLDER: "Digite o CNPJ",
+        ICON: "id-card-solid",
+        TYPE: "text",
+        NAME: client.keys.CNPJ,
+        LABEL: client.trans.CNPJ
+    }),
+    ADDRESS: Object.freeze({
+        PLACEHOLDER: "Digite o endereço",
+        ICON: "address-book-solid",
+        TYPE: "text",
+        NAME: client.keys.ADDRESS,
+        LABEL: client.trans.ADDRESS
+    }),
+    CEP: Object.freeze({
+        PLACEHOLDER: "Digite o CEP",
+        ICON: "map-solid",
+        TYPE: "text",
+        NAME: client.keys.CEP,
+        LABEL: client.trans.CEP
+    }),
+    CELLPHONE: Object.freeze({
+        PLACEHOLDER: "Digite o telefone",
+        ICON: "phone-solid",
+        TYPE: "text",
+        NAME: client.keys.CELLPHONE,
+        LABEL: client.trans.CELLPHONE
+    }),
 });

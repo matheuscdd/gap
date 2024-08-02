@@ -36,11 +36,11 @@ import { getErrors, getValues } from "@/common/utils";
 export default {
     mixins: [mixins],
     data: () => ({
-        [mixins.data().keys.EMAIL]: {
+        [mixins.data().user.keys.EMAIL]: {
             errors: [],
             value: ""
         },
-        [mixins.data().keys.NAME]: {
+        [mixins.data().user.keys.NAME]: {
             errors: [],
             value: ""
         },

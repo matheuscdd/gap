@@ -26,13 +26,18 @@ const routes = [
     },
     {
         path: endpoints.routes.USER_EDIT,
-        name: encodeURI.name.USER_EDIT,
+        name: endpoints.names.USER_EDIT,
         component: () => import("@/views/UsersEdit.vue")
     },
     {
         path: endpoints.routes.USER_CREATE,
-        name: encodeURI.name.USER_CREATE,
+        name: endpoints.names.USER_CREATE,
         component: () => import("@/views/UsersCreate.vue")
+    },
+    {
+        path: endpoints.routes.CLIENT_CREATE,
+        name: endpoints.names.CLIENT_CREATE,
+        component: () => import("@/views/ClientsCreate.vue")
     },
     {
         path: endpoints.routes.NOT_FOUND,

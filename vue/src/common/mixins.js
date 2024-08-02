@@ -1,5 +1,5 @@
-import { user, userForm } from "./consts";
+import { user, userForm, client, clientForm } from "./consts";
 
 export default {
-    data: () => ({...user, userForm })
+    data: () => ({user, userForm, client, clientForm })
 };

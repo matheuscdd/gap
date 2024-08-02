@@ -40,11 +40,11 @@ export default {
         iInput
     },
     data: () => ({
-        [mixins.data().keys.EMAIL]: {
+        [mixins.data().user.keys.EMAIL]: {
             value: "",
             errors: []
         },
-        [mixins.data().keys.PASSWORD]: {
+        [mixins.data().user.keys.PASSWORD]: {
             value: "",
             errors: []
         },

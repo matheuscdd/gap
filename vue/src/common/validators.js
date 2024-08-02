@@ -1,12 +1,16 @@
 import { z } from "zod";
-import { user as cUser } from "./consts";
+import { user as cUser, client as cClient } from "./consts";
 
 const {
     NAME,
     EMAIL,
     PASSWORD,
     CONFIRM_PASSWORD,
-} = cUser.keys;
+    ADDRESS,
+    CELLPHONE, 
+    CEP,
+    CNPJ, 
+} = {...cUser.keys, ...cClient.keys };
 
 const base = Object.freeze({
     user: Object.freeze({
@@ -24,6 +28,25 @@ const base = Object.freeze({
         }),
     }),
 
+    client: Object.freeze({
+        [NAME]: Object.freeze({
+            min: 8,
+            max: 128,
+        }),
+        [ADDRESS]: Object.freeze({
+            min: 20,
+            max: 256
+        }),
+        [CEP]: Object.freeze({
+            size: 8,
+        }),
+        [CELLPHONE]: Object.freeze({
+            size: 11,
+        }),
+        [CNPJ]: Object.freeze({
+            size: 14
+        })
+    })
 });
 
 const msgs = Object.freeze({
@@ -31,7 +54,8 @@ const msgs = Object.freeze({
     valid: (field) => `O campo ${field} deve ser válido`,
     required: (field) => `O campo ${field} é obrigatório`,
     min: (field, val) => `O campo ${field} não contém o mínimo de ${val} caracteres`,
-    max: (field, val) => `O campo ${field} contém mais caracteres do que o permitido de ${val}`
+    max: (field, val) => `O campo ${field} contém mais caracteres do que o permitido de ${val}`,
+    size: (field, val) => `O campo ${field} deve ter o exato tamanho de dígitos de ${val}`,
 });
 
 const nonempty = /^[^$]/;
@@ -84,4 +108,46 @@ export function verifyUser(name) {
     });
 
     verify(user, name, this[name], handleFields);
+}
+
+export function verifyClient(name) {
+    const handleFields = {};
+    [NAME, ADDRESS, CEP, CELLPHONE, CNPJ]
+        .forEach(key => handleFields[key] = this[key]?.value);
+    const client = z.object({
+        [NAME]: z
+            .string()
+            .trim()
+            .regex(nonempty, msgs.required(cClient.trans.NAME))
+            .min(base.client[NAME].min, msgs.min(cClient.trans.NAME, base.client[NAME].min))
+            .max(base.client[NAME].max, msgs.max(cClient.trans.NAME, base.client[NAME].max)),
+      
+        [ADDRESS]: z
+            .string()
+            .trim()
+            .regex(nonempty, msgs.required(cClient.trans.ADDRESS))
+            .min(base.client[ADDRESS].min, msgs.min(cClient.trans.ADDRESS, base.client[ADDRESS].min))
+            .max(base.client[ADDRESS].max, msgs.max(cClient.trans.ADDRESS, base.client[ADDRESS].max)),
+        
+        [CEP]: z
+            .number({message: msgs.size(cClient.trans.CEP, base.client[CEP].size)})
+            .int(msgs.size(cClient.trans.CEP, base.client[CEP].size))
+            .lte(Math.pow(10, base.client[CEP].size - 1), msgs.size(cClient.trans.CEP, base.client[CEP].size))
+            .gte(Math.pow(10, base.client[CEP].size) - 1, msgs.size(cClient.trans.CEP, base.client[CEP].size))
+            .optional(),
+
+        [CNPJ]: z
+            .number({message: msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size)})
+            .int(msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
+            .lte(Math.pow(10, base.client[CNPJ].size - 1), msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
+            .gte(Math.pow(10, base.client[CNPJ].size) - 1, msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
+            .optional(),
+
+        [CELLPHONE]: z
+            .number({message: msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size)})
+            .int(msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
+            .lte(Math.pow(10, base.client[CELLPHONE].size - 1), msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
+            .gte(Math.pow(10, base.client[CELLPHONE].size) - 1, msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
+    });
+    verify(client, name, this[name], handleFields);
 }
