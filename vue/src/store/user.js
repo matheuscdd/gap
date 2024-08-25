@@ -34,27 +34,27 @@ export default {
         async delUser(ctx, id) {
             if (ctx.state.user.id === id) return alert("O usuário não pode excluir a si mesmo");
             const response = await api("/users/" + id, methods.DELETE);
-            if (response.error) return alert(response.error);
+            if (response.msg) return alert(response.msg);
             ctx.commit("storeUser", response);
             await ctx.dispatch("storeUsers");
         },
 
         async editUser(ctx, data) {
             const response = await api("/users/" + data.id, methods.PATCH, data);
-            if (response.error) return alert(response.error);
+            if (response.msg) return alert(response.msg);
             ctx.commit("storeUser", response);
-            router.push(endpoints.routes.USERS);
+            router.push(endpoints.routes.USER_LIST);
         },
 
         async createUser(ctx, data) {
             const response = await api("/users", methods.POST, data);
-            if (response.error) return alert(response.error);
-            router.push(endpoints.routes.USERS);
+            if (response.msg) return alert(response.msg);
+            router.push(endpoints.routes.USER_LIST);
         },
 
         async storeUser(ctx, id) {
             const response = await api("/users/" + id);
-            if (response.error) return;
+            if (response.msg) return;
             ctx.commit("storeUser", response);
         },
 
@@ -64,7 +64,7 @@ export default {
         },
 
         async storeUsers(ctx) {
-            const response = await api("/users/");
+            const response = await api("/users");
             const data = response.map(user => ({
                 ...user,
                 created_at: handleDate(user.created_at),
@@ -75,7 +75,7 @@ export default {
 
         async storeLogin(ctx, data) {
             const response = await api("/auth/login", methods.POST, data);
-            if (response.error) return alert(response.error);
+            if (response.msg) return alert(response.msg);
             const userId = jwtDecode(response.token).sub;
             localStorage.setItem(consts.TOKEN, response.token);
             localStorage.setItem(consts.USER_ID, userId);

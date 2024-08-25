@@ -9,13 +9,13 @@
             :email="el.email"
             :createdAt="el.created_at"
             :updatedAt="el.updated_at"
-            :isAdmin="el.type === ADMIN"
+            :isAdmin="el.type === 'admin'"
             @del="del"
             @edit="edit"
         />
     </ul>
 </template>
-f
+
 <script>
 import iCard from "@/components/users/iCard.vue";
 import mixins from "@/common/mixins";
@@ -30,10 +30,9 @@ export default {
     components: {
         iCard, 
     },
-
     methods: {
         del(id) {
-            confirm("Tem certeza que deseja excluir?") &&  this.$store.dispatch("userMod/delUser", id);
+            if (confirm("Tem certeza que deseja excluir?")) this.$store.dispatch("userMod/delUser", id);
         },
 
         edit(id) {

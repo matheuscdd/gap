@@ -8,6 +8,7 @@
             :type="userForm.NAME.TYPE"
             :name="userForm.NAME.NAME"
             :errors="name.errors"
+            :maxlength="limits.user.name"
             v-model="name.value"
             @validate="verifyUser"
         />
@@ -18,6 +19,7 @@
             :type="userForm.EMAIL.TYPE"
             :name="userForm.EMAIL.NAME"
             :errors="email.errors"
+            :maxlength="limits.user.email"
             v-model="email.value"
             @validate="verifyUser"
         />
@@ -28,6 +30,7 @@
             :type="userForm.PASSWORD.TYPE"
             :name="userForm.PASSWORD.NAME"
             :errors="password.errors"
+            :maxlength="limits.user.password"
             v-model="password.value"
             @validate="verifyUser"
         />
@@ -38,6 +41,7 @@
             :type="userForm.CONFIRM_PASSWORD.TYPE"
             :name="userForm.CONFIRM_PASSWORD.NAME"
             :errors="confirmPassword.errors"
+            :maxlength="limits.user.password"
             v-model="confirmPassword.value"
             @validate="verifyUser"
         />
@@ -106,7 +110,6 @@ export default {
             const { type, email, name, password, confirmPassword } = this;
             const data = { type, email, name, password, confirmPassword };
             if (getErrors(data)) return alert("Ajuste os erros antes de continuar");
-            console.log(data);
             this.$store.dispatch("userMod/createUser", getValues(data));
         },
         verifyUser

@@ -12,7 +12,7 @@ const {
     CNPJ, 
 } = {...cUser.keys, ...cClient.keys };
 
-const base = Object.freeze({
+export const base = Object.freeze({
     user: Object.freeze({
         [NAME]: Object.freeze({
             min: 3,
@@ -132,22 +132,23 @@ export function verifyClient(name) {
         [CEP]: z
             .number({message: msgs.size(cClient.trans.CEP, base.client[CEP].size)})
             .int(msgs.size(cClient.trans.CEP, base.client[CEP].size))
-            .lte(Math.pow(10, base.client[CEP].size - 1), msgs.size(cClient.trans.CEP, base.client[CEP].size))
-            .gte(Math.pow(10, base.client[CEP].size) - 1, msgs.size(cClient.trans.CEP, base.client[CEP].size))
+            .gte(Math.pow(10, base.client[CEP].size - 1), msgs.size(cClient.trans.CEP, base.client[CEP].size))
+            .lte(Math.pow(10, base.client[CEP].size) - 1, msgs.size(cClient.trans.CEP, base.client[CEP].size))
             .optional(),
 
         [CNPJ]: z
             .number({message: msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size)})
             .int(msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
-            .lte(Math.pow(10, base.client[CNPJ].size - 1), msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
-            .gte(Math.pow(10, base.client[CNPJ].size) - 1, msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
+            .gte(Math.pow(10, base.client[CNPJ].size - 1), msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
+            .lte(Math.pow(10, base.client[CNPJ].size) - 1, msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
             .optional(),
 
         [CELLPHONE]: z
             .number({message: msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size)})
             .int(msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
-            .lte(Math.pow(10, base.client[CELLPHONE].size - 1), msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
-            .gte(Math.pow(10, base.client[CELLPHONE].size) - 1, msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
+            .gte(Math.pow(10, base.client[CELLPHONE].size - 1), msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
+            .lte(Math.pow(10, base.client[CELLPHONE].size) - 1, msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
     });
-    verify(client, name, this[name], handleFields);
+    verify(client, name, this[name]
+        , handleFields);
 }

@@ -1,9 +1,9 @@
 <template>
     <li>
-        <div :class="keys.NAME">{{ name }}</div>
-        <div :class="keys.EMAIL">{{ email }}</div>
-        <div :class="keys.CREATED_AT">{{ createdAtHandle }}</div>
-        <div :class="keys.UPDATED_AT">{{ updatedAtHandle }}</div>
+        <div :class="userForm.NAME.NAME">{{ name }}</div>
+        <div :class="userForm.EMAIL.NAME">{{ email }}</div>
+        <div class="createdAt">{{ createdAtHandle }}</div>
+        <div class="updatedAt">{{ updatedAtHandle }}</div>
         <div>
             <button
                 @click="edit"

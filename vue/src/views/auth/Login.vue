@@ -9,6 +9,7 @@
             type="text"
             :name="keys.EMAIL"
             :errors="email.errors"
+            :maxlength="limits.user.email"
             v-model="email.value"
             @validate="verifyUser"
         />
@@ -19,6 +20,7 @@
             type="password"
             :name="keys.PASSWORD"
             :errors="password.errors"
+            :maxlength="limits.user.password"
             v-model="password.value"
             @validate="verifyUser"
         />

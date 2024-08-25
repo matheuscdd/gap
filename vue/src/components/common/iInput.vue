@@ -13,7 +13,8 @@
                     :id="id" 
                     :placeholder="placeholder" 
                     :type="kind" 
-                    :value="modelValue" 
+                    :value="modelValue"
+                    :maxlength="maxlength"
                     @focusin="onFocus" 
                     @blur="outFocus" 
                     @input="updateValue"
@@ -60,10 +61,11 @@ export default {
         "modelValue", 
         "type",
         "errors",
+        "maxlength",
     ],
     watch: {
         modelValue(value) {
-            this.empty = !value.length;
+            this.empty = !String(value).length;
         }
     },
     computed: {
@@ -72,8 +74,12 @@ export default {
         },
  
         kind() {
-            if (this.type !== "password") return this.type;
-            return this.showPassword ? "text" : "password";
+            if (this.type === "password" ) {
+                return this.showPassword ? "text" : "password";
+            } else if (this.type === "number") {
+                return "text";
+            }
+            return this.type;
         }
 
     },
@@ -83,11 +89,16 @@ export default {
         },
         outFocus() {
             this.focused = false;
-            this.empty = !this.modelValue.length;
+            this.empty = !String(this.modelValue).length;
             this.$emit("validate", this.name);
         },
         updateValue(e) {
-            this.$emit("update:modelValue", e.target.value.trim());
+            let val = e.target.value;
+            if (this.type === "number") {
+                val = e.target.value.replace(/\D/g, "");
+                if (e.target.value.length) val = Number(val);
+            }
+            this.$emit("update:modelValue", val);
         },
         getUUID
     }

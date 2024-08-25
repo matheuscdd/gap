@@ -12,37 +12,47 @@ const routes = [
     {
         path: endpoints.routes.LOGIN,
         name: endpoints.names.LOGIN,
-        component: () => import("../views/Login.vue")
+        component: () => import("../views/auth/Login.vue")
     },
     {
         path: endpoints.routes.HOME,
         name: endpoints.names.HOME,
-        component: () => import("../views/Home.vue")
+        component: () => import("../views/common/Home.vue")
     },
     {
-        path: endpoints.routes.USERS,
-        name: endpoints.names.USERS,
-        component: () => import("../views/UsersList.vue")
+        path: endpoints.routes.USER_LIST,
+        name: endpoints.names.USER_LIST,
+        component: () => import("../views/users/UsersList.vue")
     },
     {
         path: endpoints.routes.USER_EDIT,
         name: endpoints.names.USER_EDIT,
-        component: () => import("@/views/UsersEdit.vue")
+        component: () => import("@/views/users/UsersEdit.vue")
     },
     {
         path: endpoints.routes.USER_CREATE,
         name: endpoints.names.USER_CREATE,
-        component: () => import("@/views/UsersCreate.vue")
+        component: () => import("@/views/users/UsersCreate.vue")
     },
     {
         path: endpoints.routes.CLIENT_CREATE,
         name: endpoints.names.CLIENT_CREATE,
-        component: () => import("@/views/ClientsCreate.vue")
+        component: () => import("@/views/clients/ClientsCreate.vue")
+    },
+    {
+        path: endpoints.routes.CLIENT_LIST,
+        name: endpoints.names.CLIENT_LIST,
+        component: () => import("@/views/clients/ClientsList.vue")
+    },
+    {
+        path: endpoints.routes.CLIENT_EDIT,
+        name: endpoints.names.CLIENT_EDIT,
+        component: () => import("@/views/clients/ClientsEdit.vue")
     },
     {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
-        component: () => import("../views/NotFound.vue")
+        component: () => import("../views/common/NotFound.vue")
     },
 ];
 
@@ -62,7 +72,7 @@ router.beforeEach(async (to, from, next) => {
     
     if (isLogin) return next(endpoints.routes.HOME);
 
-    const protectedRoutes = [endpoints.routes.USERS, endpoints.routes.USER_EDIT, endpoints.routes.USER_CREATE];
+    const protectedRoutes = [endpoints.routes.USER_LIST, endpoints.routes.USER_EDIT, endpoints.routes.USER_CREATE];
     if (!protectedRoutes.includes(to.path)) return next();
     const userId = localStorage.getItem(consts.USER_ID);
     await store.dispatch("userMod/storeLogged", userId);

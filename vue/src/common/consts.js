@@ -16,20 +16,24 @@ export const endpoints = Object.freeze({
         INITIAL: "/",
         LOGIN: "/login",
         HOME: "/home",
-        USERS: "/users/list",
+        USER_LIST: "/users/list",
         USER_EDIT: "/users/edit/:id",
         USER_CREATE: "/users/create",
         CLIENT_CREATE: "/clients/create",
+        CLIENT_LIST: "/clients/list",
+        CLIENT_EDIT: "/clients/edit/:id",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
     names: Object.freeze({
         INITIAL: "initial",
         LOGIN: "login",
         HOME: "home",
-        USERS: "users-list",
+        USER_LIST: "users-list",
         USER_EDIT: "users-edit",
         USER_CREATE: "users-create",
         CLIENT_CREATE: "clients-create",
+        CLIENT_LIST: "clients-list",
+        CLIENT_EDIT: "clients-edit",
         NOT_FOUND: "not found",
     })
 });
@@ -120,7 +124,7 @@ export const clientForm = Object.freeze({
     CNPJ: Object.freeze({
         PLACEHOLDER: "Digite o CNPJ",
         ICON: "id-card-solid",
-        TYPE: "text",
+        TYPE: "number",
         NAME: client.keys.CNPJ,
         LABEL: client.trans.CNPJ
     }),
@@ -134,14 +138,14 @@ export const clientForm = Object.freeze({
     CEP: Object.freeze({
         PLACEHOLDER: "Digite o CEP",
         ICON: "map-solid",
-        TYPE: "text",
+        TYPE: "number",
         NAME: client.keys.CEP,
         LABEL: client.trans.CEP
     }),
     CELLPHONE: Object.freeze({
         PLACEHOLDER: "Digite o telefone",
         ICON: "phone-solid",
-        TYPE: "text",
+        TYPE: "number",
         NAME: client.keys.CELLPHONE,
         LABEL: client.trans.CELLPHONE
     }),

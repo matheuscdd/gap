@@ -7,6 +7,7 @@
             :icon="clientForm.NAME.ICON"
             :type="clientForm.NAME.TYPE"
             :name="clientForm.NAME.NAME"
+            :maxlength="limits.client.name.max"
             :errors="name.errors"
             v-model="name.value"
             @validate="verifyClient"
@@ -17,6 +18,7 @@
             :icon="clientForm.CNPJ.ICON"
             :type="clientForm.CNPJ.TYPE"
             :name="clientForm.CNPJ.NAME"
+            :maxlength="limits.client.CNPJ.size"
             :errors="CNPJ.errors"
             v-model="CNPJ.value"
             @validate="verifyClient"
@@ -27,6 +29,7 @@
             :icon="clientForm.CEP.ICON"
             :type="clientForm.CEP.TYPE"
             :name="clientForm.CEP.NAME"
+            :maxlength="limits.client.CEP.size"
             :errors="CEP.errors"
             v-model="CEP.value"
             @validate="verifyClient"
@@ -37,6 +40,7 @@
             :icon="clientForm.ADDRESS.ICON"
             :type="clientForm.ADDRESS.TYPE"
             :name="clientForm.ADDRESS.NAME"
+            :maxlength="limits.client.address.max"
             :errors="address.errors"
             v-model="address.value"
             @validate="verifyClient"
@@ -47,6 +51,7 @@
             :icon="clientForm.CELLPHONE.ICON"
             :type="clientForm.CELLPHONE.TYPE"
             :name="clientForm.CELLPHONE.NAME"
+            :maxlength="limits.client.cellphone.size"
             :errors="cellphone.errors"
             v-model="cellphone.value"
             @validate="verifyClient"
@@ -94,8 +99,8 @@ export default {
             const { CNPJ, CEP, name, address, cellphone } = this;
             const data = { CNPJ, CEP, name, address, cellphone };
             if (getErrors(data)) return alert("Ajuste os erros antes de continuar");
-            console.log(data);
-            this.$store.dispatch("userMod/createUser", getValues(data));
+            console.log({...data});
+            this.$store.dispatch("clientMod/createClient", getValues(data));
         },
         verifyClient
     }

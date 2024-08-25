@@ -9,6 +9,7 @@
             :type="userForm.NAME.TYPE"
             :name="userForm.NAME.NAME"
             :errors="name.errors"
+            :maxlength="limits.user.name"
             v-model="name.value"
             @validate="verifyUser"
         />
@@ -19,6 +20,7 @@
             :type="userForm.EMAIL.TYPE"
             :name="userForm.EMAIL.NAME"
             :errors="email.errors"
+            :maxlength="limits.user.email"
             v-model="email.value"
             @validate="verifyUser"
         />
@@ -50,10 +52,6 @@ export default {
 
     mounted() {
         this.fill();
-        const user = this.$store.state.userMod.user;
-        console.log({...user});
-        this.name.value = user.name;
-        this.email.value = user.email;
     },
 
     methods: {
@@ -61,7 +59,6 @@ export default {
             const id = this.$route.params.id;
             await this.$store.dispatch("userMod/storeUser", id);
             const user = this.$store.state.userMod.user;
-            console.log({...user});
             this.name.value = user.name;
             this.email.value = user.email;
         },
@@ -70,7 +67,7 @@ export default {
             const { name, email } = this;
             const data = { name };
             if (this.$store.state.userMod.user.email !== email.value) {
-                data.email = this.email;
+                data.email = email;
             }
             if (getErrors(data)) return alert("Ajuste os erros antes de continuar");
             this.$store.dispatch("userMod/editUser", {
