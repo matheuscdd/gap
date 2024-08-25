@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\{UserController, AuthController, ClientController};
+use App\Http\Controllers\{UserController, AuthController, ClientController, StockTypeController};
 use Illuminate\Support\Facades\Route;
-use \App\Http\Middlewares\{ClientMiddleware, JWTMiddleware, UserMiddleware};
+use \App\Http\Middlewares\{ClientMiddleware, JWTMiddleware, StockTypeMiddleware, UserMiddleware};
 
 Route::group([
     'prefix' => 'auth'
@@ -24,4 +24,10 @@ Route::middleware([JWTMiddleware::class, ClientMiddleware::class])->group(functi
     Route::get('/clients', [ClientController::class, 'list']);
     Route::get('/clients/{id}', [ClientController::class, 'find']);
     Route::patch('/clients/{id}', [ClientController::class, 'edit']);
+});
+
+Route::middleware([JWTMiddleware::class, StockTypeMiddleware::class])->group(function() {
+    Route::post('/stock_type', [StockTypeController::class, 'create']);
+    Route::get('/stock_type', [StockTypeController::class, 'list']);
+    Route::patch('/stock_type/{id}', [StockTypeController::class, 'edit']);
 });

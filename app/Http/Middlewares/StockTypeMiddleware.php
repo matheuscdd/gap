@@ -3,15 +3,15 @@
 namespace App\Http\Middlewares;
 
 use App\Exceptions\AppError;
-use App\Models\Client;
+use App\Models\StockType;
 use Closure;
 use Illuminate\Http\Request;
 
-class ClientMiddleware {
+class StockTypeMiddleware {
     public function handle(Request $request, Closure $next) {
         $id = $request->route('id');
-        $client = Client::find($id);
-        if ($id && !boolval($client)) {
+        $stockType = StockType::find($id);
+        if ($id && !boolval($stockType)) {
             throw new AppError('Não encontrado', 404);
         }
         return $next($request);
