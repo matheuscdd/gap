@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -39,6 +40,12 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'msg' => 'Não encontrado'
                 ], 404);
+            }
+
+            if ($request->is('api/*') && $error instanceof MethodNotAllowedHttpException) {
+                return response()->json([
+                    'msg' => 'Método não permitido'
+                ], 405);
             }
 
             if ($error instanceof AccessDeniedHttpException) {

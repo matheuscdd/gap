@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Http\Services\Client;
-
+use App\Constraints\ClientKeysConstraints as Keys;
 use App\Models\Client;
 
 class ClientService {
     public static function create(array $data) {
-        $data['created_by'] = auth()->user()->id;
-        $data['updated_by'] = auth()->user()->id;
+        $data[Keys::CREATED_BY] = auth()->user()->id;
+        $data[Keys::UPDATED_BY] = auth()->user()->id;
         return Client::create($data);
     }
 
@@ -16,7 +16,7 @@ class ClientService {
     }
 
     public static function edit(int $id, array $data) {
-        $data['updated_by'] = auth()->user()->id;
+        $data[Keys::UPDATED_BY] = auth()->user()->id;
         $client = Client::find($id);
         $client->update($data);
         return $client;

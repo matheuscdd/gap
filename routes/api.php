@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\{UserController, AuthController, ClientController, StockTypeController};
+use App\Http\Controllers\{UserController, AuthController, BudgetController, ClientController, StockTypeController};
 use Illuminate\Support\Facades\Route;
-use \App\Http\Middlewares\{ClientMiddleware, JWTMiddleware, StockTypeMiddleware, UserMiddleware};
+use \App\Http\Middlewares\{BudgetMiddleware, ClientMiddleware, JWTMiddleware, StockTypeMiddleware, UserMiddleware};
 
 Route::group([
     'prefix' => 'auth'
@@ -30,4 +30,11 @@ Route::middleware([JWTMiddleware::class, StockTypeMiddleware::class])->group(fun
     Route::post('/stock_type', [StockTypeController::class, 'create']);
     Route::get('/stock_type', [StockTypeController::class, 'list']);
     Route::patch('/stock_type/{id}', [StockTypeController::class, 'edit']);
+});
+
+Route::middleware([JWTMiddleware::class, BudgetMiddleware::class])->group(function() {
+    Route::post('/budgets', [BudgetController::class, 'create']);
+    Route::get('/budgets', [BudgetController::class, 'list']);
+    Route::get('/budgets/{id}', [BudgetController::class, 'find']);
+    Route::patch('/budgets/{id}', [BudgetController::class, 'edit']);
 });

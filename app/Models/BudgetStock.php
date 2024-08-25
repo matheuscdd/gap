@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use App\Constraints\StockTypeKeysConstraints as Keys;
+use App\Constraints\BudgetKeysConstraints as Keys;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StockType extends Model {
+class BudgetStock extends Model {
     use HasFactory;
 
-    protected $table = 'stock_type';
+    protected $table = 'budgets_stocks';
 
     protected $fillable = [
-        Keys::NAME,
+        Keys::BUDGET,
+        Keys::STOCK,
     ];
 }
 

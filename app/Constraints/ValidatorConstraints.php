@@ -9,6 +9,8 @@ class ValidatorConstraints {
     public const UNIQUE = 'unique';
     public const EMAIL = 'email';
     public const DIGITS = 'digits';
+    public const DATE_FORMAT = 'date_format';
+    public const REGEX = 'regex';
 
     private static function dot($field, $key): string {
         return "$field.$key";
@@ -16,6 +18,18 @@ class ValidatorConstraints {
 
     private static function colon($field, $key): string {
         return "$key:$field";
+    }
+
+    public static function cDecimal(): string {
+        return self::cRegex('/^\d{1,20}$|(?=^.{1,20}$)^\d+\.\d{0,2}$/i');
+    }
+
+    public static function cRegex($field): string {
+        return self::colon($field, self::REGEX);
+    }
+
+    public static function cDate($field): string {
+        return self::colon($field, self::DATE_FORMAT);
     }
 
     public static function dMax($field): string {

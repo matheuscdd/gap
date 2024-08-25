@@ -8,7 +8,7 @@ use App\Constraints\StockTypeTransConstraints as Trans;
 use App\Constraints\ValidatorConstraints as Schema;
 
 class StockTypeRequest extends Request {
-    protected const NAME_MIN = 8;
+    protected const NAME_MIN = 3;
     protected const NAME_MAX = 50;
 
     public function rules(): array {
