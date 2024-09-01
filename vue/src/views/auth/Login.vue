@@ -3,22 +3,22 @@
     {{ $store.state.userMod.user }}
     <form>
         <iInput 
-            :label="trans.EMAIL"
-            placeholder="Digite seu email"
-            icon="envelope-solid"
-            type="text"
-            :name="keys.EMAIL"
+            :label="userForm.EMAIL.LABEL"
+            :placeholder="userForm.EMAIL.PLACEHOLDER"
+            :icon="userForm.EMAIL.ICON"
+            :type="userForm.EMAIL.TYPE"
+            :name="userForm.EMAIL.NAME"
             :errors="email.errors"
             :maxlength="limits.user.email"
             v-model="email.value"
             @validate="verifyUser"
         />
         <iInput 
-            :label="trans.PASSWORD"
-            placeholder="Digite sua senha"
-            icon="key-solid"
-            type="password"
-            :name="keys.PASSWORD"
+            :label="userForm.PASSWORD.LABEL"
+            :placeholder="userForm.PASSWORD.PLACEHOLDER"
+            :icon="userForm.PASSWORD.ICON"
+            :type="userForm.PASSWORD.TYPE"
+            :name="userForm.PASSWORD.NAME"
             :errors="password.errors"
             :maxlength="limits.user.password"
             v-model="password.value"

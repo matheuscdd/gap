@@ -1,0 +1,207 @@
+<template>
+    <li>
+        <div class="general-info">
+            <div>
+                <h3>{{ client_name }}</h3>
+                <h4>{{ provider_name }}</h4>
+                <h5>{{ delivery_date }}</h5>
+            </div>
+            <div class="btns">
+                <button class="create">
+                    <iSvg 
+                        :src="require('@/assets/icons/truck-solid.svg')"
+                        width="16" 
+                        height="16"
+                        fill="currentColor"
+                    />
+                </button>
+                <button class="edit">
+                    <iSvg 
+                        :src="require('@/assets/icons/pencil-solid.svg')"
+                        width="16" 
+                        height="16"
+                        fill="currentColor"
+                    />
+                </button>
+                <button class="del">
+                    <iSvg 
+                        :src="require('@/assets/icons/circle-xmark-solid.svg')"
+                        width="16" 
+                        height="16"
+                        fill="currentColor"
+                    />
+                </button>
+            </div>
+        </div>
+        <div>
+            <h4 class="currency">{{ Number(revenue).toLocaleString("pt-br", {style: "currency", currency: "BRL"}) }}</h4>
+        </div>
+        <div class="path">
+            <legend>Trajeto</legend>
+            <div class="container">
+                <div>
+                    <span>A</span>
+                    <h6>{{ provider_city }}ddddddddddddddddddddddddd</h6>
+                </div>
+                <div>
+                    <span>B</span>
+                    <h6>{{ delivery_address }}</h6>
+                </div>
+            </div>
+        </div>
+    </li>
+</template>
+<script>
+
+export default {
+    props: [
+        "id",
+        "client_name",
+        "provider_name",
+        "provider_city",
+        "delivery_address",
+        "revenue",
+        "delivery_date"
+    ],
+};
+</script>
+<style scoped>
+li {
+    padding: 30px;
+    border: 1px solid var(--gray-1);
+    width: 330px;
+    height: 300px;
+}
+
+h3 {
+    font-size: 25px;
+    height: 28px;
+}
+
+h4 {
+    font-size: 20px;
+    height: 23px;
+}
+
+.btns {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.btns button {
+    border-radius: 50%;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    border: transparent;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btns button:hover {
+    transition: 0.3s;
+    opacity: 0.8;
+}
+
+.btns button:active {
+    transition: 0.3s;
+    opacity: 0.5;
+}
+
+.btns .create {
+    background-color: var(--green-1);
+}
+
+.btns .edit {
+    background-color: var(--yellow-1);
+}
+
+.btns .del {
+    background-color: var(--red-1);
+}
+
+.general-info {
+    width: 330px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.general-info h3, .general-info h4, .general-info h5 {
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    max-width: 200px;
+} 
+
+.general-info h3 {
+    margin-bottom: 8px;
+}
+
+.general-info h4 {
+    margin-bottom: 5px;
+}
+
+.general-info h5 {
+    margin-bottom: 40px;
+}
+
+.currency {
+    color: var(--green-1);
+    font-weight: 600;
+    margin-bottom: 35px;
+}
+
+.path {
+    color: var(--gray-1);
+}
+
+.path legend {
+    margin-bottom: 8px;
+}
+
+.path .container {
+    position: relative;
+}
+
+.path span {
+    border: 1px solid var(--gray-1);
+    border-radius: 100%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.path .container div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: max-content;
+    gap: 5px;
+}
+
+.path .container div:first-child:after {
+    content: " ";
+    position: absolute;
+    height: 20px;
+    border: 1px solid var(--gray-1);
+    border-style: dashed;
+    top: 33px;
+    left: 12px;
+}
+
+.path .container div:last-child {
+    margin-top: 35px;
+}
+
+.path h6 {
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    max-width: 200px;
+}
+</style>

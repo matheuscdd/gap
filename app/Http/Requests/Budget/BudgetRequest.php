@@ -17,7 +17,7 @@ class BudgetRequest extends Request {
     protected const DELIVERY_ADDRESS_MAX = 256;
     protected const DELIVERY_ADDRESS_MIN = 3;
     protected const PROVIDER_NAME_MAX = 128;
-    protected const PROVIDER_NAME_MIN = 5;
+    protected const PROVIDER_NAME_MIN = 3;
     protected const PROVIDER_CITY_MAX = 128;
     protected const PROVIDER_CITY_MIN = 2;
     protected const FLOAT_CASES = 2;

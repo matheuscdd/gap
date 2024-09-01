@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { user as cUser, client as cClient } from "./consts";
+import { user as cUser, client as cClient, budget as cBudget } from "./consts";
+import store from "@/store";
 
 const {
     NAME,
@@ -9,8 +10,20 @@ const {
     ADDRESS,
     CELLPHONE, 
     CEP,
-    CNPJ, 
-} = {...cUser.keys, ...cClient.keys };
+    CNPJ,
+    COST,
+    CLIENT,
+    PAYMENT_DATE,
+    PAYMENT_METHOD,
+    PROVIDER_CITY,
+    PROVIDER_NAME,
+    STOCKS,
+    REVENUE,
+    UNLOADED,
+    PAYMENT_STATUS,
+    DELIVERY_ADDRESS,
+    DELIVERY_DATE,
+} = {...cUser.keys, ...cClient.keys, ...cBudget.keys };
 
 export const base = Object.freeze({
     user: Object.freeze({
@@ -46,7 +59,25 @@ export const base = Object.freeze({
         [CNPJ]: Object.freeze({
             size: 14
         })
-    })
+    }),
+
+    budget: Object.freeze({
+        [DELIVERY_ADDRESS]: Object.freeze({
+            min: 3,
+            max: 256
+        }),
+        [PROVIDER_NAME]: Object.freeze({
+            min: 3,
+            max: 128
+        }),
+        [PROVIDER_CITY]: Object.freeze({
+            min: 2,
+            max: 128
+        }),
+        [STOCKS]: Object.freeze({
+            max: 512
+        })
+    }),
 });
 
 const msgs = Object.freeze({
@@ -56,9 +87,11 @@ const msgs = Object.freeze({
     min: (field, val) => `O campo ${field} não contém o mínimo de ${val} caracteres`,
     max: (field, val) => `O campo ${field} contém mais caracteres do que o permitido de ${val}`,
     size: (field, val) => `O campo ${field} deve ter o exato tamanho de dígitos de ${val}`,
+    twoCases: (field) => `O campo ${field} deve ter exatamente duas casas decimais`,
 });
 
 const nonempty = /^[^$]/;
+const twoCases = /^\d{1,20}$|(?=^.{1,20}$)^\d+\.\d{0,2}$/i;
 
 function validate(validator, data) {
     const schema = validator.safeParse(data);
@@ -149,6 +182,69 @@ export function verifyClient(name) {
             .gte(Math.pow(10, base.client[CELLPHONE].size - 1), msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
             .lte(Math.pow(10, base.client[CELLPHONE].size) - 1, msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
     });
-    verify(client, name, this[name]
-        , handleFields);
+    verify(client, name, this[name], handleFields);
+}
+
+const stockVal = z.object({
+    type: z.enum(store.state.stockTypeMod.stockTypes.map(({id}) => id)),
+    name: z.string().max(base.budget[STOCKS].max),
+    weight: z.number().int().positive(),
+    quantity: z.number().int().positive()
+});
+
+export function verifyBudget(name) {
+    const handleFields = {};
+    [ 
+        COST,
+        CLIENT,
+        PAYMENT_DATE,
+        PAYMENT_METHOD,
+        PROVIDER_CITY,
+        PROVIDER_NAME,
+        STOCKS,
+        REVENUE,
+        UNLOADED,
+        PAYMENT_STATUS,
+        DELIVERY_ADDRESS,
+        DELIVERY_DATE
+    ].forEach(key => handleFields[key] = this[key]?.value);
+    const budget = z.object({
+        [DELIVERY_ADDRESS]: z
+            .string()
+            .regex(nonempty, msgs.required(cBudget.trans.DELIVERY_ADDRESS))      
+            .min(base.budget[DELIVERY_ADDRESS].min, msgs.min(cBudget.trans.DELIVERY_ADDRESS, base.budget[DELIVERY_ADDRESS].min))
+            .max(base.budget[DELIVERY_ADDRESS].max, msgs.max(cBudget.trans.DELIVERY_ADDRESS, base.budget[DELIVERY_ADDRESS].max)),
+        [PROVIDER_NAME]: z
+            .string()
+            .regex(nonempty, msgs.required(cBudget.trans.PROVIDER_NAME))      
+            .min(base.budget[PROVIDER_NAME].min, msgs.min(cBudget.trans.PROVIDER_NAME, base.budget[PROVIDER_NAME].min))
+            .max(base.budget[PROVIDER_NAME].max, msgs.max(cBudget.trans.PROVIDER_NAME, base.budget[PROVIDER_NAME].max)),
+        [PROVIDER_CITY]: z
+            .string()
+            .regex(nonempty, msgs.required(cBudget.trans.PROVIDER_CITY))      
+            .min(base.budget[PROVIDER_CITY].min, msgs.min(cBudget.trans.PROVIDER_CITY, base.budget[PROVIDER_CITY].min))
+            .max(base.budget[PROVIDER_CITY].max, msgs.max(cBudget.trans.PROVIDER_CITY, base.budget[PROVIDER_CITY].max)),
+        [COST]: z
+            .number()
+            .positive()
+            .regex(twoCases, msgs.twoCases(cBudget.trans.COST))
+            .lte(handleFields.REVENUE, "O custo não pode ser maior que o faturamento"),
+        [REVENUE]: z
+            .number()
+            .positive()
+            .regex(twoCases, msgs.twoCases(cBudget.trans.REVENUE))
+            .lte(handleFields.COST, "O faturamento não pode ser menor que o custo"),
+        [STOCKS]: z.array(stockVal)
+    });
+}
+
+export function verifyStock(name) {
+    const handleFields = {};
+    [ 
+        "type",
+        "name",
+        "weight",
+        "quantity"
+    ].forEach(key => handleFields[key] = this[key]?.value);
+    verify(stockVal, name, this[name], handleFields);
 }

@@ -1,4 +1,5 @@
 <template>
+    {{ name }}
     <div :class="[$style.external, {[$style.focused]: focused}, {[$style.invalid]: empty || errors.length}]">
         <div :class="$style.intermediary" :for="id" @click="toggleOpen">
             <legend>{{ label }}</legend>
@@ -72,7 +73,6 @@ export default {
         "placeholder",
         "errors",
         "modelValue", 
-        "validator"
     ],
     computed: {
         $style() {
@@ -81,12 +81,13 @@ export default {
     },  
     methods: {
         select(e) {
+            const target = e.target.tagName !== "LI" ? e.target.closest("LI") : e.target;
             this.selected = true;
             this.open = false;
             this.empty = false;
-            this.text =  e.target.dataset.text;
-            this.$emit("update:modelValue", e.target.dataset.value);
-            this.iconSelected = e.target.dataset.icon;
+            this.text =  target.dataset.text;
+            this.$emit("update:modelValue", target.dataset.value);
+            this.iconSelected = target.dataset.icon;
         },
         onFocus() {
             this.focused = true;
@@ -104,7 +105,7 @@ export default {
         updateValue(e) {
             this.$emit("update:modelValue", e.target.value.trim());
         },
-    }
+    },
 };
 </script>
 

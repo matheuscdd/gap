@@ -50,6 +50,16 @@ const routes = [
         component: () => import("@/views/clients/ClientsEdit.vue")
     },
     {
+        path: endpoints.routes.BUDGET_CREATE,
+        name: endpoints.names.BUDGET_CREATE,
+        component: () => import("@/views/budgets/BudgetsCreate.vue")
+    },
+    {
+        path: endpoints.routes.BUDGET_LIST,
+        name: endpoints.names.BUDGET_LIST,
+        component: () => import("@/views/budgets/BudgetsList.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/common/NotFound.vue")
