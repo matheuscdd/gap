@@ -48,9 +48,6 @@
         <iSelect
             :opts="opts"
             :label="userForm.TYPE.LABEL"
-            :placeholder="type.text"
-            :NAME="userForm.TYPE.NAME"
-            :errors="type.errors"
             icon="id-card-solid"
             v-model="type.value"
         />
@@ -73,12 +70,10 @@ export default {
             {
                 value: "common",
                 text: "Comum",
-                icon: "helmet-safety-solid"
             },
             {
                 value: "admin",
                 text: "Administrador",
-                icon: "user-tie-solid"
             },
         ],
 
@@ -100,8 +95,7 @@ export default {
         },
         [mixins.data().user.keys.TYPE.THIS]: {
             errors: [],
-            value: "",
-            text: mixins.data().userForm.TYPE.PLACEHOLDER,
+            value: "common",
         },
     }),
     components: { iInput, iSelect },

@@ -1,6 +1,5 @@
 <template>
     <h1>Login</h1>
-    {{ $store.state.userMod.user }}
     <form>
         <iInput 
             :label="userForm.EMAIL.LABEL"
@@ -24,7 +23,11 @@
             v-model="password.value"
             @validate="verifyUser"
         />
-        <button type="button" @click="login">Logar</button>
+        <iButton
+            text="Entrar"
+            background="var(--green-2)"
+            @click="login"
+        />
     </form>
 
 </template>
@@ -34,12 +37,14 @@ import iInput from "@/components/common/iInput.vue";
 import { verifyUser } from "@/common/validators";
 import mixins from "@/common/mixins";
 import { getErrors, getValues } from "@/common/utils";
+import iButton from "@/components/common/iButton.vue";
 
 
 export default {
     mixins: [mixins],
     components: {
-        iInput
+        iInput,
+        iButton
     },
     data: () => ({
         [mixins.data().user.keys.EMAIL]: {

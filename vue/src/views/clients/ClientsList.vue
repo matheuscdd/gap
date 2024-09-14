@@ -1,5 +1,12 @@
 <template>
     <h1>Clientes</h1>
+    <ul class="header">
+        <div>Nome</div>
+        <div>CNPJ</div>
+        <div>Endereço</div>
+        <div>Celular</div>
+        <div>Ações</div>
+    </ul>
     <ul v-if="$store.state.clientMod.clients.length">
         <iCard
             v-for="el in $store.state.clientMod.clients" 
@@ -37,3 +44,19 @@ export default {
     }
 };
 </script>
+<style scoped>
+.header {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 15% 10%;
+    grid-auto-rows: 30px;
+    grid-gap: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    padding: 0 20px;
+}
+
+ul {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+</style>

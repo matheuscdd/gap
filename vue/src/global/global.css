@@ -5,6 +5,9 @@
     --blue-2: #76b7dc32;
     --red-1: #F4001F;
     --green-1: #2E9395;
+    --green-2: #1E9B2D;
+    --green-3: #19382D;
+    --green-4: #3E9237;
     --yellow-1: #F7DA00;
     --trans-1: 0.8s;
     --radius-1: 30px;
@@ -13,4 +16,8 @@
 
 body {
     font-family: 'Jost', 'Arial', sans-serif;
+}
+
+h1 {
+    font-size: 30px;
 }
