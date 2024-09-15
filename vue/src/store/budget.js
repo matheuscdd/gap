@@ -13,11 +13,21 @@ export default {
         storeBudgets(state, payload) {
             state.budgets = payload;
         },
+        storeBudget(state, payload) {
+            state.budget = payload;
+        },
     },
     actions: {
         async createBudget(ctx, data) {
             const response = await api("/budgets", methods.POST, data);
-            if (response.msg) return alert(response.msg);
+            if (response.error) return alert(response.error);
+            router.push(endpoints.routes.BUDGET_LIST);
+        },
+
+        async editBudget(ctx, data) {
+            const response = await api("/budgets/" + data.id, methods.PATCH, data);
+            if (response.error) return alert(response.error);
+            ctx.commit("storeBudget", response);
             router.push(endpoints.routes.BUDGET_LIST);
         },
 
@@ -29,6 +39,12 @@ export default {
                 updated_at: handleDate(budget.updated_at),
             }));
             ctx.commit("storeBudgets", data);
-        }
+        },
+
+        async storeBudget(ctx, id) {
+            const response = await api("/budgets/" + id);
+            if (response.error) return;
+            ctx.commit("storeBudget", response);
+        },
     }
 };

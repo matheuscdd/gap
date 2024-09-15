@@ -70,3 +70,34 @@ export function getValues(data) {
 export function getErrors(data) {
     return Object.keys(data).find(field => data[field].errors.length || !data[field].value);
 }
+
+export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
+    ctx.revenue.value = Number(ctx.revenue.value) || "";
+    ctx.cost.value = Number(ctx.cost.value) || "";
+    const data = {
+        stocks: ctx.stocks.map(({type, name, quantity, weight, extra }) => ({type, name, quantity, weight, extra })),
+        client: ctx.client.value,
+        delivery_address: ctx.delivery_address.value,
+        delivery_date: ctx.delivery_date.value,
+        provider_name: ctx.provider_name.value,
+        provider_city: ctx.provider_city.value,
+        revenue: ctx.revenue.value,
+        cost: ctx.cost.value,
+        unloaded: ctx.unloaded.value,
+        payment_status: ctx.payment_status.value,
+        payment_method: ctx.payment_method.value,
+    };
+    const paymentDate = ctx.payment_date.value;
+    if (paymentDate) data.payment_date = paymentDate;
+
+    const errors = [];
+    Object.keys(data).forEach(key => errors.push(verifyBudget(key, ctx)));
+    ctx.$refs.stocks.forEach(el => 
+        ["name", "quantity", "weight"].forEach(name => 
+            errors.push(el.outFocus({target: {name}}))
+        )
+    );
+    await sleep(100);
+    if (errors.flat().filter(Boolean).length) return alert("Verifique os campos marcados e tente novamente");
+    ctx.$store.dispatch(`budgetMod/${action}Budget`, {...data, ...extra});
+}

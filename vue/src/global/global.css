@@ -21,3 +21,21 @@ body {
 h1 {
     font-size: 30px;
 }
+
+.bButton {
+    font-size: 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    padding: 8px 15px;
+    border: transparent;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.bButton:hover {
+    transition: 0.3s;
+    opacity: 0.8;
+}

@@ -13,8 +13,10 @@ class BudgetService {
     public static function create(array $data) {
         $data[Keys::CREATED_BY] = auth()->user()->id;
         $data[Keys::UPDATED_BY] = auth()->user()->id;
-        $data[Keys::PAYMENT_DATE] = date(Keys::DATE_FORMAT, strtotime($data[Keys::PAYMENT_DATE]));
         $data[Keys::DELIVERY_DATE] = date(Keys::DATE_FORMAT, strtotime($data[Keys::DELIVERY_DATE]));
+        if (array_key_exists(Keys::PAYMENT_DATE, $data)) {
+            $data[Keys::PAYMENT_DATE] = date(Keys::DATE_FORMAT, strtotime($data[Keys::PAYMENT_DATE]));
+        }
 
         $budget = Budget::create($data);
         $stocks = self::insertStocks($budget, $data[Keys::STOCKS]);

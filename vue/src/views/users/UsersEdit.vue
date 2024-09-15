@@ -1,7 +1,7 @@
 <template>
     <h1>Usuário</h1>
     {{ $store.state.userMod.user }}
-    <form>
+    <form @submit.prevent="edit">
         <iInput 
             :label="userForm.NAME.LABEL"
             :placeholder="userForm.NAME.PLACEHOLDER"
@@ -24,7 +24,7 @@
             v-model="email.value"
             @validate="verifyUser"
         />
-        <button type="button" @click="edit">Salvar</button>
+        <button type="submit">Salvar</button>
     </form>
 </template>
 
@@ -76,6 +76,9 @@ export default {
             });
         },
         verifyUser
+    },
+    beforeCreate() {
+        window.scrollTo(0,0);
     }
 };
 </script>

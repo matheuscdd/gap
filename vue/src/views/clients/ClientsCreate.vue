@@ -1,6 +1,6 @@
 <template>
     <h1>Criar cliente</h1>
-    <form>
+    <form @submit.prevent="create">
         <iInput 
             :label="clientForm.NAME.LABEL"
             :placeholder="clientForm.NAME.PLACEHOLDER"
@@ -56,7 +56,7 @@
             v-model="cellphone.value"
             @validate="verifyClient"
         />
-        <button type="button" @click="create">Salvar</button>
+        <button type="submit">Salvar</button>
     </form>
 </template>
 
@@ -103,6 +103,9 @@ export default {
             this.$store.dispatch("clientMod/createClient", getValues(data));
         },
         verifyClient
+    },
+    beforeCreate() {
+        window.scrollTo(0,0);
     }
 };
 </script>

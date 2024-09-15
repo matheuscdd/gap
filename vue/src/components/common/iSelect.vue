@@ -1,7 +1,7 @@
 <template>
     {{ name }}
     <div :class="[$style.external]">
-        <label :class="$style.intermediary" :for="id">
+        <div :class="$style.intermediary" :for="id">
             <legend>{{ label }}</legend>
             <div :class="$style.internal">
                 <iSvg 
@@ -13,14 +13,14 @@
                 <select :id="id" :value="modelValue" @change="$emit('update:modelValue', $event.target.value)">
                     <option
                         v-for="opt in opts"
-                        :key="opt.value"
-                        :value="opt.value"
+                        :key="opt.id"
+                        :value="opt.id"
                     >
-                        {{ opt.text }}
+                        {{ opt.name }}
                     </option>
                 </select>
             </div>
-        </label>
+        </div>
     </div>
 
 </template>

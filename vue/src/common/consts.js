@@ -23,6 +23,7 @@ export const endpoints = Object.freeze({
         CLIENT_LIST: "/clients/list",
         CLIENT_EDIT: "/clients/edit/:id",
         BUDGET_CREATE: "/budgets/create",
+        BUDGET_EDIT: "/budgets/edit/:id",
         BUDGET_LIST: "/budgets/list",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
@@ -37,6 +38,7 @@ export const endpoints = Object.freeze({
         CLIENT_LIST: "clients-list",
         CLIENT_EDIT: "clients-edit",
         BUDGET_CREATE: "budge-create",
+        BUDGET_EDIT: "budge-edit",
         BUDGET_LIST: "budgets-list",
         NOT_FOUND: "not found",
     })
@@ -207,7 +209,7 @@ export const budgetForm = Object.freeze({
     }),
     DELIVERY_DATE: Object.freeze({
         PLACEHOLDER: "Defina a data de entrega",
-        ICON: "calendar-solid-truck",
+        ICON: "truck-solid",
         TYPE: "date",
         NAME: budget.keys.DELIVERY_DATE,
         LABEL: budget.trans.DELIVERY_DATE
@@ -235,7 +237,7 @@ export const budgetForm = Object.freeze({
     }),
     PAYMENT_DATE: Object.freeze({
         PLACEHOLDER: "Defina a data de pagamento",
-        ICON: "calendar-solid-money",
+        ICON: "cash-register-solid",
         TYPE: "date",
         NAME: budget.keys.PAYMENT_DATE,
         LABEL: budget.trans.PAYMENT_DATE

@@ -4,31 +4,27 @@
             <div>
                 <h3>{{ client_name }}</h3>
                 <h4>{{ provider_name }}</h4>
-                <h5>{{ delivery_date }}</h5>
+                <h5>ENTREGA: {{ delivery_date }}</h5>
+                <h6>ATUALIZAÇÃO: {{ updatedAt.toLocaleString("pt-BR") }}</h6>
             </div>
             <div class="btns">
+                <div class="id">
+                    {{ id }}
+                </div>
                 <button class="create">
                     <iSvg 
                         :src="require('@/assets/icons/truck-solid.svg')"
                         width="16" 
                         height="16"
-                        fill="currentColor"
+                        fill="white"
                     />
                 </button>
-                <button class="edit">
+                <button class="edit" @click="this.$emit('edit', this.id)">
                     <iSvg 
                         :src="require('@/assets/icons/pencil-solid.svg')"
                         width="16" 
                         height="16"
-                        fill="currentColor"
-                    />
-                </button>
-                <button class="del">
-                    <iSvg 
-                        :src="require('@/assets/icons/circle-xmark-solid.svg')"
-                        width="16" 
-                        height="16"
-                        fill="currentColor"
+                        fill="white"
                     />
                 </button>
             </div>
@@ -41,7 +37,7 @@
             <div class="container">
                 <div>
                     <span>A</span>
-                    <h6>{{ provider_city }}ddddddddddddddddddddddddd</h6>
+                    <h6>{{ provider_city }}</h6>
                 </div>
                 <div>
                     <span>B</span>
@@ -58,11 +54,15 @@ export default {
         "id",
         "client_name",
         "provider_name",
+        "updatedAt",
         "provider_city",
         "delivery_address",
         "revenue",
         "delivery_date"
     ],
+    methods: {
+
+    }
 };
 </script>
 <style scoped>
@@ -71,6 +71,7 @@ li {
     border: 1px solid var(--gray-1);
     width: 330px;
     height: 300px;
+    background-color: white;
 }
 
 h3 {
@@ -83,15 +84,24 @@ h4 {
     height: 23px;
 }
 
+h5 {
+    font-size: 15px;
+    height: 18px;
+}
+
+h6 {
+    font-size: 12px;
+    height: 15px;
+}
+
 .btns {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
-.btns button {
+.btns button, .id {
     border-radius: 50%;
-    cursor: pointer;
     width: 35px;
     height: 35px;
     border: transparent;
@@ -99,6 +109,14 @@ h4 {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.btns button {
+    cursor: pointer;
+}
+
+.id {
+    background-color: var(--gray-1);
 }
 
 .btns button:hover {
@@ -117,10 +135,6 @@ h4 {
 
 .btns .edit {
     background-color: var(--yellow-1);
-}
-
-.btns .del {
-    background-color: var(--red-1);
 }
 
 .general-info {
@@ -144,8 +158,8 @@ h4 {
     margin-bottom: 5px;
 }
 
-.general-info h5 {
-    margin-bottom: 40px;
+.general-info h6 {
+    margin-bottom: 20px;
 }
 
 .currency {

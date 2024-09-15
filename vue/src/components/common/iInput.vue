@@ -1,5 +1,5 @@
 <template>
-    <div :class="[$style.external, {[$style.focused]: focused}, {[$style.invalid]: empty || errors.length}]">
+    <div :class="[$style.external, {[$style.invalid]: empty || errors.length}]">
         <label :class="$style.intermediary" :for="id">
             <legend>{{ label }}</legend>
             <div :class="$style.internal">
@@ -10,12 +10,12 @@
                     fill="currentColor"
                 />
                 <input 
+                    :disabled="!!readonly"
                     :id="id" 
                     :placeholder="placeholder" 
                     :type="kind" 
                     :value="modelValue"
                     :maxlength="maxlength"
-                    @focusin="onFocus" 
                     @blur="outFocus" 
                     @input="updateValue"
                 />
@@ -49,7 +49,6 @@ import styles from "@/global/bInput.module.css";
 export default {
     data: () => ({
         id: getUUID(),
-        focused: false,
         empty: false,
         showPassword: false,
     }),
@@ -62,6 +61,7 @@ export default {
         "type",
         "errors",
         "maxlength",
+        "readonly"
     ],
     watch: {
         modelValue(value) {
@@ -84,11 +84,7 @@ export default {
 
     },
     methods: {   
-        onFocus() {
-            this.focused = true;
-        },
         outFocus() {
-            this.focused = false;
             this.empty = !String(this.modelValue).length;
             this.$emit("validate", this.name);
         },

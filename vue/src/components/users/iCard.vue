@@ -2,8 +2,8 @@
     <li>
         <div :class="userForm.NAME.NAME">{{ name }}</div>
         <div :class="userForm.EMAIL.NAME">{{ email }}</div>
-        <div class="createdAt">{{ createdAtHandle }}</div>
-        <div class="updatedAt">{{ updatedAtHandle }}</div>
+        <div class="createdAt">{{ createdAt.toLocaleString("pt-BR") }}</div>
+        <div class="updatedAt">{{ updatedAt.toLocaleString("pt-BR") }}</div>
         <div>
             <button
                 @click="edit"
@@ -37,15 +37,6 @@ export default {
         "updatedAt",
         "isAdmin",
     ],
-    computed: {
-        createdAtHandle() {
-            return this.handleDate(this.createdAt);
-        },
-
-        updatedAtHandle() {
-            return this.handleDate(this.updatedAt);
-        }
-    },
     methods: {
         edit() {
             this.$emit("edit", this.id);
@@ -53,10 +44,6 @@ export default {
 
         del() {
             this.$emit("del", this.id);
-        },
-
-        handleDate(date) {
-            return date.toLocaleString("pt-BR");
         },
         getNow,
     }

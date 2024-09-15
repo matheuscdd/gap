@@ -13,7 +13,7 @@ class BudgetController extends Controller {
     }
 
     public function find(Request $request) {
-        return BudgetService::find($requeskt->route('id'));
+        return BudgetService::find($request->route('id'));
     }
 
     public function list(Request $request) {

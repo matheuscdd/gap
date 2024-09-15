@@ -12,18 +12,25 @@
                 <input 
                     :list="name"
                     @input="updateValue"
+                    @blur="outFocus"
+                    ref="input"
                 />
             </div>
         </div>
         <datalist :id="name">
             <option
                 v-for="opt in opts"
-                :key="opt.value"
-                :value="opt.value"
+                :key="opt.id"
+                :value="opt.text"
             >
                 {{ opt.text }}
             </option>
         </datalist>
+        <ul v-show="errors.length" :class="$style.errors">
+            <li v-for="el in errors" :key="el">
+                <legend>{{ el }}</legend>
+            </li>
+        </ul>
     </div>
 </template>
 
@@ -41,19 +48,31 @@ export default {
         "label", 
         "icon",
         "errors",
-        "modelValue", 
-        "validator"
+        "validator",
+        "modelValue",
+        "edit"
     ],
     computed: {
         $style() {
             return styles;
         },
-    },  
+    },
+    watch: {
+        modelValue() {
+            const id = this.modelValue;
+            if (!id || !this.edit) return;
+            const text = this.opts.find(opt => opt.id === id).text;
+            this.$refs.input.value = text;
+        }
+    },
     methods: {
         updateValue(e) {
             const opt = this.opts.find(opt => opt.text === e.target.value)?.id || "";
             this.$emit("update:modelValue", opt);
         },
+        outFocus() {
+            return this.$emit("validate", this.name);
+        }
     }
 };
 </script>

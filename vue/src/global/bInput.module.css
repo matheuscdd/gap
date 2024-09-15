@@ -3,12 +3,12 @@
     margin-bottom: 16px;
 }
 
-.external.focused,
-.external.focused .internal input, 
-.external.focused .internal input::placeholder,
-.external.focused .internal svg,
-.external.focused svg,
-.external.focused .internal label {
+.external:focus-within,
+.external:focus-within .internal input, 
+.external:focus-within .internal input::placeholder,
+.external:focus-within .internal svg,
+.external:focus-within svg,
+.external:focus-within .internal label {
     color: var(--blue-1);
 }
 
@@ -24,7 +24,7 @@
     color: var(--gray-1);
 }
 
-.external.focused .internal {
+.external:focus-within .internal {
     box-shadow: 0px 0px 0px 1px var(--blue-1);
 }
 
@@ -76,9 +76,8 @@
 }
 
 .external .errors {
-    font-weight: 500;
     margin-top: 5px;
-    font-size: 14px;
+    font-size: 10px;
     color: var(--red-1);
 }
 
@@ -97,9 +96,11 @@
 
 select {
     background-color: transparent;
+    height: 25px;
     border: none;
     outline: none;
     width: 100%;
     padding-left: 30px;
+    color: var(--gray-1);
 }
 

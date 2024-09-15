@@ -1,6 +1,6 @@
 <template>
     <h1>Login</h1>
-    <form>
+    <form @submit.prevent="login">
         <iInput 
             :label="userForm.EMAIL.LABEL"
             :placeholder="userForm.EMAIL.PLACEHOLDER"
@@ -23,11 +23,13 @@
             v-model="password.value"
             @validate="verifyUser"
         />
-        <iButton
-            text="Entrar"
-            background="var(--green-2)"
-            @click="login"
-        />
+        <button 
+            class="bButton"
+            type="submit"
+            :style="{backgroundColor: 'var(--green-2)'}"
+        >
+            Entrar
+        </button>
     </form>
 
 </template>
@@ -37,14 +39,12 @@ import iInput from "@/components/common/iInput.vue";
 import { verifyUser } from "@/common/validators";
 import mixins from "@/common/mixins";
 import { getErrors, getValues } from "@/common/utils";
-import iButton from "@/components/common/iButton.vue";
 
 
 export default {
     mixins: [mixins],
     components: {
         iInput,
-        iButton
     },
     data: () => ({
         [mixins.data().user.keys.EMAIL]: {
@@ -65,5 +65,8 @@ export default {
         },
         verifyUser
     },
+    beforeCreate() {
+        window.scrollTo(0,0);
+    }
 };
 </script>

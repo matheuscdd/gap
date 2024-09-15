@@ -1,11 +1,11 @@
 <template>
-    <h1>Criar Orçamento</h1>
-    <form @submit.prevent="create">
+    <h1>Editar Orçamento</h1>
+    <form @submit.prevent="edit">
         <section>
             <div>
                 <iInput 
                     label="Número"
-                    placeholder="Indefinido"
+                    :placeholder="this.$route.params.id"
                     readonly="true"
                     icon="file-contract-solid"
                     type="text"
@@ -97,6 +97,7 @@
                         v-model="client.value"
                         :opts="clientsOpts"
                         @validate="verifyBudget"
+                        :edit="true"
                     />
                     <iSelect
                         :opts="unloadedOpts"
@@ -166,14 +167,7 @@ import iStock from "@/components/common/iStock.vue";
 
 export default {
     data: () => ({
-        stocks: [{
-            id: getUUID(),
-            type: 1,
-            name: "",
-            quantity: "",
-            weight: "",
-            extra: null
-        }],
+        stocks: [],
         [mixins.data().budget.keys.CLIENT]: {
             errors: [],
             value: "",
@@ -272,16 +266,22 @@ export default {
         removeStock(id) {
             this.stocks = this.stocks.filter(el => el.id !== id);
         },
-        async create() {
-            prepareDataBudget(this, "create", verifyBudget);
+        async edit() {
+            prepareDataBudget(this, "edit", verifyBudget, {id: this.$route.params.id});
         }
     },
     async beforeCreate() {
         window.scrollTo(0,0);
+        const id = this.$route.params.id;
+        await this.$store.dispatch("budgetMod/storeBudget", id);
         await this.$store.dispatch("stockTypeMod/storeStockTypes");
         await this.$store.dispatch("clientMod/storeClients");
-        this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
-    }
+        this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`}));
+        const budget = this.$store.state.budgetMod.budget;
+        this.stocks = budget.stocks;
+        const keys = ["client", "delivery_date", "delivery_address", "provider_name", "provider_city", "payment_date", "revenue", "cost", "unloaded", "payment_status", "payment_method"];
+        keys.forEach(key => this[key].value = budget[key]);
+    },
 };
 </script>
 <style scoped>

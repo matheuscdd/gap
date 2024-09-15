@@ -92,6 +92,7 @@ const msgs = Object.freeze({
 
 const nonempty = /^[^$]/;
 const twoCases = /^\d{1,20}$|(?=^.{1,20}$)^\d+\.\d{0,2}$/i;
+const includes = (arr) => ((el) => arr.includes(el));
 
 function validate(validator, data) {
     const schema = validator.safeParse(data);
@@ -99,10 +100,10 @@ function validate(validator, data) {
     return {};
 }
 
-
 function verify(schema, name, field, fields) {
     const errors = validate(schema, fields)[name];
     field.errors = errors || [];
+    return errors;
 }
 
 export function verifyUser(name) {
@@ -187,28 +188,37 @@ export function verifyClient(name) {
 
 const stockVal = z.object({
     type: z.enum(store.state.stockTypeMod.stockTypes.map(({id}) => id)),
-    name: z.string().max(base.budget[STOCKS].max),
-    weight: z.number().int().positive(),
-    quantity: z.number().int().positive()
+    name: z
+        .string()
+        .regex(nonempty, msgs.required("nome"))
+        .max(base.budget[STOCKS].max),
+    weight: z.number({ message: msgs.required("peso") }).int("Precisa ser inteiro").positive("Precisa ser maior que zero"),
+    quantity: z.number({ message: msgs.required("quantidade")}).int("Precisa ser inteiro").positive("Precisa ser maior que zero")
 });
 
-export function verifyBudget(name) {
+export function verifyBudget(name, obj) {
+    const sel = obj || this;
     const handleFields = {};
     [ 
         COST,
         CLIENT,
         PAYMENT_DATE,
-        PAYMENT_METHOD,
         PROVIDER_CITY,
         PROVIDER_NAME,
         STOCKS,
         REVENUE,
-        UNLOADED,
-        PAYMENT_STATUS,
         DELIVERY_ADDRESS,
-        DELIVERY_DATE
-    ].forEach(key => handleFields[key] = this[key]?.value);
+        DELIVERY_DATE,
+        UNLOADED.THIS,
+        PAYMENT_STATUS.THIS,
+        PAYMENT_METHOD.THIS,
+    ].forEach(key => handleFields[key] = sel[key]?.value);
+
+    const clients = store.state.clientMod.clients.map(({id}) => id);
     const budget = z.object({
+        [DELIVERY_DATE]: z
+            .string()
+            .date(msgs.required("data de entrega")),
         [DELIVERY_ADDRESS]: z
             .string()
             .regex(nonempty, msgs.required(cBudget.trans.DELIVERY_ADDRESS))      
@@ -225,26 +235,24 @@ export function verifyBudget(name) {
             .min(base.budget[PROVIDER_CITY].min, msgs.min(cBudget.trans.PROVIDER_CITY, base.budget[PROVIDER_CITY].min))
             .max(base.budget[PROVIDER_CITY].max, msgs.max(cBudget.trans.PROVIDER_CITY, base.budget[PROVIDER_CITY].max)),
         [COST]: z
-            .number()
+            .number({ message: msgs.required("custo") })
             .positive()
-            .regex(twoCases, msgs.twoCases(cBudget.trans.COST))
+            // .regex(twoCases, msgs.twoCases(cBudget.trans.COST))
             .lte(handleFields.REVENUE, "O custo não pode ser maior que o faturamento"),
         [REVENUE]: z
-            .number()
+            .number({ message: msgs.required("faturamento") })
             .positive()
-            .regex(twoCases, msgs.twoCases(cBudget.trans.REVENUE))
+            // .regex(twoCases, msgs.twoCases(cBudget.trans.REVENUE))
             .lte(handleFields.COST, "O faturamento não pode ser menor que o custo"),
-        [STOCKS]: z.array(stockVal)
+        [CLIENT]: z
+            .number({ message: msgs.valid("cliente") })
+            .refine(includes(clients), { message: msgs.valid("cliente") })
+
     });
+    console.log(handleFields);
+    return verify(budget, name, sel[name], handleFields);
 }
 
-export function verifyStock(name) {
-    const handleFields = {};
-    [ 
-        "type",
-        "name",
-        "weight",
-        "quantity"
-    ].forEach(key => handleFields[key] = this[key]?.value);
-    verify(stockVal, name, this[name], handleFields);
+export function verifyStock(obj, name) {
+    return validate(stockVal, obj)[name] || [];
 }

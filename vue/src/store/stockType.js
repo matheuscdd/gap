@@ -15,13 +15,7 @@ export default {
     actions: {
         async storeStockTypes(ctx) {
             const response = await api("/stock_type");
-            const icons = {
-                1: "sack-xmark-solid",
-                2: "ruler-combined-solid",
-                3: "pallet-solid"
-            };
-            const data = response.map((el, i) => ({value: el.id, text: el.name, icon: icons[i + 1] || "box-solid"}));
-            ctx.commit("storeStockTypes", data);
+            ctx.commit("storeStockTypes", response);
         },
     }
 };

@@ -31,6 +31,7 @@ import { endpoints } from "@/common/consts";
 export default {
     mixins: [mixins],
     beforeCreate() {
+        window.scrollTo(0,0);
         this.$store.dispatch("clientMod/storeClients");
     },
     components: {
@@ -41,7 +42,8 @@ export default {
         edit(id) {
             this.$router.push(endpoints.routes.CLIENT_EDIT.replace(":id", id));
         }
-    }
+    },
+    
 };
 </script>
 <style scoped>

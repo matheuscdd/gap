@@ -36,13 +36,13 @@ export default {
 
         async createClient(ctx, data) {
             const response = await api("/clients", methods.POST, data);
-            if (response.msg) return alert(response.msg);
+            if (response.error) return alert(response.error);
             router.push(endpoints.routes.CLIENT_LIST);
         },
 
         async editClient(ctx, data) {
             const response = await api("/clients/" + data.id, methods.PATCH, data);
-            if (response.msg) return alert(response.msg);
+            if (response.error) return alert(response.error);
             ctx.commit("storeClient", response);
             router.push(endpoints.routes.CLIENT_LIST);
         },

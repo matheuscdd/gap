@@ -26,6 +26,8 @@ main {
   background-size: 100%;
   min-height: 100vh;
   background-repeat: no-repeat;
+  margin-top: 90px;
+  padding-bottom: 100px;
 }
 
 footer {
@@ -34,10 +36,13 @@ footer {
   justify-content: center;
   align-items: center;
   color: white;
-  position: absolute;
   width: 100vw;
   bottom: 0;
+  left: 0;
+  right: 0;
   padding: 15px 0;
+  position: fixed; 
+  z-index: 1000;
 }
 
 header {
@@ -47,7 +52,12 @@ header {
   display: flex;
   align-items: center;
   justify-content: left;
-  gap: 20px
+  gap: 20px;
+  position: fixed; 
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1000;
 }
 
 header img {

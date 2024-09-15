@@ -22,16 +22,22 @@
 import { sleep } from "@/common/utils";
 import iCard from "@/components/budgets/iCard.vue";
 import client from "@/store/client";
-
+import { endpoints } from "@/common/consts";
 
 
 export default {
     async beforeCreate() {
+        window.scrollTo(0,0);
         await this.$store.dispatch("clientMod/storeClients");
         await this.$store.dispatch("budgetMod/storeBudgets");
     },
     components: {
         iCard
+    },
+    methods: {
+        edit(id) {
+            this.$router.push(endpoints.routes.BUDGET_EDIT.replace(":id", id));
+        }
     }
 };
 </script>

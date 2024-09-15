@@ -1,6 +1,6 @@
 <template>
     <h1>Usuário</h1>
-    <form>
+    <form @submit.prevent="create">
         <iInput 
             :label="userForm.NAME.LABEL"
             :placeholder="userForm.NAME.PLACEHOLDER"
@@ -51,7 +51,7 @@
             icon="id-card-solid"
             v-model="type.value"
         />
-        <button type="button" @click="create">Salvar</button>
+        <button type="submit">Salvar</button>
     </form>
 </template>
 
@@ -68,12 +68,12 @@ export default {
     data: () => ({
         opts: [
             {
-                value: "common",
-                text: "Comum",
+                id: "common",
+                name: "Comum",
             },
             {
-                value: "admin",
-                text: "Administrador",
+                id: "admin",
+                name: "Administrador",
             },
         ],
 
@@ -107,6 +107,9 @@ export default {
             this.$store.dispatch("userMod/createUser", getValues(data));
         },
         verifyUser
+    },
+    beforeCreate() {
+        window.scrollTo(0,0);
     }
 };
 </script>
