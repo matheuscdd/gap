@@ -3,17 +3,18 @@ import { api, handleDate } from "@/common/utils";
 import router from "@/router";
 import { jwtDecode } from "jwt-decode";
 
+const getDefaultState = () => ({
+    logged: {},
+    user: {
+        email: "",
+        name: ""
+    },
+    users: [],
+});
 
 export default {
     namespaced: true,
-    state: {
-        logged: {},
-        user: {
-            email: "",
-            name: ""
-        },
-        users: [],
-    },
+    state: getDefaultState(),
     mutations: {
         storeLogged(state, payload) {
             state.logged = payload;
@@ -26,6 +27,9 @@ export default {
         storeUsers(state, payload) {
             state.users = payload;
         },
+        reset(state) {
+            Object.assign(state, getDefaultState());
+        }
     },
     getters: {
         

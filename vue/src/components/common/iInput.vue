@@ -17,6 +17,7 @@
                     :value="modelValue"
                     :maxlength="maxlength"
                     @blur="outFocus" 
+                    @focusin="updateValue"
                     @input="updateValue"
                 />
                 <button 

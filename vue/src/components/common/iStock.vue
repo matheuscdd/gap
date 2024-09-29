@@ -156,6 +156,13 @@ export default {
         "extra",
         "tot"
     ],
+    created() {
+        this.kind = this.type;
+        if (!this.extra) return;
+        const [ width, height ] = this.extra.split("|");
+        this.width = width;
+        this.height = height;
+    },
     computed: {
         $style() {
             return styles;
@@ -167,7 +174,9 @@ export default {
             this.kind = Number(this.kind);
             if (this.kind === 2) return;
             this.$emit("update:extra", "");
-        }
+            this.width = "";
+            this.height = "";
+        },
     },
     methods: {
         onInt(e) {
@@ -226,7 +235,6 @@ export default {
 }
 
 button {
-    background-color: red;
     border: none;
     outline: none;
     height: 30px;
@@ -253,7 +261,7 @@ ul {
     color: var(--red-1);
 }
 
-.invalid svg, .invalid input::placeholder {
+.invalid svg, .invalid input, .invalid input::placeholder {
     color: var(--red-1);
 }
 

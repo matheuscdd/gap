@@ -2,8 +2,8 @@
     <li>
         <div class="name">{{ name }}</div>
         <div class="email">{{ email }}</div>
-        <div class="createdAt">{{ createdAt.toLocaleString("pt-BR") }}</div>
-        <div class="updatedAt">{{ updatedAt.toLocaleString("pt-BR") }}</div>
+        <div>{{ updatedAt.toLocaleString("pt-BR") }}</div>
+        <div>{{ isAdmin ? 'Admin' : 'Comum' }}</div>
         <div class="btns">
             <button
                 class="edit"

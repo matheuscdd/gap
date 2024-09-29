@@ -1,35 +1,39 @@
 <template>
     <h1>Login</h1>
     <form @submit.prevent="login">
-        <iInput 
-            :label="userForm.EMAIL.LABEL"
-            :placeholder="userForm.EMAIL.PLACEHOLDER"
-            :icon="userForm.EMAIL.ICON"
-            :type="userForm.EMAIL.TYPE"
-            :name="userForm.EMAIL.NAME"
-            :errors="email.errors"
-            :maxlength="limits.user.email"
-            v-model="email.value"
-            @validate="verifyUser"
-        />
-        <iInput 
-            :label="userForm.PASSWORD.LABEL"
-            :placeholder="userForm.PASSWORD.PLACEHOLDER"
-            :icon="userForm.PASSWORD.ICON"
-            :type="userForm.PASSWORD.TYPE"
-            :name="userForm.PASSWORD.NAME"
-            :errors="password.errors"
-            :maxlength="limits.user.password"
-            v-model="password.value"
-            @validate="verifyUser"
-        />
-        <button 
-            class="bButton"
-            type="submit"
-            :style="{backgroundColor: 'var(--green-2)'}"
-        >
-            Entrar
-        </button>
+        <section>
+            <iInput 
+                :label="userForm.EMAIL.LABEL"
+                :placeholder="userForm.EMAIL.PLACEHOLDER"
+                :icon="userForm.EMAIL.ICON"
+                :type="userForm.EMAIL.TYPE"
+                :name="userForm.EMAIL.NAME"
+                :errors="email.errors"
+                :maxlength="limits.user.email"
+                v-model="email.value"
+                @validate="verifyUser"
+            />
+            <iInput 
+                :label="userForm.PASSWORD.LABEL"
+                :placeholder="userForm.PASSWORD.PLACEHOLDER"
+                :icon="userForm.PASSWORD.ICON"
+                :type="userForm.PASSWORD.TYPE"
+                :name="userForm.PASSWORD.NAME"
+                :errors="password.errors"
+                :maxlength="limits.user.password"
+                v-model="password.value"
+                @validate="verifyUser"
+            />
+            <div class="btn">
+                <button 
+                    class="bButton"
+                    type="submit"
+                    :style="{backgroundColor: 'var(--green-2)'}"
+                >
+                    Entrar
+                </button>
+            </div>
+        </section>
     </form>
 
 </template>
@@ -38,7 +42,7 @@
 import iInput from "@/components/common/iInput.vue";
 import { verifyUser } from "@/common/validators";
 import mixins from "@/common/mixins";
-import { getErrors, getValues } from "@/common/utils";
+import { getValues } from "@/common/utils";
 
 
 export default {
@@ -60,7 +64,9 @@ export default {
         login() {
             const { email, password } = this;
             const data = { email, password };
-            if (getErrors(data)) return alert("Ajuste os erros antes de continuar");
+            const errors = [];
+            Object.keys(data).forEach(key => errors.push(verifyUser(key, this)));
+            if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
             this.$store.dispatch("userMod/storeLogin", getValues(data));
         },
         verifyUser
@@ -70,3 +76,22 @@ export default {
     }
 };
 </script>
+<style scoped>
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+form {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.btn {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}
+</style>

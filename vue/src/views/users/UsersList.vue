@@ -2,9 +2,9 @@
     <h1>Usuários</h1>
     <ul class="header">
         <div>Nome</div>
-        <div>CNPJ</div>
-        <div>Endereço</div>
-        <div>Celular</div>
+        <div>Email</div>
+        <div>Atualização</div>
+        <div>Tipo</div>
         <div>Ações</div>
     </ul>
     <ul v-if="$store.state.userMod.users.length">
@@ -65,4 +65,4 @@ h1 {
     text-align: center;
     padding: 0 20px;
 }
-</style>
+</style>    {{ $store.state.userMod.users }}

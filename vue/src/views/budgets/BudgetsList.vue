@@ -21,9 +21,7 @@
     </section>
 </template>
 <script>
-import { sleep } from "@/common/utils";
 import iCard from "@/components/budgets/iCard.vue";
-import client from "@/store/client";
 import { endpoints } from "@/common/consts";
 
 

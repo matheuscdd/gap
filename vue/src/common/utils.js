@@ -23,7 +23,7 @@ async function _api(url, method = methods.GET, body = null) {
     if ([200, 201].includes(response.status)) {
         return data;
     } 
-    return {error: data.msg};
+    return {error: `${data.msg} - ${data.errors ? JSON.stringify(data.errors) : ""}`};
 }
 
 export async function refreshToken() {
@@ -67,25 +67,33 @@ export function getValues(data) {
     return result;
 }
 
-export function getErrors(data) {
-    return Object.keys(data).find(field => data[field].errors.length || !data[field].value);
-}
-
 export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
     ctx.revenue.value = Number(ctx.revenue.value) || "";
     ctx.cost.value = Number(ctx.cost.value) || "";
+    const { client, 
+        delivery_address, 
+        delivery_date, 
+        provider_name, 
+        provider_city, 
+        revenue, 
+        cost, 
+        unloaded, 
+        payment_status, 
+        payment_method
+    } = ctx;
     const data = {
         stocks: ctx.stocks.map(({type, name, quantity, weight, extra }) => ({type, name, quantity, weight, extra })),
-        client: ctx.client.value,
-        delivery_address: ctx.delivery_address.value,
-        delivery_date: ctx.delivery_date.value,
-        provider_name: ctx.provider_name.value,
-        provider_city: ctx.provider_city.value,
-        revenue: ctx.revenue.value,
-        cost: ctx.cost.value,
-        unloaded: ctx.unloaded.value,
-        payment_status: ctx.payment_status.value,
-        payment_method: ctx.payment_method.value,
+        ...getValues({ client, 
+            delivery_address, 
+            delivery_date, 
+            provider_name, 
+            provider_city, 
+            revenue, 
+            cost, 
+            unloaded, 
+            payment_status, 
+            payment_method
+        })
     };
     const paymentDate = ctx.payment_date.value;
     if (paymentDate) data.payment_date = paymentDate;
@@ -99,5 +107,6 @@ export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
     );
     await sleep(100);
     if (errors.flat().filter(Boolean).length) return alert("Verifique os campos marcados e tente novamente");
+    if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
     ctx.$store.dispatch(`budgetMod/${action}Budget`, {...data, ...extra});
 }

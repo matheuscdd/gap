@@ -244,14 +244,14 @@ export const budgetForm = Object.freeze({
     }),
     REVENUE: Object.freeze({
         PLACEHOLDER: "Defina o faturamento",
-        ICON: "money-bill-solid",
+        ICON: "arrow-up-solid",
         TYPE: "number",
         NAME: budget.keys.REVENUE,
         LABEL: budget.trans.REVENUE
     }),
     COST: Object.freeze({
         PLACEHOLDER: "Defina o custo",
-        ICON: "coins-solid",
+        ICON: "arrow-down-solid",
         TYPE: "number",
         NAME: budget.keys.COST,
         LABEL: budget.trans.COST

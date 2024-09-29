@@ -1,5 +1,5 @@
 <template>
-    <h1>Editar cliente</h1>
+    <h1>Editar Cliente</h1>
     <form @submit.prevent="edit">
         <section>
             <iInput 
@@ -74,7 +74,7 @@
 import mixins from "@/common/mixins";
 import { verifyClient } from "@/common/validators";
 import iInput from "@/components/common/iInput.vue";
-import { getErrors, getValues } from "@/common/utils";
+import { getValues } from "@/common/utils";
 
 export default {
     data: () => ({
@@ -129,7 +129,10 @@ export default {
             if (client.CNPJ !== CNPJ.value) {
                 data.CNPJ = CNPJ;
             }
-            if (getErrors(data)) return alert("Ajuste os erros antes de continuar");
+            const errors = [];
+            Object.keys(data).forEach(key => errors.push(verifyClient(key, this)));
+            if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
+            if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
             this.$store.dispatch("clientMod/editClient", {
                 ...getValues(data), 
                 id: this.$route.params.id

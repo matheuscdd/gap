@@ -10,5 +10,15 @@ export default createStore({
         clientMod,
         budgetMod,
         stockTypeMod,
+    },
+    actions: {
+        clearAll({ commit }){
+            [
+                "userMod",
+                "clientMod",
+                "budgetMod",
+                "stockTypeMod"
+            ].forEach(mod => commit(`${mod}/reset`));
+        }
     }
 });

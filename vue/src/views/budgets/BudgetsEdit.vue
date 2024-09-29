@@ -157,8 +157,8 @@
 
 <script>
 import iInput from "@/components/common/iInput.vue";
-import { verifyBudget, verifyStock } from "@/common/validators";
-import { getErrors, getUUID, getValues, prepareDataBudget, sleep } from "@/common/utils";
+import { verifyBudget } from "@/common/validators";
+import { getUUID, prepareDataBudget } from "@/common/utils";
 import mixins from "@/common/mixins";
 import iSearch from "@/components/common/iSearch.vue";
 import iSelect from "@/components/common/iSelect.vue";

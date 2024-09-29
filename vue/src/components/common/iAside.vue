@@ -51,7 +51,6 @@ h2 {
 }
 
 aside {
-    /* background-color: gray; */
     min-width: 9vw;
     margin-top: 25px;
     width: 9vw;
@@ -78,8 +77,12 @@ a {
     margin-left: 20px;
 } 
 
+a:hover {
+    color: var(--green-2);
+}
+
 a::before {
-    content: "➤ ";
+    content: "- ";
 }
 
 </style>

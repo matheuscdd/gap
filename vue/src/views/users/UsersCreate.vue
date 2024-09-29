@@ -1,5 +1,5 @@
 <template>
-    <h1>Usuário</h1>
+    <h1>Criar Usuário</h1>
     <form @submit.prevent="create">
         <section>
             <iInput 
@@ -70,7 +70,7 @@ import mixins from "@/common/mixins";
 import iInput from "@/components/common/iInput.vue";
 import { verifyUser } from "@/common/validators";
 import iSelect from "@/components/common/iSelect.vue";
-import { getErrors, getValues } from "@/common/utils";
+import { getValues } from "@/common/utils";
 
 
 export default {
@@ -113,13 +113,17 @@ export default {
         create() {
             const { type, email, name, password, confirmPassword } = this;
             const data = { type, email, name, password, confirmPassword };
-            if (getErrors(data)) return alert("Ajuste os erros antes de continuar");
+            const errors = [];
+            Object.keys(data).forEach(key => errors.push(verifyUser(key, this)));
+            if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
+            if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
             this.$store.dispatch("userMod/createUser", getValues(data));
         },
         verifyUser
     },
     beforeCreate() {
         window.scrollTo(0,0);
+        this.$store.dispatch("userMod/storeUsers");
     }
 };
 </script>

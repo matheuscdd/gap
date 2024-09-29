@@ -3,19 +3,24 @@ import { api, handleDate } from "@/common/utils";
 import router from "@/router";
 
 
+const getDefaultState = () => ({
+    budget: {},
+    budgets: [],
+});
+
 export default {
     namespaced: true,
-    state: {
-        budget: {},
-        budgets: [],
-    },
+    state: getDefaultState(),
     mutations: {
         storeBudgets(state, payload) {
-            state.budgets = payload;
+            state.budgets = payload.toReversed();
         },
         storeBudget(state, payload) {
             state.budget = payload;
         },
+        reset(state) {
+            Object.assign(state, getDefaultState());
+        }
     },
     actions: {
         async createBudget(ctx, data) {

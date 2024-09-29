@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import { getUUID, sleep } from "@/common/utils";
 import styles from "@/global/bInput.module.css";
 
 export default {

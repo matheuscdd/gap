@@ -25,7 +25,7 @@ export default {
     iHeader
   },
   beforeCreate() {
-      if (this.$route.path === endpoints.routes.LOGIN) return;
+      if (!localStorage.getItem("token")) return;
       this.$store.dispatch("userMod/storeLogged");
   }  
 };

@@ -24,6 +24,7 @@ export default {
     methods: {
         clean() {
             localStorage.clear();
+            this.$store.dispatch("clearAll");
             router.push(endpoints.routes.LOGIN);
         }
     }
@@ -57,6 +58,7 @@ button {
     outline: none;
     cursor: pointer;
     justify-self: end;
+    grid-area: button;
 }
 
 img {
@@ -67,10 +69,4 @@ img {
 h6 {
     grid-area: title;
 }
-
-button {
-    grid-area: button;
-}
-
-
 </style>

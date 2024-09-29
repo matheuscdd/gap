@@ -1,13 +1,15 @@
-import { client, consts, endpoints, methods } from "@/common/consts";
+import { endpoints, methods } from "@/common/consts";
 import { api, handleDate } from "@/common/utils";
 import router from "@/router";
 
+const getDefaultState = () => ({
+    clients: [],
+    client: {}
+});
+
 export default {
     namespaced: true,
-    state: {
-        clients: [],
-        client: {}
-    },
+    state: getDefaultState(),
     mutations: {
         storeClient(state, payload) {
             state.client = payload;
@@ -15,6 +17,9 @@ export default {
 
         storeClients(state, payload) {
             state.clients = payload;
+        },
+        reset(state) {
+            Object.assign(state, getDefaultState());
         },
     },
     actions: {

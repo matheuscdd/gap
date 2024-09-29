@@ -1,5 +1,5 @@
 <template>
-    <h1>Criar cliente</h1>
+    <h1>Criar Cliente</h1>
     <form @submit.prevent="create">
         <section>
             <iInput 
@@ -74,7 +74,7 @@
 import mixins from "@/common/mixins";
 import { verifyClient } from "@/common/validators";
 import iInput from "@/components/common/iInput.vue";
-import { getErrors, getValues } from "@/common/utils";
+import { getValues } from "@/common/utils";
 
 export default {
     data: () => ({
@@ -108,8 +108,10 @@ export default {
         create() {
             const { CNPJ, CEP, name, address, cellphone } = this;
             const data = { CNPJ, CEP, name, address, cellphone };
-            if (getErrors(data)) return alert("Ajuste os erros antes de continuar");
-            console.log({...data});
+            const errors = [];
+            Object.keys(data).forEach(key => errors.push(verifyClient(key, this)));
+            if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
+            if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
             this.$store.dispatch("clientMod/createClient", getValues(data));
         },
         verifyClient

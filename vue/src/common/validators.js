@@ -106,10 +106,16 @@ function verify(schema, name, field, fields) {
     return errors;
 }
 
-export function verifyUser(name) {
+export function verifyUser(name, obj) {
+    const sel = obj || this;
+    const curUser = store.state.userMod.user;
+    const users = store.state.userMod.users
+        .filter(({email}) => email !== curUser.email)
+        .map(({email}) => email);
+
     const handleFields = {};
     [NAME, EMAIL, PASSWORD, CONFIRM_PASSWORD, cUser.keys.TYPE.THIS]
-        .forEach(key => handleFields[key] = this[key]?.value);
+        .forEach(key => handleFields[key] = sel[key]?.value);
     const user = z.object({
         [EMAIL]: z
             .string()
@@ -118,7 +124,8 @@ export function verifyUser(name) {
             .regex(nonempty, msgs.required(cUser.trans.EMAIL))
             .email(msgs.valid(cUser.trans.EMAIL))
             .min(base.user[EMAIL].min, msgs.min(cUser.trans.EMAIL, base.user[EMAIL].min))
-            .max(base.user[EMAIL].max, msgs.max(cUser.trans.EMAIL, base.user[EMAIL].max)),
+            .max(base.user[EMAIL].max, msgs.max(cUser.trans.EMAIL, base.user[EMAIL].max))
+            .refine((el) => curUser.email === el || !users.includes(el), { message: "Email já em uso" }),
     
         [PASSWORD]: z
             .string()
@@ -141,13 +148,14 @@ export function verifyUser(name) {
         [cUser.keys.TYPE.THIS]: z.enum([cUser.keys.TYPE.ADMIN, cUser.keys.TYPE.COMMON]) 
     });
 
-    verify(user, name, this[name], handleFields);
+    return verify(user, name, sel[name], handleFields);
 }
 
-export function verifyClient(name) {
+export function verifyClient(name, obj) {
+    const sel = obj || this;
     const handleFields = {};
     [NAME, ADDRESS, CEP, CELLPHONE, CNPJ]
-        .forEach(key => handleFields[key] = this[key]?.value);
+        .forEach(key => handleFields[key] = sel[key]?.value);
     const client = z.object({
         [NAME]: z
             .string()
@@ -183,7 +191,7 @@ export function verifyClient(name) {
             .gte(Math.pow(10, base.client[CELLPHONE].size - 1), msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
             .lte(Math.pow(10, base.client[CELLPHONE].size) - 1, msgs.size(cClient.trans.CELLPHONE, base.client[CELLPHONE].size))
     });
-    verify(client, name, this[name], handleFields);
+    return verify(client, name, sel[name], handleFields);
 }
 
 const stockVal = z.object({
@@ -238,18 +246,17 @@ export function verifyBudget(name, obj) {
             .number({ message: msgs.required("custo") })
             .positive()
             // .regex(twoCases, msgs.twoCases(cBudget.trans.COST))
-            .lte(handleFields.REVENUE, "O custo não pode ser maior que o faturamento"),
+            .lte(handleFields[REVENUE], "O custo não pode ser maior que o faturamento"),
         [REVENUE]: z
             .number({ message: msgs.required("faturamento") })
             .positive()
             // .regex(twoCases, msgs.twoCases(cBudget.trans.REVENUE))
-            .lte(handleFields.COST, "O faturamento não pode ser menor que o custo"),
+            .gte(handleFields[COST], "O faturamento não pode ser menor que o custo"),
         [CLIENT]: z
             .number({ message: msgs.valid("cliente") })
             .refine(includes(clients), { message: msgs.valid("cliente") })
 
     });
-    console.log(handleFields);
     return verify(budget, name, sel[name], handleFields);
 }
 
