@@ -1,8 +1,22 @@
 <?php
 
-use App\Http\Controllers\{UserController, AuthController, BudgetController, ClientController, StockTypeController};
+use App\Http\Controllers\{
+    UserController,
+    AuthController,
+    BudgetController,
+    ClientController,
+    StockTypeController,
+    DeliveryController,
+};
 use Illuminate\Support\Facades\Route;
-use \App\Http\Middlewares\{BudgetMiddleware, ClientMiddleware, JWTMiddleware, StockTypeMiddleware, UserMiddleware};
+use \App\Http\Middlewares\{
+    BudgetMiddleware,
+    DeliveryMiddleware,
+    ClientMiddleware,
+    JWTMiddleware,
+    StockTypeMiddleware,
+    UserMiddleware
+};
 
 Route::group([
     'prefix' => 'auth'
@@ -37,4 +51,11 @@ Route::middleware([JWTMiddleware::class, BudgetMiddleware::class])->group(functi
     Route::get('/budgets', [BudgetController::class, 'list']);
     Route::get('/budgets/{id}', [BudgetController::class, 'find']);
     Route::patch('/budgets/{id}', [BudgetController::class, 'edit']);
+});
+
+Route::middleware([JWTMiddleware::class, DeliveryMiddleware::class])->group(function() {
+    Route::post('/deliveries', [DeliveryController::class, 'create']);
+    Route::get('/deliveries', [DeliveryController::class, 'list']);
+    Route::get('/deliveries/{id}', [DeliveryController::class, 'find']);
+    Route::patch('/deliveries/{id}', [DeliveryController::class, 'edit']);
 });

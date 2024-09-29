@@ -6,13 +6,13 @@ use App\Constraints\StocksKeysConstraints as Keys;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BudgetStock extends Model {
+class DeliveryStock extends Model {
     use HasFactory;
 
-    protected $table = 'budgets_stocks';
+    protected $table = 'deliveries_stocks';
 
     protected $fillable = [
-        Keys::BUDGET,
+        Keys::DELIVERY,
         Keys::STOCK,
     ];
 }

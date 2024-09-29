@@ -9,5 +9,8 @@ class StocksKeysConstraints {
     public const EXTRA = 'extra';
     public const TYPE = 'type';
     public const TABLE = 'stocks';
+    public const BUDGET = 'budget';
+    public const STOCK = 'stock';
+    public const DELIVERY = 'delivery';
 }
 
