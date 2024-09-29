@@ -1,0 +1,106 @@
+.external {
+    color: var(--gray-1);
+    margin-bottom: 16px;
+}
+
+.external:focus-within,
+.external:focus-within .internal input, 
+.external:focus-within .internal input::placeholder,
+.external:focus-within .internal svg,
+.external:focus-within svg,
+.external:focus-within .internal label {
+    color: var(--blue-1);
+}
+
+.external.invalid .internal input, 
+.external.invalid .internal input::placeholder,
+.external.invalid .internal svg,
+.external.invalid .internal label {
+    color: var(--red-1);
+}
+
+.external, input, input::placeholder, svg {
+    transition: var(--trans-1);
+    color: var(--gray-1);
+}
+
+.external:focus-within .internal {
+    box-shadow: 0px 0px 0px 1px var(--blue-1);
+}
+
+.external.invalid .internal {
+    box-shadow: 0px 0px 0px 1px var(--red-1);
+}
+
+.internal {
+    transition: var(--trans-1) box-shadow;
+    box-shadow: 0px 0px 0px 1px var(--gray-1);
+    border-radius: var(--radius-1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 18px;
+    cursor: pointer;
+    background-color: #FFF;
+    padding: 5px 10px;
+    width: 230px;
+}
+
+.intermediary > legend {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.intermediary > legend:first-letter  {
+    text-transform: capitalize;
+}
+
+.internal input {
+    cursor: pointer;
+    border: none;
+}
+
+.internal input:focus {
+    outline: none;
+}
+
+.internal input.selected::placeholder {
+    opacity: 1;
+}
+
+.internal button {
+    background-color: transparent;
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.external .errors {
+    margin-top: 5px;
+    font-size: 10px;
+    color: var(--red-1);
+}
+
+.external .errors li {
+    margin-bottom: 5px;
+}
+
+.internal:has(select) {
+    position: relative;
+}
+
+
+.internal:has(select) svg {
+    position: absolute;
+}
+
+select {
+    background-color: transparent;
+    height: 25px;
+    border: none;
+    outline: none;
+    width: 100%;
+    padding-left: 30px;
+    color: var(--gray-1);
+}
+
