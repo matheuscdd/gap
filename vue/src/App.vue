@@ -1,26 +1,72 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <main>
+    <iHeader/>
+    <section>
+      <iAside/>
+      <div>
+        <RouterView/>
+      </div>
+    </section>
+    <footer>
+      Copyright © GAP 2024
+    </footer>
+  </main>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { endpoints } from "./common/consts";
+import iAside from "./components/common/iAside.vue";
+import iHeader from "./components/common/iHeader.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    iAside,
+    iHeader
+  },
+  beforeCreate() {
+      if (!localStorage.getItem("token")) return;
+      this.$store.dispatch("userMod/storeLogged");
+  }  
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+main {
+  background-image: url('@/assets/common/waves.svg');
+  background-position-x: center;
+  background-position-y: bottom;
+  background-attachment: fixed;
+  background-size: 100%;
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  margin-top: 90px;
+  padding-bottom: 100px;
 }
+
+footer {
+  background-color: var(--green-3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  width: 100vw;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px 0;
+  position: fixed; 
+  z-index: 1000;
+}
+
+section {
+  display: flex;
+  gap: 0.5vw;
+  margin-right: 2vw;
+}
+
+div {
+  width: 100%;
+}
+
 </style>

@@ -1,0 +1,42 @@
+:root {
+    --gray-1: #808080; 
+    --gray-2: #f2f2f2;
+    --gray-3: #c9c9c9;
+    --blue-1: #76B6DC;
+    --blue-2: #76b7dc32;
+    --red-1: #F4001F;
+    --green-1: #2E9395;
+    --green-2: #1E9B2D;
+    --green-3: #19382D;
+    --green-4: #3E9237;
+    --yellow-1: #F7DA00;
+    --trans-1: 0.8s;
+    --radius-1: 30px;
+    --radius-2: 10px;
+}
+
+body {
+    font-family: 'Jost', 'Arial', sans-serif;
+}
+
+h1 {
+    font-size: 30px;
+}
+
+.bButton {
+    font-size: 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    padding: 8px 15px;
+    border: transparent;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.bButton:hover {
+    transition: 0.3s;
+    opacity: 0.8;
+}
