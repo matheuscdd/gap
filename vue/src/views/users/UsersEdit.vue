@@ -1,30 +1,39 @@
 <template>
     <h1>Usuário</h1>
-    {{ $store.state.userMod.user }}
     <form @submit.prevent="edit">
-        <iInput 
-            :label="userForm.NAME.LABEL"
-            :placeholder="userForm.NAME.PLACEHOLDER"
-            :icon="userForm.NAME.ICON"
-            :type="userForm.NAME.TYPE"
-            :name="userForm.NAME.NAME"
-            :errors="name.errors"
-            :maxlength="limits.user.name"
-            v-model="name.value"
-            @validate="verifyUser"
-        />
-        <iInput 
-            :label="userForm.EMAIL.LABEL"
-            :placeholder="userForm.EMAIL.PLACEHOLDER"
-            :icon="userForm.EMAIL.ICON"
-            :type="userForm.EMAIL.TYPE"
-            :name="userForm.EMAIL.NAME"
-            :errors="email.errors"
-            :maxlength="limits.user.email"
-            v-model="email.value"
-            @validate="verifyUser"
-        />
-        <button type="submit">Salvar</button>
+        <section>
+            <iInput 
+                :label="userForm.NAME.LABEL"
+                :placeholder="userForm.NAME.PLACEHOLDER"
+                :icon="userForm.NAME.ICON"
+                :type="userForm.NAME.TYPE"
+                :name="userForm.NAME.NAME"
+                :errors="name.errors"
+                :maxlength="limits.user.name"
+                v-model="name.value"
+                @validate="verifyUser"
+            />
+            <iInput 
+                :label="userForm.EMAIL.LABEL"
+                :placeholder="userForm.EMAIL.PLACEHOLDER"
+                :icon="userForm.EMAIL.ICON"
+                :type="userForm.EMAIL.TYPE"
+                :name="userForm.EMAIL.NAME"
+                :errors="email.errors"
+                :maxlength="limits.user.email"
+                v-model="email.value"
+                @validate="verifyUser"
+            />
+            <div class="btn">
+                <button 
+                    class="bButton" 
+                    type="submit"
+                    :style="{backgroundColor: 'var(--green-2)'}"
+                >
+                Salvar
+                </button>
+            </div>
+        </section>
     </form>
 </template>
 
@@ -82,3 +91,22 @@ export default {
     }
 };
 </script>
+<style scoped>
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+form {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.btn {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}
+</style>

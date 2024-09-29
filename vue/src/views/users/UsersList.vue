@@ -1,5 +1,12 @@
 <template>
     <h1>Usuários</h1>
+    <ul class="header">
+        <div>Nome</div>
+        <div>CNPJ</div>
+        <div>Endereço</div>
+        <div>Celular</div>
+        <div>Ações</div>
+    </ul>
     <ul v-if="$store.state.userMod.users.length">
         <iCard
             v-for="el in $store.state.userMod.users" 
@@ -47,5 +54,15 @@ h1 {
     text-align: center;
     margin-bottom: 30px;
     margin-top: 20px;
+}
+
+.header {
+    display: grid;
+    grid-template-columns: 25% 25% 20% 20% 10%;
+    grid-auto-rows: 30px;
+    grid-gap: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    padding: 0 20px;
 }
 </style>

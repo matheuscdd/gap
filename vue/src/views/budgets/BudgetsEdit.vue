@@ -147,7 +147,7 @@
             <button
                 class="bButton"
                 type="submit"
-                :style="{backgroundColor: 'var(--green-1)'}"
+                :style="{backgroundColor: 'var(--green-2)'}"
             >
                 Salvar
             </button>
@@ -290,6 +290,7 @@ h1 {
     margin-bottom: 30px;
     margin-top: 120px;
 }
+
 form section {
     display: flex;
     gap: 20px;

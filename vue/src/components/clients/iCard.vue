@@ -83,6 +83,13 @@ button {
     background-color: var(--yellow-1);
     padding: 5px;
     border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.btns {
+    display: flex;
+    justify-content: center;
 }
 
 .btns button:hover {
