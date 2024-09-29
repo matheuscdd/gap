@@ -57,6 +57,12 @@ export default {
     padding: 0 20px;
 }
 
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
 ul {
     max-width: 100vw;
     overflow-x: hidden;

@@ -66,6 +66,7 @@ li {
     text-align: center;
     border-radius: 5px;
     border: 2px solid var(--gray-1);
+    background-color: white;
 }
 
 li > div {

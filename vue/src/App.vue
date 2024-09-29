@@ -1,10 +1,12 @@
 <template>
   <main>
-    <header>
-      <img src="@/assets/common/brazil.png"/>
-      <span>GAP - Logística e Transportes LTDA.</span>
-    </header>
-    <RouterView/>
+    <iHeader/>
+    <section>
+      <iAside/>
+      <div>
+        <RouterView/>
+      </div>
+    </section>
     <footer>
       Copyright © GAP 2024
     </footer>
@@ -12,8 +14,20 @@
 </template>
 
 <script>
+import { endpoints } from "./common/consts";
+import iAside from "./components/common/iAside.vue";
+import iHeader from "./components/common/iHeader.vue";
+
 export default {
-  name: "App"  
+  name: "App",
+  components: {
+    iAside,
+    iHeader
+  },
+  beforeCreate() {
+      if (this.$route.path === endpoints.routes.LOGIN) return;
+      this.$store.dispatch("userMod/storeLogged");
+  }  
 };
 </script>
 
@@ -45,24 +59,14 @@ footer {
   z-index: 1000;
 }
 
-header {
-  padding: 10px;
-  background-color: var(--green-4);
-  color: white;
+section {
   display: flex;
-  align-items: center;
-  justify-content: left;
-  gap: 20px;
-  position: fixed; 
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: 1000;
+  gap: 0.5vw;
+  margin-right: 2vw;
 }
 
-header img {
-  height: 62px;
+div {
+  width: 100%;
 }
-
 
 </style>

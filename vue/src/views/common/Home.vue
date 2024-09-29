@@ -1,7 +1,7 @@
 <template>
     <h1>Home</h1>
     <div>
-        {{ $store.state.userMod.logged }}
+        Sejam bem-vindo
     </div>
 </template>
 

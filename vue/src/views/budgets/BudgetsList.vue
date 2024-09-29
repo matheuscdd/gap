@@ -1,22 +1,24 @@
 <template>
     <h1>Orçamentos</h1>
-    <ul v-if="$store.state.budgetMod.budgets.length">
-        <iCard
-            v-for="el in $store.state.budgetMod.budgets" 
-            :key="el.id"
-            :id="el.id"
-            :client_name="$store.state.clientMod.clients.find(client => client.id === el.client).name"
-            :provider_city="el.provider_city"
-            :provider_name="el.provider_name"
-            :delivery_address="el.delivery_address"
-            :revenue="el.revenue"
-            :delivery_date="el.delivery_date"
-            :createdAt="el.created_at"
-            :updatedAt="el.updated_at"
-            @del="del"
-            @edit="edit"
-        />
-    </ul>
+    <section>
+        <ul v-if="$store.state.budgetMod.budgets.length">
+            <iCard
+                v-for="el in $store.state.budgetMod.budgets" 
+                :key="el.id"
+                :id="el.id"
+                :client_name="$store.state.clientMod.clients.find(client => client.id === el.client).name"
+                :provider_city="el.provider_city"
+                :provider_name="el.provider_name"
+                :delivery_address="el.delivery_address"
+                :revenue="el.revenue"
+                :delivery_date="el.delivery_date"
+                :createdAt="el.created_at"
+                :updatedAt="el.updated_at"
+                @del="del"
+                @edit="edit"
+            />
+        </ul>
+    </section>
 </template>
 <script>
 import { sleep } from "@/common/utils";
@@ -42,6 +44,17 @@ export default {
 };
 </script>
 <style scoped>
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+section {
+    display: flex;
+    justify-content: center;
+}
+
 ul {
     display: grid;
     grid-template-columns: repeat(3, 400px);

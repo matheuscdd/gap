@@ -11,7 +11,7 @@
                 <div class="id">
                     {{ id }}
                 </div>
-                <button class="create">
+                <button class="create" style="display: none;">
                     <iSvg 
                         :src="require('@/assets/icons/truck-solid.svg')"
                         width="16" 

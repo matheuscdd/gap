@@ -42,3 +42,10 @@ export default {
     },
 };
 </script>
+<style scoped>
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+</style>
