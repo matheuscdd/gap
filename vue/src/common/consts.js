@@ -25,6 +25,9 @@ export const endpoints = Object.freeze({
         BUDGET_CREATE: "/budgets/create",
         BUDGET_EDIT: "/budgets/edit/:id",
         BUDGET_LIST: "/budgets/list",
+        DELIVERY_CREATE: "/deliveries/create",
+        DELIVERY_EDIT: "/deliveries/edit",
+        DELIVERY_LIST: "/deliveries/list",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
     names: Object.freeze({
@@ -40,6 +43,9 @@ export const endpoints = Object.freeze({
         BUDGET_CREATE: "budge-create",
         BUDGET_EDIT: "budge-edit",
         BUDGET_LIST: "budgets-list",
+        DELIVERY_CREATE: "deliveries-create",
+        DELIVERY_EDIT: "deliveries-edit",
+        DELIVERY_LIST: "deliveries-list",
         NOT_FOUND: "not found",
     })
 });
