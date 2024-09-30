@@ -22,6 +22,11 @@
                     <RouterLink :to="endpoints.routes.BUDGET_CREATE">Criar</RouterLink> 
                     <RouterLink :to="endpoints.routes.BUDGET_LIST">Listar</RouterLink> 
                 </li>
+                <li>
+                    <h6>Entregas</h6>
+                    <RouterLink :to="endpoints.routes.DELIVERY_CREATE">Criar</RouterLink> 
+                    <RouterLink :to="endpoints.routes.DELIVERY_LIST">Listar</RouterLink> 
+                </li>
             </ul>
         </div>
     </aside>

@@ -65,6 +65,11 @@ const routes = [
         component: () => import("@/views/budgets/BudgetsList.vue")
     },
     {
+        path: endpoints.routes.DELIVERY_LIST,
+        name: endpoints.names.DELIVERY_LIST,
+        component: () => import("@/views/deliveries/DeliveriesList.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/common/NotFound.vue")

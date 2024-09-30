@@ -3,7 +3,11 @@ import { methods, consts, endpoints } from "./consts";
 import { jwtDecode } from "jwt-decode";
 
 export function getUUID() {
-    return "i" + crypto.randomUUID().substring(1);
+    const id =
+        typeof crypto.randomUUID === "function"
+            ? crypto.randomUUID()
+            : String(Math.random()).replace(".", "");
+    return "i" + id.substring(1);
 }
 
 async function _api(url, method = methods.GET, body = null) {
