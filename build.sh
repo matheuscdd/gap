@@ -15,7 +15,7 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-
+sudo usermod -aG docker $USER
 
 # PHP requirements
 sudo echo 'export WWWUSER=${WWWUSER:-$UID}' | cat >> ~/.bashrc
@@ -24,6 +24,7 @@ source ~/.bashrc
 sudo apt update && sudo apt upgrade -y
 sudo apt install unzip php8.3 php8.3-curl php8.3-xml php8.3-zip -y
 sudo systemctl disable apache2
+sudo apt remove apache2*
 curDir=$(pwd)
 cd ~
 curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
@@ -33,6 +34,7 @@ php -r "if (hash_file('SHA384', '/tmp/composer-setup.php') === '$HASH') { echo '
 sudo php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
 cd $curDir
 composer update
+sudo chown -R $USER:$USER ~/gap
 sudo apt update && sudo apt upgrade -y
 cp docker-compose.prod.yml docker-compose.yml
 ./vendor/bin/sail up --build
