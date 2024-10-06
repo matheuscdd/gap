@@ -1,10 +1,22 @@
 #!/bin/bash
 
+# SSL requirements
+source .env
+sudo apt install certbot python3-certbot-nginx -y
+sudo apt remove nginx
+certbot certonly --nginx -n --agree-tos -d "${DOMAIN}" --email "${EMAIL_SUPPORT}"
+restartNginx="docker exec -it gap-prod-nginx-1 nginx -s reload"
+fullchain="cp -r -L /etc/letsencrypt/live/${DOMAIN}/fullchain.pem /etc/letsencrypt/ssl/"
+privkey="cp -r -L /etc/letsencrypt/live/${DOMAIN}/privkey.pem /etc/letsencrypt/ssl/"
+$fullchain
+$privkey
+crontab -l | { cat; echo "0  0,12 *  *  * certbot renew --post-hook '$fullchain && $privkey && $restartNginx'"; } | crontab -
+
 # Docker requirements
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
 
 sudo apt-get update
-sudo apt-get install ca-certificates curl
+sudo apt-get install ca-certificates curl -y
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
