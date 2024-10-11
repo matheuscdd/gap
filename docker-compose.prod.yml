@@ -66,6 +66,7 @@ services:
         environment:
             DOMAIN: '${DOMAIN}'
             EMAIL_SUPPORT: '${EMAIL_SUPPORT}'
+            STAGING_URL: '${STAGING_URL}'
         volumes:
             - /etc/letsencrypt/ssl/fullchain.pem:/etc/nginx/ssl/fullchain.pem
             - /etc/letsencrypt/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem
