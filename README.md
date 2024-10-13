@@ -49,3 +49,9 @@ docker exec -it gap-prod-nginx-1 cat /etc/nginx/nginx.conf
 ```
 
 * No arquivo `nginx/Dockerfile.prod` , agora troque `nginx.http` por `nginx.https`, isso deve ser feito para inserir as novas configurações do certbot
+
+# Crontab
+
+```
+apt update && apt-get install cron -y && echo '* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1' | crontab - && service cron start
+```

@@ -46,6 +46,14 @@
     width: 230px;
 }
 
+.internal:has(input[name="quantity"]), .internal:has(input[name="weight"]) {
+    width: 160px;
+}
+
+.internal input[name="quantity"], .internal input[name="weight"] {
+    width: 100px;
+}
+
 .intermediary > legend {
     display: block;
     margin-bottom: 10px;

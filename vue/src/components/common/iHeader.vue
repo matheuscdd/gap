@@ -1,7 +1,7 @@
 <template>
     <header>
         <img src="@/assets/common/brazil.png"/>
-        <h6>GAP - Logística e Transportes LTDA.</h6>
+        <h6>GAP - Logística e Transportes LTDA. <span style="color: yellow; font-weight: 600;">(AMBIENTE DE TESTES)</span></h6>
         <button @click="clean" v-show="this.$route.path !== endpoints.routes.LOGIN">
             <iSvg 
                 :src="require('@/assets/icons/right-from-bracket-solid.svg')"

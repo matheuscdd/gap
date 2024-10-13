@@ -17,6 +17,17 @@ services:
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
             WWWGROUP: '${WWWGROUP:-1000}'
             PWD: '${PWD:-/var/www/html}'
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            FORWARD_DB_PORT: '${FORWARD_DB_PORT:-5432}'
+            PRIVATE_KEY_256: '${PRIVATE_KEY_256:-secret}'
+            PUBLIC_KEY_RSA: '${PUBLIC_KEY_RSA}'
+            PRIVATE_KEY_GITHUB: '${PRIVATE_KEY_GITHUB}'
+            GITHUB_BUCKET_USER: '${GITHUB_BUCKET_USER}'
+            GITHUB_BUCKET_REP: '${GITHUB_BUCKET_REP}'
+            EMAIL_SUPPORT: '${EMAIL_SUPPORT}'
+            APP_ENV: 'prod'
         volumes:
             - '.:/var/www/html'
         networks:
