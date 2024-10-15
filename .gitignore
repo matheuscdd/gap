@@ -8,6 +8,7 @@
 .env
 .env.backup
 .env.production
+.env.cron
 .phpactor.json
 .phpunit.result.cache
 Homestead.json
@@ -44,3 +45,4 @@ pnpm-debug.log*
 *.sln
 *.sw?
 backups/
+logs/

@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Phar;
 use PharData;
-
+use DateTime;
 
 class DumpDatabase extends Command {
     protected $signature = 'db:dump';
@@ -14,13 +14,14 @@ class DumpDatabase extends Command {
 
     public function handle() {
         $sqlDump = $this->getSqlDump();
+        if (!$sqlDump) return;
         $this->sendGitHub($sqlDump);
     }
 
     private function getSqlDump() {
         $db = env('POSTGRES_DB');
         $user = env('POSTGRES_USER');
-        $port = env('FORWARD_DB_PORT');
+        $port = env('DB_PORT');
         $content = $this->execSys("pg_dump -Z 9 --data-only -h pgsql -p $port -U $user -d $db");
         if (is_null($content)) return;
         $content = base64_encode($content);
@@ -44,7 +45,8 @@ class DumpDatabase extends Command {
     }
     
     private function encryptRSA($decryptedContent) {
-        openssl_public_encrypt($decryptedContent, $encryptedContent, env('PUBLIC_KEY_RSA'));
+        $key = str_replace('\n', PHP_EOL, base64_decode(env('PUBLIC_KEY_RSA_B64')));
+        openssl_public_encrypt($decryptedContent, $encryptedContent, $key);
         return base64_encode($encryptedContent);
     }
 
@@ -108,6 +110,8 @@ class DumpDatabase extends Command {
         if ($statusCode !== 201) {
             return $this->error($res);
         }
-        $this->info('Backup saved successfully');
+        $date = new DateTime('now');
+        $date = $date->format('c');
+        $this->info("$date - Backup saved successfully");
     }
 }

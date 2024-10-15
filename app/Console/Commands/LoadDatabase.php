@@ -34,11 +34,11 @@ class LoadDatabase extends Command {
     private function insertSql($content) {
         $db = env('POSTGRES_DB');
         $user = env('POSTGRES_USER');
-        $port = env('FORWARD_DB_PORT');
+        $port = env('DB_PORT');
         $filename = self::FOLDER.'script.sql';
         $this->makeFile($content, $filename);
         $res = $this->execSys("psql -h pgsql -p $port -U $user -d $db -f $filename");
-        echo $res;
+        $this->line($res);
         unlink($filename);
     }
 
@@ -49,7 +49,8 @@ class LoadDatabase extends Command {
     }
 
     private function decryptRSA($encryptedContent) {
-        openssl_private_decrypt(base64_decode($encryptedContent), $decryptedContent, env('PRIVATE_KEY_RSA'));
+        $key = str_replace('\n', PHP_EOL, base64_decode(env('PRIVATE_KEY_RSA_B64')));
+        openssl_private_decrypt(base64_decode($encryptedContent), $decryptedContent, $key);
         return $decryptedContent;
     }
 

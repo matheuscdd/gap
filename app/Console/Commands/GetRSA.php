@@ -18,8 +18,9 @@ class GetRSA extends Command {
         $publicKeyPem = $keyDetails["key"];
 
         $this->warn("Don't share these info with anyone\n");
-        $this->info("$privateKeyPem\n");
-        $this->line($publicKeyPem);
+        $this->info("Private");
+        $this->info(base64_encode($privateKeyPem));
+        $this->line("\nPublic");
+        $this->line(base64_encode($publicKeyPem));
     }
-
 }
