@@ -8,5 +8,4 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
-Schedule::command('db:dump')->everyFifteenMinutes()->runInBackground();
-// ->environments(['stage', 'prod']);
+Schedule::command('db:dump')->everyFifteenMinutes()->runInBackground()->environments(['prod']);
