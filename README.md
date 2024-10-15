@@ -53,5 +53,5 @@ docker exec -it gap-prod-nginx-1 cat /etc/nginx/nginx.conf
 # Crontab
 
 ```
-apt update && apt-get install cron -y && echo '* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1' | crontab - && service cron start
+apt update && apt-get install cron -y && echo '* * * * * cd /var/www/html && source .env && php artisan schedule:run >> /dev/null 2>&1' | crontab - && service cron start
 ```

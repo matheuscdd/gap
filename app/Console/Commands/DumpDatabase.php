@@ -14,6 +14,7 @@ class DumpDatabase extends Command {
 
     public function handle() {
         $sqlDump = $this->getSqlDump();
+        if (!$sqlDump) return;
         $this->sendGitHub($sqlDump);
     }
 
@@ -44,7 +45,8 @@ class DumpDatabase extends Command {
     }
     
     private function encryptRSA($decryptedContent) {
-        openssl_public_encrypt($decryptedContent, $encryptedContent, env('PUBLIC_KEY_RSA'));
+        $key = str_replace('\n', PHP_EOL, env('PUBLIC_KEY_RSA'));
+        openssl_public_encrypt($decryptedContent, $encryptedContent, $key);
         return base64_encode($encryptedContent);
     }
 

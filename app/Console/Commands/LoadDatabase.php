@@ -38,7 +38,7 @@ class LoadDatabase extends Command {
         $filename = self::FOLDER.'script.sql';
         $this->makeFile($content, $filename);
         $res = $this->execSys("psql -h pgsql -p $port -U $user -d $db -f $filename");
-        echo $res;
+        $this->line($res);
         unlink($filename);
     }
 
@@ -49,7 +49,8 @@ class LoadDatabase extends Command {
     }
 
     private function decryptRSA($encryptedContent) {
-        openssl_private_decrypt(base64_decode($encryptedContent), $decryptedContent, env('PRIVATE_KEY_RSA'));
+        $key = str_replace('\n', PHP_EOL, env('PRIVATE_KEY_RSA'));
+        openssl_private_decrypt(base64_decode($encryptedContent), $decryptedContent, $key);
         return $decryptedContent;
     }
 
