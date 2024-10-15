@@ -9,22 +9,31 @@ services:
         image: sail-8.3/app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
-        ports:
-            - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            WWWGROUP: '${WWWGROUP:-1000}'
+            PWD: '${PWD:-/var/www/html}'
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            FORWARD_DB_PORT: '${FORWARD_DB_PORT:-5432}'
+            PRIVATE_KEY_256: '${PRIVATE_KEY_256:-secret}'
+            PUBLIC_KEY_RSA: '${PUBLIC_KEY_RSA}'
+            PRIVATE_KEY_GITHUB: '${PRIVATE_KEY_GITHUB}'
+            GITHUB_BUCKET_USER: '${GITHUB_BUCKET_USER}'
+            GITHUB_BUCKET_REP: '${GITHUB_BUCKET_REP}'
+            EMAIL_SUPPORT: '${EMAIL_SUPPORT}'
+            APP_ENV: 'prod'
         volumes:
             - '.:/var/www/html'
         networks:
             - sail
         depends_on:
             - pgsql
-            - selenium
     pgsql:
         image: 'postgres:15'
         ports:
@@ -54,18 +63,29 @@ services:
         build:
             context: ./vue
             dockerfile: Dockerfile.prod
-        ports:
-            - '8080:80'
         volumes:
             - './vue:/app'
         networks:
             - sail
-    selenium:
-        image: selenium/standalone-chrome
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
+    nginx:
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile.prod
+        ports:
+            - '80:80'
+            - '443:443'
+        environment:
+            DOMAIN: '${DOMAIN}'
+            EMAIL_SUPPORT: '${EMAIL_SUPPORT}'
+            STAGING_URL: '${STAGING_URL}'
         volumes:
-            - '/dev/shm:/dev/shm'
+            - /etc/letsencrypt/ssl/fullchain.pem:/etc/nginx/ssl/fullchain.pem
+            - /etc/letsencrypt/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem
+            - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf
+            - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
+        depends_on:
+            - laravel
+            - vue
         networks:
             - sail
 networks:

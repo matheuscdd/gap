@@ -6,15 +6,15 @@ use App\Models\User;
 use Illuminate\Console\Command;
 
 class AdminCommand extends Command {
-    protected $signature = 'admin:create';
+    protected $signature = 'admin:create {email=adm@mail.com}';
     protected $description = 'Crete a new admin';
 
     public function handle() {
         User::create([
             'name' => 'admin',
-            'email' => 'adm@mail.com',
+            'email' => $this->argument('email'),
             'type' => 'admin',
-            'password' => '12345678',
+            'password' => $this->secret('What is the password?'),
         ]);
         $this->info('Admin successfully created');
     }

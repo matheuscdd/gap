@@ -21,7 +21,7 @@ async function _api(url, method = methods.GET, body = null) {
     };
     if (body) request.body = JSON.stringify(body);
 
-    const response = await fetch(process.env.VUE_APP_API_URL + url, request);
+    const response = await fetch(process.env.VUE_APP_API_URL + "/api" + url, request);
     if (response.status === 204) return {};
     const data = await response.json();
     if ([200, 201].includes(response.status)) {

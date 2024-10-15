@@ -18,13 +18,24 @@ services:
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            FORWARD_DB_PORT: '${FORWARD_DB_PORT:-5432}'
+            PRIVATE_KEY_256: '${PRIVATE_KEY_256:-secret}'
+            PRIVATE_KEY_RSA: '${PRIVATE_KEY_RSA}'
+            PUBLIC_KEY_RSA: '${PUBLIC_KEY_RSA}'
+            PRIVATE_KEY_GITHUB: '${PRIVATE_KEY_GITHUB}'
+            GITHUB_BUCKET_USER: '${GITHUB_BUCKET_USER}'
+            GITHUB_BUCKET_REP: '${GITHUB_BUCKET_REP}'
+            EMAIL_SUPPORT: '${EMAIL_SUPPORT}'
+            APP_ENV: 'dev'
         volumes:
             - '.:/var/www/html'
         networks:
             - sail
         depends_on:
             - pgsql
-            - selenium
     pgsql:
         image: 'postgres:15'
         ports:
@@ -61,14 +72,6 @@ services:
         environment:
             - CHOKIDAR_USEPOLLING=true
         tty: true
-        networks:
-            - sail
-    selenium:
-        image: selenium/standalone-chrome
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        volumes:
-            - '/dev/shm:/dev/shm'
         networks:
             - sail
 networks:
