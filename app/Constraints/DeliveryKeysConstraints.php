@@ -26,6 +26,7 @@ class DeliveryKeysConstraints {
     public const DATE_FORMAT = 'Y-m-d';
     public const DELIVERY = 'delivery';
     public const STOCK = 'stock';
+    public const REF = 'ref';
     public const ALL = [
         self::CLIENT,
         self::DELIVERY_DATE,

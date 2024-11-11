@@ -23,20 +23,20 @@ export default {
     },
     actions: {
         async createDelivery(ctx, data) {
-            const response = await api("/deliveries", methods.POST, data);
+            const response = await api("/deliveries/full", methods.POST, data);
             if (response.error) return alert(response.error);
             router.push(endpoints.routes.DELIVERY_LIST);
         },
 
         async editDelivery(ctx, data) {
-            const response = await api("/deliveries/" + data.id, methods.PATCH, data);
+            const response = await api("/deliveries/full/" + data.id, methods.PATCH, data);
             if (response.error) return alert(response.error);
             ctx.commit("storeDelivery", response);
             router.push(endpoints.routes.DELIVERY_LIST);
         },
 
         async storeDeliveries(ctx) {
-            const response = await api("/deliveries");
+            const response = await api("/deliveries/full");
             const data = response.map(delivery => ({
                 ...delivery,
                 created_at: handleDate(delivery.created_at),
@@ -46,7 +46,7 @@ export default {
         },
 
         async storeDelivery(ctx, id) {
-            const response = await api("/deliveries/" + id);
+            const response = await api("/deliveries/full/" + id);
             if (response.error) return;
             ctx.commit("storeDelivery", response);
         },

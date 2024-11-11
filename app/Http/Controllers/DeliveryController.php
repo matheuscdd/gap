@@ -8,20 +8,20 @@ use App\Http\Requests\Request;
 use App\Http\Services\Delivery\DeliveryService;
 
 class DeliveryController extends Controller {
-    public function create(CreateDeliveryRequest $request) {
-        return DeliveryService::create($request->validated());
+    public function createFull(CreateDeliveryRequest $request) {
+        return DeliveryService::createFull($request->validated());
     }
 
-    public function find(Request $request) {
-        return DeliveryService::find($request->route('id'));
+    public function findFull(Request $request) {
+        return DeliveryService::findFull($request->route('id'));
     }
 
-    public function list(Request $request) {
-        return DeliveryService::list();
+    public function listFull(Request $request) {
+        return DeliveryService::listFull();
     }
 
-    public function edit(EditDeliveryRequest $request) {
-        return DeliveryService::edit($request->route('id'), $request->validated());
+    public function editFull(EditDeliveryRequest $request) {
+        return DeliveryService::editFull($request->route('id'), $request->validated());
     }
 
 }
