@@ -6,12 +6,11 @@ use App\Http\Requests\Request;
 use Exception;
 use App\Constraints\DeliveryKeysConstraints as Keys;
 use App\Constraints\ClientKeysConstraints as Client;
-use App\Constraints\StockTypeKeysConstraints as StockType;
-use App\Constraints\BudgetTransConstraints as Trans;
 use App\Constraints\ValidatorConstraints as Schema;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use App\Enums\{Unloaded, PaymentMethod, PaymentStatus};
+use Illuminate\Support\Facades\Log;
 
 class DeliveryRequest extends Request {
     protected const DELIVERY_ADDRESS_MAX = 256;
@@ -26,7 +25,7 @@ class DeliveryRequest extends Request {
     protected const FLOAT_CASES = 2;
     
 
-    public function getRules($partial, ...$keys): array {
+    public function getRules($partial, $keepRequired, ...$keys): array {
         $ref = [
             Keys::DELIVERY_DATE => [
                 Schema::REQUIRED,
@@ -91,12 +90,12 @@ class DeliveryRequest extends Request {
                 new Enum(PaymentStatus::class)
             ],
             Keys::STOCKS => [
-                Schema::REQUIRED
+                Schema::REQUIRED,
+                Schema::ARRAY,
             ],
-            
         ];
 
-        $rules= self::retrieveRules($partial, $ref, $keys);
+        $rules = self::retrieveRules($partial, $ref, $keys, $keepRequired);
         if (count($rules) === 0) {
             throw new Exception('getRules: No key found');
         }

@@ -44,8 +44,6 @@ class DeliveryKeysConstraints {
         self::TRAVEL_COST,
         self::UNLOADING_COST,
         self::STOCKS,
-        self::DELIVERY,
-        self::STOCK,
     ];
 }
 

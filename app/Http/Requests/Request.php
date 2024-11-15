@@ -62,9 +62,10 @@ class Request extends FormRequest {
         return [$key => "Seleção inválida, as opções são [$handleCases]"];
     }
 
-    protected function retrieveRules(bool $partial, array $ref, array $keys): array {
+    protected function retrieveRules(bool $partial, array $ref, array $keys, bool $keepRequired): array {
         if (!$partial) return $ref;
         $handle = array_filter($ref, fn($el) => in_array($el, $keys), ARRAY_FILTER_USE_KEY);
+        if ($keepRequired) return $handle;
         foreach($handle as $key => $value) {
             $handle[$key] = array_filter($value, fn($el) => $el !== Schema::REQUIRED);
         }

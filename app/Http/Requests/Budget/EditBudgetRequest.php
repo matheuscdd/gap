@@ -15,7 +15,7 @@ use App\Enums\{Unloaded, PaymentMethod, PaymentStatus};
 
 class EditBudgetRequest extends BudgetRequest {
     public function rules(): array {
-        return $this->getRules(true, ...Keys::ALL);
+        return $this->getRules(true, false, ...Keys::ALL);
     }
 }
 

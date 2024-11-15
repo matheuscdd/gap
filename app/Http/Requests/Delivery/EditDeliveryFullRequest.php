@@ -4,9 +4,9 @@ namespace App\Http\Requests\Delivery;
 
 use App\Constraints\DeliveryKeysConstraints as Keys;
 
-class EditDeliveryRequest extends DeliveryRequest {
+class EditDeliveryFullRequest extends DeliveryRequest {
     public function rules(): array {
-        return $this->getRules(true, ...Keys::ALL);
+        return $this->getRules(false, true,...Keys::ALL);
     }
 }
 

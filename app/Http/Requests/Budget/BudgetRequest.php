@@ -23,7 +23,7 @@ class BudgetRequest extends Request {
     protected const FLOAT_CASES = 2;
     
 
-    public function getRules($partial, ...$keys): array {
+    public function getRules($partial, $keepRequired, ...$keys): array {
         $ref = [
             Keys::DELIVERY_DATE => [
                 Schema::REQUIRED,
@@ -77,7 +77,7 @@ class BudgetRequest extends Request {
             
         ];
 
-        $rules= self::retrieveRules($partial, $ref, $keys);
+        $rules = self::retrieveRules($partial, $ref, $keys, $keepRequired);
         if (count($rules) === 0) {
             throw new Exception('getRules: No key found');
         }

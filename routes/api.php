@@ -57,5 +57,9 @@ Route::middleware([JWTMiddleware::class, DeliveryMiddleware::class])->group(func
     Route::post('/deliveries/full', [DeliveryController::class, 'createFull']);
     Route::get('/deliveries/full', [DeliveryController::class, 'listFull']);
     Route::get('/deliveries/full/{id}', [DeliveryController::class, 'findFull']);
+    Route::patch('/deliveries/full/finish/{id}', [DeliveryController::class, 'finishFull']);
     Route::patch('/deliveries/full/{id}', [DeliveryController::class, 'editFull']);
+    Route::put('/deliveries/partial/{id}', [DeliveryController::class, 'createPartial']);
+    Route::get('/deliveries/partial/{id}', [DeliveryController::class, 'listPartial']);
+    Route::patch('/deliveries/partial/finish/{id}', [DeliveryController::class, 'finishPartial']);
 });
