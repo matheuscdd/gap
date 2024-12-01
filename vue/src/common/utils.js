@@ -74,7 +74,8 @@ export function getValues(data) {
 export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
     ctx.revenue.value = Number(ctx.revenue.value) || "";
     ctx.cost.value = Number(ctx.cost.value) || "";
-    const { client, 
+    const { 
+        client, 
         delivery_address, 
         delivery_date, 
         provider_name, 
@@ -87,7 +88,8 @@ export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
     } = ctx;
     const data = {
         stocks: ctx.stocks.map(({type, name, quantity, weight, extra }) => ({type, name, quantity, weight, extra })),
-        ...getValues({ client, 
+        ...getValues({ 
+            client, 
             delivery_address, 
             delivery_date, 
             provider_name, 
@@ -113,4 +115,57 @@ export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
     if (errors.flat().filter(Boolean).length) return alert("Verifique os campos marcados e tente novamente");
     if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
     ctx.$store.dispatch(`budgetMod/${action}Budget`, {...data, ...extra});
+}
+
+export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {}) {
+    ctx.revenue.value = Number(ctx.revenue.value) || "";
+    ctx.travel_cost.value = Number(ctx.travel_cost.value) || "";
+    ctx.unloading_cost.value = Number(ctx.unloading_cost.value) || 0;
+    const { 
+        client, 
+        delivery_address, 
+        delivery_date, 
+        provider_name, 
+        provider_city, 
+        revenue, 
+        unloaded, 
+        payment_status, 
+        payment_method,
+        travel_cost,
+        unloading_cost,
+        driver,
+        receipt_date,
+    } = ctx;
+    const data = {
+        stocks: ctx.stocks.map(({type, name, quantity, weight, extra }) => ({type, name, quantity, weight, extra })),
+        ...getValues({ 
+            client, 
+            delivery_address, 
+            delivery_date, 
+            provider_name, 
+            provider_city, 
+            revenue, 
+            unloaded, 
+            payment_status, 
+            payment_method,
+            travel_cost,
+            unloading_cost,
+            driver,
+            receipt_date,
+        })
+    };
+    const paymentDate = ctx.payment_date.value;
+    if (paymentDate) data.payment_date = paymentDate;
+
+    const errors = [];
+    Object.keys(data).forEach(key => errors.push(verifyDelivery(key, ctx)));
+    ctx.$refs.stocks.forEach(el => 
+        ["name", "quantity", "weight"].forEach(name => 
+            errors.push(el.outFocus({target: {name}}))
+        )
+    );
+    await sleep(100);
+    if (errors.flat().filter(Boolean).length) return alert("Verifique os campos marcados e tente novamente");
+    if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
+    ctx.$store.dispatch(`deliveryMod/${action}Delivery`, {...data, ...extra});
 }

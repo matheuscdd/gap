@@ -24,7 +24,7 @@
                 </li>
                 <li>
                     <h6>Entregas</h6>
-                    <RouterLink :to="endpoints.routes.DELIVERY_CREATE">Criar</RouterLink> 
+                    <RouterLink :to="endpoints.routes.DELIVERY_CREATE_FULL">Criar</RouterLink> 
                     <RouterLink :to="endpoints.routes.DELIVERY_LIST">Listar</RouterLink> 
                 </li>
             </ul>

@@ -25,7 +25,7 @@ export const endpoints = Object.freeze({
         BUDGET_CREATE: "/budgets/create",
         BUDGET_EDIT: "/budgets/edit/:id",
         BUDGET_LIST: "/budgets/list",
-        DELIVERY_CREATE: "/deliveries/create",
+        DELIVERY_CREATE_FULL: "/deliveries/full/create",
         DELIVERY_EDIT: "/deliveries/edit",
         DELIVERY_LIST: "/deliveries/list",
         NOT_FOUND: "/:pathMatch(.*)*",
@@ -43,7 +43,7 @@ export const endpoints = Object.freeze({
         BUDGET_CREATE: "budge-create",
         BUDGET_EDIT: "budge-edit",
         BUDGET_LIST: "budgets-list",
-        DELIVERY_CREATE: "deliveries-create",
+        DELIVERY_CREATE_FULL: "deliveries-full-create",
         DELIVERY_EDIT: "deliveries-edit",
         DELIVERY_LIST: "deliveries-list",
         NOT_FOUND: "not found",
@@ -264,7 +264,7 @@ export const budgetForm = Object.freeze({
     }),
     UNLOADED: Object.freeze({
         PLACEHOLDER: "Escolha o modo de descarga",
-        ICON: "truck-ramp-box-solid",
+        ICON: "dolly-solid",
         NAME: budget.keys.UNLOADED,
         LABEL: budget.trans.UNLOADED
     }),
@@ -276,8 +276,61 @@ export const budgetForm = Object.freeze({
     }),
     PAYMENT_METHOD: Object.freeze({
         PLACEHOLDER: "Defina o método de pagamento",
-        ICON: "cash-register-solid",
+        ICON: "barcode-solid",
         NAME: budget.keys.PAYMENT_METHOD,
         LABEL: budget.trans.PAYMENT_METHOD
+    }),
+});
+
+export const delivery = Object.freeze({
+    keys: Object.freeze({
+        ...budget.keys,
+        TRAVEL_COST: "travel_cost",
+        UNLOADING_COST: "unloading_cost",
+        DRIVER: "driver",
+        RECEIPT_DATE: "receipt_date",
+        COST: null,
+    }),
+
+    trans: Object.freeze({
+        ...budget.trans,
+        TRAVEL_COST: "custo da viagem",
+        UNLOADING_COST: "custo da descarga",
+        DRIVER: "motorista",
+        RECEIPT_DATE: "data de recebimento",
+        COST: null,
+    })
+});
+
+export const deliveryForm = Object.freeze({
+    ...budgetForm,
+    COST: null,
+    TRAVEL_COST: Object.freeze({
+        PLACEHOLDER: "Indique o custo da viagem",
+        ICON: "gas-pump-solid",
+        TYPE: "number",
+        NAME: delivery.keys.TRAVEL_COST,
+        LABEL: delivery.trans.TRAVEL_COST
+    }),
+    UNLOADING_COST: Object.freeze({
+        PLACEHOLDER: "Indique o custo de descarga",
+        ICON: "people-carry-box-solid",
+        TYPE: "number",
+        NAME: delivery.keys.UNLOADING_COST,
+        LABEL: delivery.trans.UNLOADING_COST
+    }),
+    DRIVER: Object.freeze({
+        PLACEHOLDER: "Indique o motorista",
+        ICON: "user-solid",
+        TYPE: "text",
+        NAME: delivery.keys.DRIVER,
+        LABEL: delivery.trans.DRIVER
+    }),
+    RECEIPT_DATE: Object.freeze({
+        PLACEHOLDER: "Data de chegada da mercadoria",
+        ICON: "truck-ramp-box-solid",
+        TYPE: "date",
+        NAME: delivery.keys.RECEIPT_DATE,
+        LABEL: delivery.trans.RECEIPT_DATE
     }),
 });

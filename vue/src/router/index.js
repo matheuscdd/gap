@@ -70,6 +70,11 @@ const routes = [
         component: () => import("@/views/deliveries/DeliveriesList.vue")
     },
     {
+        path: endpoints.routes.DELIVERY_CREATE_FULL,
+        name: endpoints.names.DELIVERY_CREATE_FULL,
+        component: () => import("@/views/deliveries/DeliveriesFullCreate.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/common/NotFound.vue")

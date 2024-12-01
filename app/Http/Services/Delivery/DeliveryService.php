@@ -100,7 +100,7 @@ class DeliveryService {
     public static function listFull() {
         $deliveriesRaw = Delivery::where(Keys::REF, null);
         $deliveriesHandle = [];
-        foreach ($deliveriesRaw as $delivery) {
+        foreach ($deliveriesRaw->get() as $delivery) {
             $deliveriesHandle[] = self::retrieve($delivery->id, $delivery);
         }
         return $deliveriesHandle;

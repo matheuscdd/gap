@@ -105,7 +105,7 @@
                         :placeholder="budgetForm.UNLOADED.PLACEHOLDER"
                         :name="budgetForm.UNLOADED.NAME"
                         :errors="unloaded.errors"
-                        icon="dolly-solid"
+                        :icon="budgetForm.UNLOADED.ICON"
                         v-model="unloaded.value"
                     />
                     <iSelect
@@ -114,7 +114,7 @@
                         :placeholder="budgetForm.PAYMENT_STATUS.PLACEHOLDER"
                         :name="budgetForm.PAYMENT_STATUS.NAME"
                         :errors="payment_status.errors"
-                        icon="money-bill-transfer-solid"
+                        :icon="budgetForm.PAYMENT_STATUS.ICON"
                         v-model="payment_status.value"
                     />
                     <iSelect
@@ -123,7 +123,7 @@
                         :placeholder="budgetForm.PAYMENT_METHOD.PLACEHOLDER"
                         :name="budgetForm.PAYMENT_METHOD.NAME"
                         :errors="payment_method.errors"
-                        icon="barcode-solid"
+                        :icon="budgetForm.PAYMENT_METHOD.ICON"
                         v-model="payment_method.value"
                     />
                 </div>

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { user as cUser, client as cClient, budget as cBudget } from "./consts";
+import { user as cUser, client as cClient, budget as cBudget, delivery as cDelivery  } from "./consts";
 import store from "@/store";
 
 const {
@@ -23,7 +23,29 @@ const {
     PAYMENT_STATUS,
     DELIVERY_ADDRESS,
     DELIVERY_DATE,
-} = {...cUser.keys, ...cClient.keys, ...cBudget.keys };
+    DRIVER,
+    TRAVEL_COST,
+    UNLOADING_COST,
+    RECEIPT_DATE,
+} = {...cUser.keys, ...cClient.keys, ...cBudget.keys, ...cDelivery.keys  };
+
+const budgetLimits = Object.freeze({
+    [DELIVERY_ADDRESS]: Object.freeze({
+        min: 3,
+        max: 256
+    }),
+    [PROVIDER_NAME]: Object.freeze({
+        min: 3,
+        max: 128
+    }),
+    [PROVIDER_CITY]: Object.freeze({
+        min: 2,
+        max: 128
+    }),
+    [STOCKS]: Object.freeze({
+        max: 512
+    })
+});
 
 export const base = Object.freeze({
     user: Object.freeze({
@@ -61,23 +83,14 @@ export const base = Object.freeze({
         })
     }),
 
-    budget: Object.freeze({
-        [DELIVERY_ADDRESS]: Object.freeze({
+    budget: budgetLimits,
+    delivery: {
+        ...budgetLimits,
+        [DRIVER]: Object.freeze({
             min: 3,
-            max: 256
-        }),
-        [PROVIDER_NAME]: Object.freeze({
-            min: 3,
-            max: 128
-        }),
-        [PROVIDER_CITY]: Object.freeze({
-            min: 2,
-            max: 128
-        }),
-        [STOCKS]: Object.freeze({
-            max: 512
-        })
-    }),
+            max: 128,
+        }),        
+    }
 });
 
 const msgs = Object.freeze({
@@ -96,6 +109,7 @@ const includes = (arr) => ((el) => arr.includes(el));
 
 function validate(validator, data) {
     const schema = validator.safeParse(data);
+    console.log(schema.error);
     if (!schema.success) return schema.error.flatten().fieldErrors;
     return {};
 }
@@ -262,4 +276,73 @@ export function verifyBudget(name, obj) {
 
 export function verifyStock(obj, name) {
     return validate(stockVal, obj)[name] || [];
+}
+
+export function verifyDelivery(name, obj) {
+    const sel = obj || this;
+    const handleFields = {};
+    [ 
+        TRAVEL_COST,
+        UNLOADING_COST,
+        RECEIPT_DATE,
+        CLIENT,
+        DRIVER,
+        PAYMENT_DATE,
+        PROVIDER_CITY,
+        PROVIDER_NAME,
+        STOCKS,
+        REVENUE,
+        DELIVERY_ADDRESS,
+        DELIVERY_DATE,
+        UNLOADED.THIS,
+        PAYMENT_STATUS.THIS,
+        PAYMENT_METHOD.THIS,
+    ].forEach(key => handleFields[key] = sel[key]?.value);
+
+    const clients = store.state.clientMod.clients.map(({id}) => id);
+    const delivery = z.object({
+        [DELIVERY_DATE]: z
+            .string()
+            .date(msgs.required("data de entrega")),
+        [DELIVERY_ADDRESS]: z
+            .string()
+            .regex(nonempty, msgs.required(cDelivery.trans.DELIVERY_ADDRESS))      
+            .min(base.delivery[DELIVERY_ADDRESS].min, msgs.min(cDelivery.trans.DELIVERY_ADDRESS, base.budget[DELIVERY_ADDRESS].min))
+            .max(base.delivery[DELIVERY_ADDRESS].max, msgs.max(cDelivery.trans.DELIVERY_ADDRESS, base.budget[DELIVERY_ADDRESS].max)),
+        [PROVIDER_NAME]: z
+            .string()
+            .regex(nonempty, msgs.required(cDelivery.trans.PROVIDER_NAME))      
+            .min(base.delivery[PROVIDER_NAME].min, msgs.min(cDelivery.trans.PROVIDER_NAME, base.budget[PROVIDER_NAME].min))
+            .max(base.delivery[PROVIDER_NAME].max, msgs.max(cDelivery.trans.PROVIDER_NAME, base.budget[PROVIDER_NAME].max)),
+        [PROVIDER_CITY]: z
+            .string()
+            .regex(nonempty, msgs.required(cDelivery.trans.PROVIDER_CITY))      
+            .min(base.delivery[PROVIDER_CITY].min, msgs.min(cDelivery.trans.PROVIDER_CITY, base.delivery[PROVIDER_CITY].min))
+            .max(base.delivery[PROVIDER_CITY].max, msgs.max(cDelivery.trans.PROVIDER_CITY, base.delivery[PROVIDER_CITY].max)),
+        [TRAVEL_COST]: z
+            .number({ message: msgs.required("custo de viagem") })
+            .positive()
+            // .regex(twoCases, msgs.twoCases(cDelivery.trans.COST))
+            .lte(handleFields[REVENUE], "O custo de viagem não pode ser maior que o faturamento"),
+        [UNLOADING_COST]: z
+            .number({ message: msgs.required("custo de descarga") })
+            .positive()
+            // .regex(twoCases, msgs.twoCases(cDelivery.trans.COST))
+            .lte(handleFields[REVENUE], "O custo de descarga não pode ser maior que o faturamento"),
+        [REVENUE]: z
+            .number({ message: msgs.required("faturamento") })
+            .positive()
+            // .regex(twoCases, msgs.twoCases(cDelivery.trans.REVENUE))
+            .gte(handleFields[COST], "O faturamento não pode ser menor que o custo"),
+        [CLIENT]: z
+            .number({ message: msgs.valid("cliente") })
+            .refine(includes(clients), { message: msgs.valid("cliente") }),
+        [DRIVER]: z
+            .string()
+            .regex(nonempty, msgs.required(cDelivery.trans.DRIVER))      
+            .min(base.delivery[DRIVER].min, msgs.min(cDelivery.trans.DRIVER, base.delivery[DRIVER].min))
+            .max(base.delivery[DRIVER].max, msgs.max(cDelivery.trans.DRIVER, base.delivery[DRIVER].max)),
+    });
+
+    return verify(delivery, name, sel[name], handleFields);
 }
