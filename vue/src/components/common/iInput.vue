@@ -92,7 +92,7 @@ export default {
         updateValue(e) {
             let val = e.target.value;
             if (this.type === "number") {
-                val = e.target.value.replace(/\D/g, "");
+                val = e.target.value.replace(/[^0-9.]/g, "").replace(/\.(?=.*\.)/g, "");
                 if (e.target.value.length) val = Number(val);
             }
             this.$emit("update:modelValue", val);

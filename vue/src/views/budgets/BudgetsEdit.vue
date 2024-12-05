@@ -279,6 +279,7 @@ export default {
         this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`}));
         const budget = this.$store.state.budgetMod.budget;
         this.stocks = budget.stocks;
+        // TODO trocar pelas keys dos consts
         const keys = ["client", "delivery_date", "delivery_address", "provider_name", "provider_city", "payment_date", "revenue", "cost", "unloaded", "payment_status", "payment_method"];
         keys.forEach(key => this[key].value = budget[key]);
     },

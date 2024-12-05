@@ -21,6 +21,7 @@
     </section>
 </template>
 <script>
+import { endpoints } from "@/common/consts";
 import iCard from "@/components/deliveries/iCard.vue";
 
 export default {
@@ -33,6 +34,12 @@ export default {
         await this.$store.dispatch("clientMod/storeClients");
         await this.$store.dispatch("deliveryMod/storeDeliveries");
     },
+
+    methods: {
+        edit(id) {
+            this.$router.push(endpoints.routes.DELIVERY_EDIT_FULL.replace(":id", id));
+        }
+    }
 };
 </script>
 <style scoped>

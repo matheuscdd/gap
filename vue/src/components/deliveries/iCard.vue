@@ -9,7 +9,14 @@
         <div>{{ delivery_address }}</div>
         <div>
             <div class="btns">
-
+                <button @click="edit">
+                    <iSvg 
+                        :src="require('@/assets/icons/pencil-solid.svg')"
+                        width="16" 
+                        height="16"
+                        fill="currentColor"
+                    />
+                </button>
             </div>
         </div>
     </li>
@@ -31,6 +38,11 @@ export default {
             const res = parseInt((new Date(this.delivery_date) - new Date()) / (1000 * 60 * 60 * 24));
             return `${res} dias`;
         }
+    },
+    methods: {
+        edit() {
+            this.$emit("edit", this.id);
+        },
     }
 };
 </script>

@@ -121,6 +121,10 @@ export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {
     ctx.revenue.value = Number(ctx.revenue.value) || "";
     ctx.travel_cost.value = Number(ctx.travel_cost.value) || "";
     ctx.unloading_cost.value = Number(ctx.unloading_cost.value) || 0;
+    if (ctx.unloaded.value === "client") {
+        ctx.unloading_cost.value = 0;
+    }
+    
     const { 
         client, 
         delivery_address, 

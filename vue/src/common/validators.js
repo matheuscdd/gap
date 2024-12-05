@@ -109,7 +109,6 @@ const includes = (arr) => ((el) => arr.includes(el));
 
 function validate(validator, data) {
     const schema = validator.safeParse(data);
-    console.log(schema.error);
     if (!schema.success) return schema.error.flatten().fieldErrors;
     return {};
 }
@@ -235,7 +234,12 @@ export function verifyBudget(name, obj) {
         PAYMENT_STATUS.THIS,
         PAYMENT_METHOD.THIS,
     ].forEach(key => handleFields[key] = sel[key]?.value);
-
+    Object.keys(handleFields).forEach(el => {
+        const num = Number(handleFields[el]);
+        if (isNaN(num)) return;
+        handleFields[el] = num;
+    });
+    
     const clients = store.state.clientMod.clients.map(({id}) => id);
     const budget = z.object({
         [DELIVERY_DATE]: z
@@ -298,6 +302,11 @@ export function verifyDelivery(name, obj) {
         PAYMENT_STATUS.THIS,
         PAYMENT_METHOD.THIS,
     ].forEach(key => handleFields[key] = sel[key]?.value);
+    Object.keys(handleFields).forEach(el => {
+        const num = Number(handleFields[el]);
+        if (isNaN(num)) return;
+        handleFields[el] = num;
+    });
 
     const clients = store.state.clientMod.clients.map(({id}) => id);
     const delivery = z.object({
@@ -326,7 +335,7 @@ export function verifyDelivery(name, obj) {
             .lte(handleFields[REVENUE], "O custo de viagem não pode ser maior que o faturamento"),
         [UNLOADING_COST]: z
             .number({ message: msgs.required("custo de descarga") })
-            .positive()
+            .gte(-1)
             // .regex(twoCases, msgs.twoCases(cDelivery.trans.COST))
             .lte(handleFields[REVENUE], "O custo de descarga não pode ser maior que o faturamento"),
         [REVENUE]: z

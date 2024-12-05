@@ -8,12 +8,17 @@ use App\Models\Delivery;
 use App\Models\DeliveryStock;
 use App\Models\Stock;
 use Illuminate\Support\Facades\Log;
+use App\Enums\Unloaded;
+use Illuminate\Support\Facades\DB;
 
 class DeliveryService {
     public static function createFull(array $data) {
         $data[Keys::CREATED_BY] = auth()->user()->id;
         $data[Keys::UPDATED_BY] = auth()->user()->id;
         $data[Keys::DELIVERY_DATE] = date(Keys::DATE_FORMAT, strtotime($data[Keys::DELIVERY_DATE]));
+        if ($data[Keys::UNLOADED] === Unloaded::CLIENT) {
+            $data[Keys::UNLOADING_COST] = 0;
+        }
         if (array_key_exists(Keys::PAYMENT_DATE, $data)) {
             $data[Keys::PAYMENT_DATE] = date(Keys::DATE_FORMAT, strtotime($data[Keys::PAYMENT_DATE]));
         }
@@ -68,6 +73,10 @@ class DeliveryService {
             throw new AppError('Entregas finalizadas não podem ser editadas', 403);
         }
 
+        if ($data[Keys::UNLOADED] === Unloaded::CLIENT) {
+            $data[Keys::UNLOADING_COST] = 0;
+        }
+
         ['stocks' => $stocks, 'deliveryStocks' => $deliveryStocks] = self::getStocks($id);
         $stocksIds = [];
         $deliveryStocksIds = [];
@@ -98,12 +107,31 @@ class DeliveryService {
     }
 
     public static function listFull() {
-        $deliveriesRaw = Delivery::where(Keys::REF, null);
-        $deliveriesHandle = [];
-        foreach ($deliveriesRaw->get() as $delivery) {
-            $deliveriesHandle[] = self::retrieve($delivery->id, $delivery);
+        $sql = "
+            SELECT 
+                dc.*,
+                (
+                    SELECT SUM(s.quantity) 
+                    FROM stocks s 
+                    JOIN deliveries_stocks ds ON ds.stock = s.id 
+                    WHERE ds.delivery = dc.id
+                ) AS total,
+                (
+                    SELECT SUM(s.quantity) 
+                    FROM stocks s 
+                    JOIN deliveries_stocks ds ON ds.stock = s.id 
+                    JOIN deliveries dp ON dp.ref = dc.id 
+                    WHERE ds.delivery = dp.id
+                ) AS completed
+            FROM deliveries dc
+            WHERE dc.ref IS NULL";
+        $deliveries = DB::select($sql);
+        foreach($deliveries as &$delivery) {
+            if ($delivery->completed === null) {
+                $delivery->completed = 0;
+            }
         }
-        return $deliveriesHandle;
+        return $deliveries;
     }
 
     public static function listPartial(int $ref) {

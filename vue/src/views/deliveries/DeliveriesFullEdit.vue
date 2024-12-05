@@ -1,11 +1,11 @@
 <template>
-    <h1>Criar Entrega Completa</h1>
-    <form @submit.prevent="create">
+    <h1>Editar Entrega Completa</h1>
+    <form @submit.prevent="edit">
         <section>
             <div>
                 <iInput 
                     label="Número"
-                    placeholder="Indefinido"
+                    :placeholder="this.$route.params.id"
                     readonly="true"
                     icon="file-contract-solid"
                     type="text"
@@ -97,6 +97,7 @@
                     v-model="client.value"
                     :opts="clientsOpts"
                     @validate="verifyDelivery"
+                    :edit="true"
                 />
                 <iSelect
                     :opts="paymentStatusOpts"
@@ -315,16 +316,25 @@ export default {
         removeStock(id) {
             this.stocks = this.stocks.filter(el => el.id !== id);
         },
-        async create() {
-            prepareDataDelivery(this, "create", verifyDelivery);
+        async edit() {
+            prepareDataDelivery(this, "edit", verifyDelivery, {id: this.$route.params.id});
         }
     },
 
     async beforeCreate() {
         window.scrollTo(0,0);
+        const id = this.$route.params.id;
+        await this.$store.dispatch("deliveryMod/storeDelivery", id);
         await this.$store.dispatch("stockTypeMod/storeStockTypes");
         await this.$store.dispatch("clientMod/storeClients");
         this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
+        const delivery = this.$store.state.deliveryMod.delivery;
+        this.stocks = delivery.stocks;
+        Object
+            .values(this.delivery.keys)
+            .filter(Boolean)
+            .map(key => typeof key !== "string" ? key.THIS : key)
+            .forEach(key => this[key].value = delivery[key]);
     }
 };
 </script>
