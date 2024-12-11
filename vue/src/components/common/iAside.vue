@@ -53,6 +53,10 @@
                         :style="setColor(endpoints.routes.DELIVERY_LIST)" 
                         :to="endpoints.routes.DELIVERY_LIST"
                     >Listar</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.DELIVERY_DASH)" 
+                        :to="endpoints.routes.DELIVERY_DASH"
+                    >Dash</RouterLink> 
                 </li>
             </ul>
         </div>

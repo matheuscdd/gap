@@ -47,7 +47,7 @@ class DeliveryService {
             throw new AppError('Estoque não encontrado', 404);
         }
 
-        $valid = self::validatePartialStocks($parent[Keys::STOCKS], $data[Keys::STOCKS], $savedPartialStocks);
+        $valid = self::validatePartialStocksValues($parent[Keys::STOCKS], $savedPartialStocks, $data[Keys::STOCKS])['valid'];
         if (!$valid) {
             throw new AppError('Entregas parciais não podem ter um estoque maior que a original', 409);
         }
@@ -99,11 +99,17 @@ class DeliveryService {
     }
 
     public static function findFull(int $id) {
-        $delivery = Delivery::find($id);
-        if ($delivery->ref) {
+        $deliveryInst = Delivery::find($id);
+        if ($deliveryInst->ref) {
             throw new AppError('Entregas parciais não podem ser retornadas nesse endpoint', 403);
         }
-        return self::retrieve($id, $delivery);
+        
+        $deliveryData = self::retrieve($id, $deliveryInst);
+        $partials = self::retrievePartialsStocks($id);
+        if (count($partials) && !$deliveryInst->finished) {
+            $deliveryData['available'] = self::validatePartialStocksValues($deliveryData[Keys::STOCKS], $partials)['availableStocks'];
+        }
+        return $deliveryData;
     }
 
     public static function listFull() {
@@ -138,7 +144,7 @@ class DeliveryService {
                     WHERE dp.ref = dc.id 
                 ) AS has_partials
             FROM deliveries dc
-            WHERE dc.ref IS NULL ";
+            WHERE dc.ref IS NULL";
         $deliveries = DB::select($sql);
         foreach ($deliveries as &$delivery) {
             $delivery->travel_cost = (float) $delivery->travel_cost;
@@ -189,8 +195,10 @@ class DeliveryService {
         return response()->noContent();
     }
 
-    private static function validatePartialStocks(array $originalStocks, array $unsavedPartialStocks, array $savedPartialStocks = []) {
-        foreach($originalStocks as &$ref) {
+    private static function validatePartialStocksValues(array $rawOriginalStocks, array $savedPartialStocks, array $unsavedPartialStocks = []) {
+        $handleOriginalStocks = [...$rawOriginalStocks];
+        
+        foreach($handleOriginalStocks as &$ref) {
             foreach($savedPartialStocks as $el) {
                 if ($el['type'] !== $ref['type'] || $el['name'] !== $ref['name']) {
                     continue;
@@ -201,7 +209,7 @@ class DeliveryService {
         }
         unset($ref);
 
-        foreach($originalStocks as &$ref) {
+        foreach($handleOriginalStocks as &$ref) {
             foreach($unsavedPartialStocks as $el) {
                 if ($el['type'] !== $ref['type'] || $el['name'] !== $ref['name']) {
                     continue;
@@ -212,12 +220,15 @@ class DeliveryService {
         }
         unset($ref);
 
-        foreach($originalStocks as $ref) {
+        foreach($handleOriginalStocks as $ref) {
             if ($ref['weight'] < 0 || $ref['quantity'] < 0) {
                 return false;
             }
         }
-        return true;
+        return [
+            'valid' => true,
+            'availableStocks' => $handleOriginalStocks,
+        ];
     }
 
     private static function validatePartialStocksExists(array $originalStocks, array $unsavedPartialStocks) {
@@ -273,9 +284,98 @@ class DeliveryService {
     }
 
     private static function retrievePartialsStocks(int $id) {
-        $partialsIds = Delivery::where(Keys::REF, $id)->get()->pluck('id');
-        $deliveryStocksIds = DeliveryStock::whereIn(Keys::DELIVERY, $partialsIds)->get()->pluck(Keys::STOCK);
-        $partialStocks = Stock::whereIn('id', $deliveryStocksIds)->get()->toArray();
-        return $partialStocks;    
+        $partialStocks = DB::table('stocks')
+            ->join('deliveries_stocks', 'deliveries_stocks.stock', '=', 'stocks.id')
+            ->join('deliveries', 'deliveries.id', '=', 'deliveries_stocks.delivery')
+            ->where('deliveries.ref', '=', $id)
+            ->select('stocks.*')
+            ->get()
+            ->toArray();
+        return json_decode(json_encode($partialStocks), true);
+    }
+
+    public static function treemap() {
+        $stocks = DB::table('stocks')
+            ->join('deliveries_stocks', 'deliveries_stocks.stock', '=', 'stocks.id')
+            ->join('deliveries', 'deliveries.id', '=', 'deliveries_stocks.delivery')
+            ->join('stock_type', 'stock_type.id', '=', 'stocks.type')
+            ->whereNotNull('deliveries.ref')
+            ->orWhere(function ($query) {
+                $query->whereNull('deliveries.ref')
+                      ->where('deliveries.finished', '=', false);
+            })
+            ->select(
+                'deliveries.id as delivery_id', 
+                'deliveries.ref as delivery_ref', 
+                'stocks.*', 
+                'stock_type.name as type_name',
+            )
+            ->get()
+            ->toArray();
+
+        $deliveries = [];
+        foreach ($stocks as $stock) {
+            if (is_null($stock->delivery_ref) && !array_key_exists($stock->delivery_id, $deliveries)) {
+                $deliveries[$stock->delivery_id] = [
+                    'ref' => [$stock],
+                    'partials' => []
+                ];
+            } else if (is_null($stock->delivery_ref)) {
+                $deliveries[$stock->delivery_id]['ref'][] = $stock;
+            }
+        }
+
+        foreach ($stocks as $stock) {
+            if (is_null($stock->delivery_ref) || !array_key_exists($stock->delivery_ref, $deliveries)) {
+                continue;
+            }
+
+            $deliveries[$stock->delivery_ref]['partials'][] = $stock;
+        }
+
+
+        foreach ($deliveries as &$delivery) {
+            $ref = json_decode(json_encode($delivery['ref']), true);
+            $partials = json_decode(json_encode($delivery['partials']), true);
+            $delivery['available'] = self::validatePartialStocksValues($ref, $partials)['availableStocks'];
+        }
+        unset($delivery);
+
+        define('BASE', 'Estoque');
+        $labels = [BASE];
+        $ids = [BASE];
+        $parents = [''];
+        foreach ($deliveries as $id => $delivery) {
+            $identifier = "Entrega $id";
+            $labels[] = $identifier;
+            $ids[] = $identifier;
+            $parents[] = BASE;
+            foreach($delivery['available'] as $stock) {
+                [
+                    'id' => $id,
+                    'weight' => $weight,
+                    'quantity' => $quantity,
+                    'name' => $name,
+                    'extra' => $extra,
+                    'type_name' => $type
+                ] = $stock;
+                if ($quantity === 0) continue;
+                $label = "[$quantity] $name - $type ($weight kg)";
+                if (!is_null($extra)) {
+                    $label .= " ($extra)";
+                }
+                $labels[] = $label;
+                $ids[] = $id;
+                $parents[] = $identifier;
+            }
+        }
+        $data = [
+            'type' => 'treemap',
+            'labels' => $labels,
+            'parents' => $parents,
+            'ids' => $ids,
+        ];
+
+        return [$data];
     }
 }

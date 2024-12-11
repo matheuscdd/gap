@@ -62,11 +62,12 @@ export default {
         "type",
         "errors",
         "maxlength",
-        "readonly"
+        "readonly",
+        "nullable",
     ],
     watch: {
         modelValue(value) {
-            this.empty = !String(value).length;
+            this.empty = !String(value).length && !this.nullable;
         }
     },
     computed: {
@@ -86,7 +87,7 @@ export default {
     },
     methods: {   
         outFocus() {
-            this.empty = !String(this.modelValue).length;
+            this.empty = !String(this.modelValue).length && !this.nullable;
             this.$emit("validate", this.name);
         },
         updateValue(e) {
