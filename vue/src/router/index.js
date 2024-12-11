@@ -80,6 +80,11 @@ const routes = [
         component: () => import("@/views/deliveries/DeliveriesFullEdit.vue")
     },
     {
+        path: endpoints.routes.DELIVERY_DASH,
+        name: endpoints.names.DELIVERY_DASH,
+        component: () => import("@/views/deliveries/DeliveriesDash.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/common/NotFound.vue")

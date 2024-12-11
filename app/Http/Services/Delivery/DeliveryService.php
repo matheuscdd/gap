@@ -138,7 +138,7 @@ class DeliveryService {
                     WHERE dp.ref = dc.id 
                 ) AS has_partials
             FROM deliveries dc
-            WHERE dc.ref IS NULL ";
+            WHERE dc.ref IS NULL";
         $deliveries = DB::select($sql);
         foreach ($deliveries as &$delivery) {
             $delivery->travel_cost = (float) $delivery->travel_cost;
@@ -277,5 +277,11 @@ class DeliveryService {
         $deliveryStocksIds = DeliveryStock::whereIn(Keys::DELIVERY, $partialsIds)->get()->pluck(Keys::STOCK);
         $partialStocks = Stock::whereIn('id', $deliveryStocksIds)->get()->toArray();
         return $partialStocks;    
+    }
+
+    public static function treemap() {
+        return [
+            "ta" => 'ok'
+        ];
     }
 }

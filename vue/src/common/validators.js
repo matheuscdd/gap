@@ -27,6 +27,7 @@ const {
     TRAVEL_COST,
     UNLOADING_COST,
     RECEIPT_DATE,
+    INVOICE,
 } = {...cUser.keys, ...cClient.keys, ...cBudget.keys, ...cDelivery.keys  };
 
 const budgetLimits = Object.freeze({
@@ -89,7 +90,10 @@ export const base = Object.freeze({
         [DRIVER]: Object.freeze({
             min: 3,
             max: 128,
-        }),        
+        }),
+        [INVOICE]: Object.freeze({
+            size: 44
+        })        
     }
 });
 
@@ -295,6 +299,7 @@ export function verifyDelivery(name, obj) {
         REVENUE,
         DELIVERY_ADDRESS,
         DELIVERY_DATE,
+        INVOICE,
         UNLOADED.THIS,
         PAYMENT_STATUS.THIS,
         PAYMENT_METHOD.THIS,
@@ -313,11 +318,16 @@ export function verifyDelivery(name, obj) {
             .regex(nonempty, msgs.required(cDelivery.trans.DELIVERY_ADDRESS))      
             .min(base.delivery[DELIVERY_ADDRESS].min, msgs.min(cDelivery.trans.DELIVERY_ADDRESS, base.budget[DELIVERY_ADDRESS].min))
             .max(base.delivery[DELIVERY_ADDRESS].max, msgs.max(cDelivery.trans.DELIVERY_ADDRESS, base.budget[DELIVERY_ADDRESS].max)),
+        [INVOICE]: z
+            .string()
+            .min(base.delivery[INVOICE].size, msgs.min(cDelivery.trans.INVOICE, base.delivery[INVOICE].size))
+            .optional()
+            .or(z.literal("")),
         [PROVIDER_NAME]: z
             .string()
             .regex(nonempty, msgs.required(cDelivery.trans.PROVIDER_NAME))      
-            .min(base.delivery[PROVIDER_NAME].min, msgs.min(cDelivery.trans.PROVIDER_NAME, base.budget[PROVIDER_NAME].min))
-            .max(base.delivery[PROVIDER_NAME].max, msgs.max(cDelivery.trans.PROVIDER_NAME, base.budget[PROVIDER_NAME].max)),
+            .min(base.delivery[PROVIDER_NAME].min, msgs.min(cDelivery.trans.PROVIDER_NAME, base.delivery[PROVIDER_NAME].min))
+            .max(base.delivery[PROVIDER_NAME].max, msgs.max(cDelivery.trans.PROVIDER_NAME, base.delivery[PROVIDER_NAME].max)),
         [PROVIDER_CITY]: z
             .string()
             .regex(nonempty, msgs.required(cDelivery.trans.PROVIDER_CITY))      

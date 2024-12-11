@@ -42,4 +42,8 @@ class DeliveryController extends Controller {
         return DeliveryService::finishPartial($request->route('id'));
     }
 
+    public function treemap(Request $request) {
+        return DeliveryService::treemap();
+    }
+
 }

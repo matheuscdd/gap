@@ -118,6 +118,20 @@
                     v-model="payment_method.value"
                 />
                 <iInput 
+                    :label="deliveryForm.INVOICE.LABEL"
+                    :placeholder="deliveryForm.INVOICE.PLACEHOLDER"
+                    :icon="deliveryForm.INVOICE.ICON"
+                    :type="deliveryForm.INVOICE.TYPE"
+                    :name="deliveryForm.INVOICE.NAME"
+                    :maxlength="limits.delivery.invoice.size"
+                    :nullable="true"
+                    :errors="invoice.errors"
+                    v-model="invoice.value"
+                    @validate="verifyDelivery"
+                />
+            </div>
+            <div>
+                <iInput 
                     :label="deliveryForm.TRAVEL_COST.LABEL"
                     :placeholder="deliveryForm.TRAVEL_COST.PLACEHOLDER"
                     :type="deliveryForm.TRAVEL_COST.TYPE"
@@ -127,8 +141,6 @@
                     v-model="travel_cost.value"
                     @validate="verifyDelivery"
                 />
-            </div>
-            <div>
                 <iInput 
                     :label="deliveryForm.DRIVER.LABEL"
                     :placeholder="deliveryForm.DRIVER.PLACEHOLDER"
@@ -206,6 +218,10 @@ export default {
             weight: "",
             extra: null
         }],
+        [mixins.data().delivery.keys.INVOICE]: {
+            errors: [],
+            value: "",
+        },
         [mixins.data().delivery.keys.CLIENT]: {
             errors: [],
             value: "",

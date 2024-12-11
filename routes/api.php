@@ -62,4 +62,5 @@ Route::middleware([JWTMiddleware::class, DeliveryMiddleware::class])->group(func
     Route::put('/deliveries/partial/{id}', [DeliveryController::class, 'createPartial']);
     Route::get('/deliveries/partial/{id}', [DeliveryController::class, 'listPartial']);
     Route::patch('/deliveries/partial/finish/{id}', [DeliveryController::class, 'finishPartial']);
+    Route::get('/deliveries/treemap', [DeliveryController::class, 'treemap']);
 });

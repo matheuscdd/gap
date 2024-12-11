@@ -139,6 +139,7 @@ export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {
         unloading_cost,
         driver,
         receipt_date,
+        invoice,
     } = ctx;
     const data = {
         stocks: ctx.stocks.map(({type, name, quantity, weight, extra }) => ({type, name, quantity, weight, extra })),
@@ -156,10 +157,12 @@ export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {
             unloading_cost,
             driver,
             receipt_date,
+            invoice,
         })
     };
     const paymentDate = ctx.payment_date.value;
     if (paymentDate) data.payment_date = paymentDate;
+    data.invoice = ctx.invoice.value === "" ? null : ctx.invoice.value;
 
     const errors = [];
     Object.keys(data).forEach(key => errors.push(verifyDelivery(key, ctx)));

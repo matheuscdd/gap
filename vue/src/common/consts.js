@@ -27,6 +27,7 @@ export const endpoints = Object.freeze({
         BUDGET_LIST: "/budgets/list",
         DELIVERY_CREATE_FULL: "/deliveries/full/create",
         DELIVERY_EDIT_FULL: "/deliveries/full/edit/:id",
+        DELIVERY_DASH: "/deliveries/dash",
         DELIVERY_LIST: "/deliveries/list",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
@@ -46,6 +47,7 @@ export const endpoints = Object.freeze({
         DELIVERY_CREATE_FULL: "deliveries-full-create",
         DELIVERY_EDIT: "deliveries-full-edit",
         DELIVERY_LIST: "deliveries-list",
+        DELIVERY_DASH: "deliveries-dash",
         NOT_FOUND: "not found",
     })
 });
@@ -289,6 +291,7 @@ export const delivery = Object.freeze({
         UNLOADING_COST: "unloading_cost",
         DRIVER: "driver",
         RECEIPT_DATE: "receipt_date",
+        INVOICE: "invoice",
         COST: null,
     }),
 
@@ -298,6 +301,7 @@ export const delivery = Object.freeze({
         UNLOADING_COST: "custo da descarga",
         DRIVER: "motorista",
         RECEIPT_DATE: "data de recebimento",
+        INVOICE: "nota fiscal",
         COST: null,
     })
 });
@@ -325,6 +329,13 @@ export const deliveryForm = Object.freeze({
         TYPE: "text",
         NAME: delivery.keys.DRIVER,
         LABEL: delivery.trans.DRIVER
+    }),
+    INVOICE: Object.freeze({
+        PLACEHOLDER: "Indique se existir",
+        ICON: "qrcode-solid",
+        TYPE: "text",
+        NAME: delivery.keys.INVOICE,
+        LABEL: delivery.trans.INVOICE
     }),
     RECEIPT_DATE: Object.freeze({
         PLACEHOLDER: "Data de chegada da mercadoria",
