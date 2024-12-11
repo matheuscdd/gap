@@ -35,6 +35,11 @@ export default {
             router.push(endpoints.routes.DELIVERY_LIST);
         },
 
+        async finishFull(ctx, id) {
+            const response = await api("/deliveries/full/finish/" + id, methods.PATCH);
+            if (response.error) return alert(response.error);
+        },
+
         async storeDeliveries(ctx) {
             const response = await api("/deliveries/full");
             const data = response.map(delivery => ({

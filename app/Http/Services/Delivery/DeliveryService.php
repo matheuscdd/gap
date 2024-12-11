@@ -31,7 +31,7 @@ class DeliveryService {
     public static function createPartial(int $ref, array $data) {
         $parent = self::retrieve($ref);
 
-        if ($parent->finished) {
+        if ($parent[Keys::FINISHED]) {
             throw new AppError('Entregas finalizadas não podem ser receber parciais', 403);
         }
 
@@ -117,20 +117,36 @@ class DeliveryService {
                     WHERE ds.delivery = dc.id
                 ) AS total,
                 (
-                    SELECT SUM(s.quantity) 
-                    FROM stocks s 
-                    JOIN deliveries_stocks ds ON ds.stock = s.id 
-                    JOIN deliveries dp ON dp.ref = dc.id 
-                    WHERE ds.delivery = dp.id
-                ) AS completed
+                CASE
+                	WHEN dc.finished = TRUE 
+                	THEN (
+	                    SELECT SUM(s.quantity) 
+	                    FROM stocks s 
+	                    JOIN deliveries_stocks ds ON ds.stock = s.id 
+	                    WHERE ds.delivery = dc.id
+                	) ELSE (
+                        SELECT COALESCE(SUM(s.quantity), 0)
+                        FROM stocks s 
+                        JOIN deliveries_stocks ds ON ds.stock = s.id 
+                        JOIN deliveries dp ON dp.ref = dc.id 
+                        WHERE ds.delivery = dp.id AND dp.finished = true
+                	)
+                END) AS completed,           
+                (
+                    SELECT SUM(dp.id) IS NOT NULL 
+                    FROM deliveries dp 
+                    WHERE dp.ref = dc.id 
+                ) AS has_partials
             FROM deliveries dc
-            WHERE dc.ref IS NULL";
+            WHERE dc.ref IS NULL ";
         $deliveries = DB::select($sql);
-        foreach($deliveries as &$delivery) {
-            if ($delivery->completed === null) {
-                $delivery->completed = 0;
-            }
+        foreach ($deliveries as &$delivery) {
+            $delivery->travel_cost = (float) $delivery->travel_cost;
+            $delivery->revenue = (float) $delivery->revenue;
+            $delivery->unloading_cost = (float) $delivery->unloading_cost;
         }
+        unset($delivery);
+
         return $deliveries;
     }
 

@@ -234,11 +234,8 @@ export function verifyBudget(name, obj) {
         PAYMENT_STATUS.THIS,
         PAYMENT_METHOD.THIS,
     ].forEach(key => handleFields[key] = sel[key]?.value);
-    Object.keys(handleFields).forEach(el => {
-        const num = Number(handleFields[el]);
-        if (isNaN(num)) return;
-        handleFields[el] = num;
-    });
+    handleFields[COST] = Number(handleFields[COST]) || handleFields[COST];
+    handleFields[REVENUE] = Number(handleFields[REVENUE]) || handleFields[REVENUE];
     
     const clients = store.state.clientMod.clients.map(({id}) => id);
     const budget = z.object({
@@ -302,11 +299,9 @@ export function verifyDelivery(name, obj) {
         PAYMENT_STATUS.THIS,
         PAYMENT_METHOD.THIS,
     ].forEach(key => handleFields[key] = sel[key]?.value);
-    Object.keys(handleFields).forEach(el => {
-        const num = Number(handleFields[el]);
-        if (isNaN(num)) return;
-        handleFields[el] = num;
-    });
+    handleFields[UNLOADING_COST] = isNaN(Number(handleFields[UNLOADING_COST])) ? 0 : Number(handleFields[UNLOADING_COST]);
+    handleFields[TRAVEL_COST] = Number(handleFields[TRAVEL_COST]) || handleFields[TRAVEL_COST];
+    handleFields[REVENUE] = Number(handleFields[REVENUE]) || handleFields[REVENUE];
 
     const clients = store.state.clientMod.clients.map(({id}) => id);
     const delivery = z.object({

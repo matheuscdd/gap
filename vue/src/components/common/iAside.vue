@@ -5,27 +5,54 @@
             <ul>
                 <li>
                     <h6>Comum</h6>
-                    <RouterLink :to="endpoints.routes.HOME">Home</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.HOME)" 
+                        :to="endpoints.routes.HOME"
+                    >Home</RouterLink> 
                 </li>
                 <li v-show="this.$store.state.userMod.logged.type === user.keys.TYPE.ADMIN">
                     <h6>Usuários</h6>
-                    <RouterLink :to="endpoints.routes.USER_CREATE">Criar</RouterLink> 
-                    <RouterLink :to="endpoints.routes.USER_LIST">Listar</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.USER_CREATE)" 
+                        :to="endpoints.routes.USER_CREATE"
+                    >Criar</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.USER_LIST)" 
+                        :to="endpoints.routes.USER_LIST"
+                    >Listar</RouterLink> 
                 </li>
                 <li>
                     <h6>Clientes</h6>
-                    <RouterLink :to="endpoints.routes.CLIENT_CREATE">Criar</RouterLink> 
-                    <RouterLink :to="endpoints.routes.CLIENT_LIST">Listar</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.CLIENT_CREATE)" 
+                        :to="endpoints.routes.CLIENT_CREATE"
+                    >Criar</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.CLIENT_LIST)" 
+                        :to="endpoints.routes.CLIENT_LIST"
+                    >Listar</RouterLink> 
                 </li>
                 <li>
                     <h6>Orçamentos</h6>
-                    <RouterLink :to="endpoints.routes.BUDGET_CREATE">Criar</RouterLink> 
-                    <RouterLink :to="endpoints.routes.BUDGET_LIST">Listar</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.BUDGET_CREATE)" 
+                        :to="endpoints.routes.BUDGET_CREATE"
+                    >Criar</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.BUDGET_LIST)" 
+                        :to="endpoints.routes.BUDGET_LIST"
+                    >Listar</RouterLink> 
                 </li>
                 <li>
                     <h6>Entregas</h6>
-                    <RouterLink :to="endpoints.routes.DELIVERY_CREATE_FULL">Criar</RouterLink> 
-                    <RouterLink :to="endpoints.routes.DELIVERY_LIST">Listar</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.DELIVERY_CREATE_FULL)" 
+                        :to="endpoints.routes.DELIVERY_CREATE_FULL"
+                    >Criar</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.DELIVERY_LIST)" 
+                        :to="endpoints.routes.DELIVERY_LIST"
+                    >Listar</RouterLink> 
                 </li>
             </ul>
         </div>
@@ -44,6 +71,11 @@ export default {
     components: {
         RouterLink
     },
+    methods: {
+        setColor(path) {
+            return {color: this.$route.path === path ? "var(--green-2)" : "var(--black-1)"};
+        }
+    }
 };
 </script>
 <style scoped>

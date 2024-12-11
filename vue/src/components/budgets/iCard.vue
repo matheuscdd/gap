@@ -4,7 +4,7 @@
             <div>
                 <h3>{{ client_name }}</h3>
                 <h4>{{ provider_name }}</h4>
-                <h5>ENTREGA: {{ delivery_date }}</h5>
+                <h5>ENTREGA: {{ new Date(delivery_date).toLocaleDateString("pt-BR")  }}</h5>
                 <h6>ATUALIZAÇÃO: {{ updatedAt.toLocaleString("pt-BR") }}</h6>
             </div>
             <div class="btns">
@@ -72,6 +72,7 @@ li {
     width: 330px;
     height: 300px;
     background-color: white;
+    border-radius: 12px;
 }
 
 h3 {

@@ -333,7 +333,7 @@ export default {
         Object
             .values(this.delivery.keys)
             .filter(Boolean)
-            .map(key => typeof key !== "string" ? key.THIS : key)
+            .map(key => key?.THIS || key)
             .forEach(key => this[key].value = delivery[key]);
     }
 };
