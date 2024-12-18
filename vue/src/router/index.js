@@ -85,6 +85,11 @@ const routes = [
         component: () => import("@/views/deliveries/DeliveriesDash.vue")
     },
     {
+        path: endpoints.routes.DELIVERY_CREATE_PARTIAL,
+        name: endpoints.names.DELIVERY_CREATE_PARTIAL,
+        component: () => import("@/views/deliveries/DeliveriesPartialCreate.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/common/NotFound.vue")

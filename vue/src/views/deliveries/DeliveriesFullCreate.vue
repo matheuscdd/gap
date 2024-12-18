@@ -333,7 +333,7 @@ export default {
             this.stocks = this.stocks.filter(el => el.id !== id);
         },
         async create() {
-            prepareDataDelivery(this, "create", verifyDelivery);
+            prepareDataDelivery(this, "createFull", verifyDelivery);
         }
     },
 

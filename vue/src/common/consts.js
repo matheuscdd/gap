@@ -29,6 +29,7 @@ export const endpoints = Object.freeze({
         DELIVERY_EDIT_FULL: "/deliveries/full/edit/:id",
         DELIVERY_DASH: "/deliveries/dash",
         DELIVERY_LIST: "/deliveries/list",
+        DELIVERY_CREATE_PARTIAL: "/deliveries/partial/create/:id",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
     names: Object.freeze({
@@ -48,6 +49,7 @@ export const endpoints = Object.freeze({
         DELIVERY_EDIT: "deliveries-full-edit",
         DELIVERY_LIST: "deliveries-list",
         DELIVERY_DASH: "deliveries-dash",
+        DELIVERY_CREATE_PARTIAL: "deliveries-partial-create",
         NOT_FOUND: "not found",
     })
 });
@@ -310,14 +312,14 @@ export const deliveryForm = Object.freeze({
     ...budgetForm,
     COST: null,
     TRAVEL_COST: Object.freeze({
-        PLACEHOLDER: "Indique o custo da viagem",
+        PLACEHOLDER: "Indique o valor",
         ICON: "gas-pump-solid",
         TYPE: "number",
         NAME: delivery.keys.TRAVEL_COST,
         LABEL: delivery.trans.TRAVEL_COST
     }),
     UNLOADING_COST: Object.freeze({
-        PLACEHOLDER: "Indique o custo de descarga",
+        PLACEHOLDER: "Indique o valor",
         ICON: "people-carry-box-solid",
         TYPE: "number",
         NAME: delivery.keys.UNLOADING_COST,

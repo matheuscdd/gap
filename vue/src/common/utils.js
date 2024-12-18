@@ -67,7 +67,7 @@ export async function sleep(time) {
   
 export function getValues(data) {
     const result = {};
-    Object.keys(data).forEach(key => result[key] = data[key].value);
+    Object.keys(data).forEach(key => result[key] = data[key]?.value);
     return result;
 }
 
@@ -118,9 +118,13 @@ export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
 }
 
 export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {}) {
-    ctx.revenue.value = Number(ctx.revenue.value) || "";
-    ctx.travel_cost.value = Number(ctx.travel_cost.value) || "";
-    ctx.unloading_cost.value = Number(ctx.unloading_cost.value) || 0;
+    ["revenue", "travel_cost", "unloading_cost"]
+        .filter(key => ctx[key])
+        .forEach(key => {
+            console.log(ctx[key]);
+            ctx[key].value = Number(ctx[key]?.value) || "";
+        }
+        );
     if (ctx.unloaded.value === "client") {
         ctx.unloading_cost.value = 0;
     }
@@ -142,7 +146,7 @@ export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {
         invoice,
     } = ctx;
     const data = {
-        stocks: ctx.stocks.map(({type, name, quantity, weight, extra }) => ({type, name, quantity, weight, extra })),
+        stocks: ctx.stocks.filter(el => !el.ignore).map(({type, name, quantity, weight, extra }) => ({type, name, quantity, weight, extra })),
         ...getValues({ 
             client, 
             delivery_address, 
@@ -160,13 +164,18 @@ export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {
             invoice,
         })
     };
-    const paymentDate = ctx.payment_date.value;
+    const paymentDate = ctx.payment_date?.value;
     if (paymentDate) data.payment_date = paymentDate;
-    data.invoice = ctx.invoice.value === "" ? null : ctx.invoice.value;
+    data.invoice = ctx.invoice?.value === "" ? null : ctx.invoice?.value;
 
     const errors = [];
-    Object.keys(data).forEach(key => errors.push(verifyDelivery(key, ctx)));
-    ctx.$refs.stocks.forEach(el => 
+    const isNotPartial = ctx.$route.name !== endpoints.names.DELIVERY_CREATE_PARTIAL;
+    let filter = Boolean;
+    if (!isNotPartial) {
+        filter = (el) => ["delivery_date", "delivery_address", "unloaded", "driver", "unloading_cost", "stocks"].includes(el);
+    }
+    Object.keys(data).filter(filter).forEach(key => errors.push(verifyDelivery(key, ctx)));
+    ctx.$refs.stocks.filter(el => !el.ignore).forEach(el => 
         ["name", "quantity", "weight"].forEach(name => 
             errors.push(el.outFocus({target: {name}}))
         )

@@ -52,6 +52,7 @@
             :finished="el.finished"
             :total="el.total"
             @edit="edit"
+            @createPartial="createPartial"
             @finish="finish"
         />
     </ul>
@@ -97,6 +98,10 @@ export default {
             if (!continues) return;
             await this.$store.dispatch("deliveryMod/finishFull", id);
             await this.$store.dispatch("deliveryMod/storeDeliveries");
+        },
+
+        createPartial(id) {
+            this.$router.push(endpoints.routes.DELIVERY_CREATE_PARTIAL.replace(":id", id));
         },
 
         filter() {

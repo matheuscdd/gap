@@ -1,6 +1,5 @@
 <template>
-    <div class="container">
-        
+    <div :class="['container', ignore ? 'ignore' : '']">
         <div>
             <div :class="{[$style.internal]: true, invalid: errors.name.length, med: true}">
                 <iSvg 
@@ -14,6 +13,7 @@
                     placeholder="Nome"
                     :value="name"
                     name="name"
+                    :disabled="onlyLess"
                     @input="$emit('update:name', $event.target.value)"
                     @blur="outFocus"
                 />
@@ -24,7 +24,6 @@
                 </li>
             </ul>
         </div>
-        
         <iSelect
             :opts="$store.state.stockTypeMod.stockTypes"
             label=""
@@ -33,8 +32,8 @@
             :errors="[]"
             icon="box-solid"
             v-model="kind"
+            :readonly="onlyLess"
         />
-
         <div v-show="kind === 2">
             <div :class="{[$style.internal]: true, combo: true, med: true}">
                 <input 
@@ -44,6 +43,7 @@
                     @input="onFloat" 
                     v-model="width"
                     @change="updateExtra"
+                    :disabled="onlyLess"
                 />
                 <div class="box">&nbsp;</div>
                 <input 
@@ -53,9 +53,9 @@
                     @input="onFloat" 
                     v-model="height"
                     @change="updateExtra"
+                    :disabled="onlyLess"
                 />
             </div>
-            
         </div>
         <div>
             <div :class="{[$style.internal]: true, invalid: errors.quantity.length, med: true}">
@@ -105,9 +105,7 @@
                 </li>
             </ul>
         </div>
-        
-        
-        <button type="button" :onclick="add" class="green">
+        <button v-show="!onlyLess" type="button" :onclick="add" class="green">
             <div>
                 <iSvg 
                     :src="require(`@/assets/icons/plus-solid.svg`)"
@@ -117,10 +115,20 @@
                 />
             </div>
         </button>
-        <button v-show="tot !== 1" type="button" :onclick="del" class="red">
+        <button v-show="tot !== 1 && !onlyLess" type="button" :onclick="del" class="red">
             <div>
                 <iSvg 
                     :src="require(`@/assets/icons/xmark-solid.svg`)"
+                    width="16" 
+                    height="16"
+                    fill="white"
+                />
+            </div>
+        </button>
+        <button v-show="onlyLess" type="button" :onclick="clean" class="gray">
+            <div>
+                <iSvg 
+                    :src="require(`@/assets/icons/ban-solid.svg`)"
                     width="16" 
                     height="16"
                     fill="white"
@@ -151,10 +159,13 @@ export default {
         "id",
         "name",
         "quantity",
+        "ignore",
         "weight",
         "type",
         "extra",
-        "tot"
+        "tot",
+        "onlyLess",
+        "max", // TODO - esse max será um objeto que terá weight e quantity, lem
     ],
     created() {
         this.kind = this.type;
@@ -181,6 +192,10 @@ export default {
     methods: {
         onInt(e) {
             e.target.value = e.target.value.replace(/\D/g, "");
+            if (!this.onlyLess) return;
+            const type = e.target.name;
+            if (Number(e.target.value) <= this.max[type]) return;
+            e.target.value = this.max[type];
         },
         onFloat(e) {
             this[e.target.name] = e.target.value
@@ -192,6 +207,9 @@ export default {
         },
         del() {
             this.$emit("del", this.id);
+        },
+        clean() {
+            this.$emit("update:ignore", !this.ignore);
         },
         outFocus(e) {
             const name = e.target.name;
@@ -211,6 +229,10 @@ export default {
 };
 </script>
 <style scoped>
+.ignore {
+    opacity: 50%;
+}
+
 .container {
     display: flex;
     gap: 5px;
@@ -224,6 +246,10 @@ export default {
 
 .red { 
     background-color: var(--red-1);
+}
+
+.gray { 
+    background-color: var(--gray-3);
 }
 
 .red span {

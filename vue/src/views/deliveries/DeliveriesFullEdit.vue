@@ -333,7 +333,7 @@ export default {
             this.stocks = this.stocks.filter(el => el.id !== id);
         },
         async edit() {
-            prepareDataDelivery(this, "edit", verifyDelivery, {id: this.$route.params.id});
+            prepareDataDelivery(this, "editFull", verifyDelivery, {id: this.$route.params.id});
         }
     },
 

@@ -26,13 +26,20 @@ export default {
         }
     },
     actions: {
-        async createDelivery(ctx, data) {
+        async createFullDelivery(ctx, data) {
             const response = await api("/deliveries/full", methods.POST, data);
             if (response.error) return alert(response.error);
             router.push(endpoints.routes.DELIVERY_LIST);
         },
 
-        async editDelivery(ctx, data) {
+        async createPartialDelivery(ctx, data) {
+            const response = await api("/deliveries/partial/" + data.id , methods.PUT, data);
+            if (response.error) return alert(response.error);
+            router.push(endpoints.routes.DELIVERY_LIST);
+            // TODO - trocar para a tela de visualização quando estiver pronta
+        },
+
+        async editFullDelivery(ctx, data) {
             const response = await api("/deliveries/full/" + data.id, methods.PATCH, data);
             if (response.error) return alert(response.error);
             ctx.commit("storeDelivery", response);
