@@ -71,6 +71,25 @@ export function getValues(data) {
     return result;
 }
 
+export function randomNumbers(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max+1);
+    let result = Math.floor(Math.random() * (max - min) + min);
+    if (result >= max) {
+      result = max-1;
+    }
+    return result;
+}
+
+export function randomColor(alpha) {
+    let red = randomNumbers(0, 255);
+    let green = randomNumbers(0, 255);
+    let blue = randomNumbers(0, 255);
+    let color = `rgb(${red},${green},${blue})`;
+    let colora = `rgba(${red},${green},${blue},${alpha})`;
+    return {color, colora};
+}
+
 export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
     ctx.revenue.value = Number(ctx.revenue.value) || "";
     ctx.cost.value = Number(ctx.cost.value) || "";
@@ -121,8 +140,7 @@ export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {
     ["revenue", "travel_cost", "unloading_cost"]
         .filter(key => ctx[key])
         .forEach(key => {
-            console.log(ctx[key]);
-            ctx[key].value = Number(ctx[key]?.value) || "";
+            ctx[key].value = isNaN(Number(ctx[key]?.value)) ? "" : Number(ctx[key]?.value);
         }
         );
     if (ctx.unloaded.value === "client") {
@@ -166,7 +184,11 @@ export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {
     };
     const paymentDate = ctx.payment_date?.value;
     if (paymentDate) data.payment_date = paymentDate;
-    data.invoice = ctx.invoice?.value === "" ? null : ctx.invoice?.value;
+    if (!ctx.invoice?.value) {
+        delete data.invoice;
+    } else {
+        data.invoice = ctx.invoice.value;
+    }
 
     const errors = [];
     const isNotPartial = ctx.$route.name !== endpoints.names.DELIVERY_CREATE_PARTIAL;

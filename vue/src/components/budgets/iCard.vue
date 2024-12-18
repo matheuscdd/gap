@@ -120,14 +120,9 @@ h6 {
     background-color: var(--gray-1);
 }
 
-.btns button:hover {
+.btns button:hover, .btns button:active {
     transition: 0.3s;
-    opacity: 0.8;
-}
-
-.btns button:active {
-    transition: 0.3s;
-    opacity: 0.5;
+    filter: brightness(1.5);
 }
 
 .btns .create {

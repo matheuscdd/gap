@@ -12,6 +12,7 @@
     --green-2: #1E9B2D;
     --green-3: #19382D;
     --green-4: #3E9237;
+    --green-5: #56ff46;
     --yellow-1: #F7DA00;
     --orange-1: #F6A909;
     --trans-1: 0.8s;
@@ -25,6 +26,7 @@ body {
 
 h1 {
     font-size: 30px;
+    user-select: none;
 }
 
 .bButton {

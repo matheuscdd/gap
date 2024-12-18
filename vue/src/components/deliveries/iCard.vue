@@ -21,6 +21,17 @@
             <div>
                 <div class="btns">
                     <button
+                        @click="view"
+                        class="view"
+                    >
+                        <iSvg
+                            :src="require('@/assets/icons/eye-solid.svg')"
+                            width="16"
+                            height="16"
+                            fill="white"
+                        />
+                    </button>
+                    <button
                         @click="edit"
                         class="edit"
                         :disabled="finished || has_partials"
@@ -107,7 +118,6 @@ export default {
     },
     methods: {
         edit() {
-            console.log(this.id);
             this.$emit("edit", this.id);
         },
         createPartial() {
@@ -115,6 +125,9 @@ export default {
         },
         finish() {
             this.$emit("finish", this.id);
+        },
+        view() {
+            this.$emit("view", this.id);
         },
     },
 };
@@ -187,9 +200,9 @@ button {
     gap: 7px;
 }
 
-.btns button:hover {
+.btns button:hover, .btns button:active {
     transition: 0.3s;
-    opacity: 0.8;
+    filter: brightness(1.5);
 }
 
 .btns .createPartial {
@@ -198,6 +211,10 @@ button {
 
 .btns .finish {
     background-color: var(--green-2);
+}
+
+.btns .view {
+    background-color: var(--green-1);
 }
 
 .btns .edit {

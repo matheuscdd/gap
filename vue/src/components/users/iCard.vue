@@ -106,9 +106,9 @@ button {
     gap: 10px;
 }
 
-button:hover {
+button:hover, button:active {
     transition: 0.3s;
-    opacity: 0.8;
+    filter: brightness(1.5);
 }
 
 button:disabled {

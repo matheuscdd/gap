@@ -54,6 +54,7 @@
             @edit="edit"
             @createPartial="createPartial"
             @finish="finish"
+            @view="view"
         />
     </ul>
     <div 
@@ -102,6 +103,10 @@ export default {
 
         createPartial(id) {
             this.$router.push(endpoints.routes.DELIVERY_CREATE_PARTIAL.replace(":id", id));
+        },
+
+        view(id) {
+            this.$router.push(endpoints.routes.DELIVERY_VIEW_FULL.replace(":id", id));
         },
 
         filter() {

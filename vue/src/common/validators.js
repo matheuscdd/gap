@@ -310,12 +310,8 @@ export function verifyDelivery(name, obj) {
             REVENUE,
         ]);
     }
-
+    
     rawFields.forEach(key => handleFields[key] = sel[key]?.value);
-    handleFields[UNLOADING_COST] = isNaN(Number(handleFields[UNLOADING_COST])) ? 0 : Number(handleFields[UNLOADING_COST]);
-    handleFields[TRAVEL_COST] = Number(handleFields[TRAVEL_COST]) || handleFields[TRAVEL_COST];
-    handleFields[REVENUE] = Number(handleFields[REVENUE]) || handleFields[REVENUE];
-
     const clients = store.state.clientMod.clients.map(({id}) => id);
     let schema = {
         [DELIVERY_DATE]: z
@@ -326,7 +322,7 @@ export function verifyDelivery(name, obj) {
             .regex(nonempty, msgs.required(cDelivery.trans.DELIVERY_ADDRESS))      
             .min(base.delivery[DELIVERY_ADDRESS].min, msgs.min(cDelivery.trans.DELIVERY_ADDRESS, base.budget[DELIVERY_ADDRESS].min))
             .max(base.delivery[DELIVERY_ADDRESS].max, msgs.max(cDelivery.trans.DELIVERY_ADDRESS, base.budget[DELIVERY_ADDRESS].max)),
-        [UNLOADING_COST]: z
+        unloading_cost: z
             .number({ message: msgs.required("custo de descarga") })
             .gte(-1),
             // .regex(twoCases, msgs.twoCases(cDelivery.trans.COST))
@@ -337,14 +333,15 @@ export function verifyDelivery(name, obj) {
             .max(base.delivery[DRIVER].max, msgs.max(cDelivery.trans.DRIVER, base.delivery[DRIVER].max)),
     };
     if (isNotPartial) {
-        schema[UNLOADING_COST] = schema[UNLOADING_COST].lte(handleFields[REVENUE], "O custo de descarga não pode ser maior que o faturamento");
+        // schema[UNLOADING_COST] = schema[UNLOADING_COST].lte(handleFields[REVENUE], "O custo de descarga não pode ser maior que o faturamento");
         schema = {
             ...schema,
             [INVOICE]: z
                 .string()
                 .min(base.delivery[INVOICE].size, msgs.min(cDelivery.trans.INVOICE, base.delivery[INVOICE].size))
                 .optional()
-                .or(z.literal("")),
+                .or(z.literal(""))
+                .or(z.literal(null)),
             [PROVIDER_NAME]: z
                 .string()
                 .regex(nonempty, msgs.required(cDelivery.trans.PROVIDER_NAME))      

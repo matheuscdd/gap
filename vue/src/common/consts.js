@@ -30,6 +30,7 @@ export const endpoints = Object.freeze({
         DELIVERY_DASH: "/deliveries/dash",
         DELIVERY_LIST: "/deliveries/list",
         DELIVERY_CREATE_PARTIAL: "/deliveries/partial/create/:id",
+        DELIVERY_VIEW_FULL: "/deliveries/full/view/:id",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
     names: Object.freeze({
@@ -50,6 +51,7 @@ export const endpoints = Object.freeze({
         DELIVERY_LIST: "deliveries-list",
         DELIVERY_DASH: "deliveries-dash",
         DELIVERY_CREATE_PARTIAL: "deliveries-partial-create",
+        DELIVERY_VIEW_FULL: "deliveries-full-view",
         NOT_FOUND: "not found",
     })
 });
@@ -218,35 +220,35 @@ export const budgetForm = Object.freeze({
         LABEL: budget.trans.CLIENT
     }),
     DELIVERY_DATE: Object.freeze({
-        PLACEHOLDER: "Defina a data de entrega",
+        PLACEHOLDER: "Data de entrega",
         ICON: "truck-solid",
         TYPE: "date",
         NAME: budget.keys.DELIVERY_DATE,
         LABEL: budget.trans.DELIVERY_DATE
     }),
     DELIVERY_ADDRESS: Object.freeze({
-        PLACEHOLDER: "Defina o endereço de entrega",
+        PLACEHOLDER: "Endereço de entrega",
         ICON: "map-solid",
         TYPE: "text",
         NAME: budget.keys.DELIVERY_ADDRESS,
         LABEL: budget.trans.DELIVERY_ADDRESS
     }),
     PROVIDER_NAME: Object.freeze({
-        PLACEHOLDER: "Defina o nome do fornecedor",
+        PLACEHOLDER: "Nome do fornecedor",
         ICON: "industry-solid",
         TYPE: "text",
         NAME: budget.keys.PROVIDER_NAME,
         LABEL: budget.trans.PROVIDER_NAME
     }),
     PROVIDER_CITY: Object.freeze({
-        PLACEHOLDER: "Escolha a cidade do fornecedor",
+        PLACEHOLDER: "Cidade do fornecedor",
         ICON: "city-solid",
         TYPE: "text",
         NAME: budget.keys.PROVIDER_CITY,
         LABEL: budget.trans.PROVIDER_CITY
     }),
     PAYMENT_DATE: Object.freeze({
-        PLACEHOLDER: "Defina a data de pagamento",
+        PLACEHOLDER: "Data de pagamento",
         ICON: "cash-register-solid",
         TYPE: "date",
         NAME: budget.keys.PAYMENT_DATE,
@@ -267,19 +269,19 @@ export const budgetForm = Object.freeze({
         LABEL: budget.trans.COST
     }),
     UNLOADED: Object.freeze({
-        PLACEHOLDER: "Escolha o modo de descarga",
+        PLACEHOLDER: "Modo de descarga",
         ICON: "dolly-solid",
         NAME: budget.keys.UNLOADED,
         LABEL: budget.trans.UNLOADED
     }),
     PAYMENT_STATUS: Object.freeze({
-        PLACEHOLDER: "Defina o status do pagamento",
+        PLACEHOLDER: "Status do pagamento",
         ICON: "money-bill-transfer-solid",
         NAME: budget.keys.PAYMENT_STATUS,
         LABEL: budget.trans.PAYMENT_STATUS
     }),
     PAYMENT_METHOD: Object.freeze({
-        PLACEHOLDER: "Defina o método de pagamento",
+        PLACEHOLDER: "Método de pagamento",
         ICON: "barcode-solid",
         NAME: budget.keys.PAYMENT_METHOD,
         LABEL: budget.trans.PAYMENT_METHOD

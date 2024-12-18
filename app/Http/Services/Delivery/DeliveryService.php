@@ -106,7 +106,7 @@ class DeliveryService {
         
         $deliveryData = self::retrieve($id, $deliveryInst);
         $partials = self::retrievePartialsStocks($id);
-        if (count($partials) && !$deliveryInst->finished) {
+        if (!$deliveryInst->finished) {
             $deliveryData['available'] = self::validatePartialStocksValues($deliveryData[Keys::STOCKS], $partials)['availableStocks'];
         }
         return $deliveryData;
@@ -350,6 +350,7 @@ class DeliveryService {
             $labels[] = $identifier;
             $ids[] = $identifier;
             $parents[] = BASE;
+            # TODO - agrupar pelo nome e tipo
             foreach($delivery['available'] as $stock) {
                 [
                     'id' => $id,
@@ -366,6 +367,16 @@ class DeliveryService {
                 }
                 $labels[] = $label;
                 $ids[] = $id;
+                $parents[] = $identifier;
+            }
+            foreach($delivery['partials'] as $stock) {
+                if ($stock->quantity === 0) continue;
+                $label = "[$stock->quantity] $stock->name - $stock->type ($stock->weight kg)";
+                if (!is_null($stock->extra)) {
+                    $label .= " ($stock->extra)";
+                }
+                $labels[] = $label;
+                $ids[] = $stock->id;
                 $parents[] = $identifier;
             }
         }

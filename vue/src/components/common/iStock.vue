@@ -91,7 +91,7 @@
                 />
                 <input 
                     type="text" 
-                    placeholder="Peso"
+                    placeholder="Peso kg"
                     @input="onInt"
                     :value="weight"
                     name="weight"

@@ -11,7 +11,7 @@
                         :src="require('@/assets/icons/pencil-solid.svg')"
                         width="16" 
                         height="16"
-                        fill="currentColor"
+                        fill="white"
                     />
                 </button>
             </div>
