@@ -106,7 +106,7 @@ class DeliveryService {
         
         $deliveryData = self::retrieve($id, $deliveryInst);
         $partials = self::retrievePartialsStocks($id);
-        if (count($partials) && !$deliveryInst->finished) {
+        if (!$deliveryInst->finished) {
             $deliveryData['available'] = self::validatePartialStocksValues($deliveryData[Keys::STOCKS], $partials)['availableStocks'];
         }
         return $deliveryData;

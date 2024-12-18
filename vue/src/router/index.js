@@ -90,6 +90,11 @@ const routes = [
         component: () => import("@/views/deliveries/DeliveriesPartialCreate.vue")
     },
     {
+        path: endpoints.routes.DELIVERY_VIEW_FULL,
+        name: endpoints.names.DELIVERY_VIEW_FULL,
+        component: () => import("@/views/deliveries/DeliveriesFullView.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/common/NotFound.vue")

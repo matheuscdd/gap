@@ -30,6 +30,7 @@ export const endpoints = Object.freeze({
         DELIVERY_DASH: "/deliveries/dash",
         DELIVERY_LIST: "/deliveries/list",
         DELIVERY_CREATE_PARTIAL: "/deliveries/partial/create/:id",
+        DELIVERY_VIEW_FULL: "/deliveries/full/view/:id",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
     names: Object.freeze({
@@ -50,6 +51,7 @@ export const endpoints = Object.freeze({
         DELIVERY_LIST: "deliveries-list",
         DELIVERY_DASH: "deliveries-dash",
         DELIVERY_CREATE_PARTIAL: "deliveries-partial-create",
+        DELIVERY_VIEW_FULL: "deliveries-full-view",
         NOT_FOUND: "not found",
     })
 });

@@ -1,5 +1,7 @@
 <template>
-  <Plotly :data="data" :layout="layout" :display-mode-bar="false"></Plotly>
+  <div v-show="data.length">
+    <Plotly :data="data" :layout="layout" :display-mode-bar="false"></Plotly>
+  </div>
 </template>
 
 <script>

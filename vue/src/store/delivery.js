@@ -5,6 +5,7 @@ import router from "@/router";
 const getDefaultState = () => ({
     delivery: {},
     deliveries: [],
+    partials: [],
     treemap: [],
 });
 
@@ -17,6 +18,9 @@ export default {
         },
         storeDelivery(state, payload) {
             state.delivery = payload;
+        },
+        storePartials(state, payload) {
+            state.partials = payload;
         },
         storeTreemap(state, payload) {
             state.treemap = payload;
@@ -65,6 +69,12 @@ export default {
             const response = await api("/deliveries/full/" + id);
             if (response.error) return;
             ctx.commit("storeDelivery", response);
+        },
+
+        async storePartials(ctx, id) {
+            const response = await api("/deliveries/partial/" + id);
+            if (response.error) return;
+            ctx.commit("storePartials", response);
         },
 
         async storeTreemap(ctx) {

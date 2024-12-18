@@ -71,6 +71,25 @@ export function getValues(data) {
     return result;
 }
 
+export function randomNumbers(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max+1);
+    let result = Math.floor(Math.random() * (max - min) + min);
+    if (result >= max) {
+      result = max-1;
+    }
+    return result;
+}
+
+export function randomColor(alpha) {
+    let red = randomNumbers(0, 255);
+    let green = randomNumbers(0, 255);
+    let blue = randomNumbers(0, 255);
+    let color = `rgb(${red},${green},${blue})`;
+    let colora = `rgba(${red},${green},${blue},${alpha})`;
+    return {color, colora};
+}
+
 export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
     ctx.revenue.value = Number(ctx.revenue.value) || "";
     ctx.cost.value = Number(ctx.cost.value) || "";
