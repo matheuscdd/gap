@@ -58,7 +58,7 @@ h1 {
 
 .header {
     display: grid;
-    grid-template-columns: 25% 25% 20% 20% 10%;
+    grid-template-columns: 25% 25% 20% 10% 20%;
     grid-auto-rows: 30px;
     grid-gap: 10px;
     margin-bottom: 10px;

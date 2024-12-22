@@ -18,6 +18,7 @@ export default {
     },
     actions: {
         async storeStockTypes(ctx) {
+            if (ctx.state.stockTypes.length) return;
             const response = await api("/stock_type");
             ctx.commit("storeStockTypes", response);
         },

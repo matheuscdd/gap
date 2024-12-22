@@ -67,14 +67,34 @@ export async function sleep(time) {
   
 export function getValues(data) {
     const result = {};
-    Object.keys(data).forEach(key => result[key] = data[key].value);
+    Object.keys(data).forEach(key => result[key] = data[key]?.value);
     return result;
+}
+
+export function randomNumbers(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max+1);
+    let result = Math.floor(Math.random() * (max - min) + min);
+    if (result >= max) {
+      result = max-1;
+    }
+    return result;
+}
+
+export function randomColor(alpha) {
+    let red = randomNumbers(0, 255);
+    let green = randomNumbers(0, 255);
+    let blue = randomNumbers(0, 255);
+    let color = `rgb(${red},${green},${blue})`;
+    let colora = `rgba(${red},${green},${blue},${alpha})`;
+    return {color, colora};
 }
 
 export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
     ctx.revenue.value = Number(ctx.revenue.value) || "";
     ctx.cost.value = Number(ctx.cost.value) || "";
-    const { client, 
+    const { 
+        client, 
         delivery_address, 
         delivery_date, 
         provider_name, 
@@ -87,7 +107,8 @@ export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
     } = ctx;
     const data = {
         stocks: ctx.stocks.map(({type, name, quantity, weight, extra }) => ({type, name, quantity, weight, extra })),
-        ...getValues({ client, 
+        ...getValues({ 
+            client, 
             delivery_address, 
             delivery_date, 
             provider_name, 
@@ -113,4 +134,76 @@ export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
     if (errors.flat().filter(Boolean).length) return alert("Verifique os campos marcados e tente novamente");
     if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
     ctx.$store.dispatch(`budgetMod/${action}Budget`, {...data, ...extra});
+}
+
+export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {}) {
+    ["revenue", "travel_cost", "unloading_cost"]
+        .filter(key => ctx[key])
+        .forEach(key => {
+            ctx[key].value = isNaN(Number(ctx[key]?.value)) ? "" : Number(ctx[key]?.value);
+        }
+        );
+    if (ctx.unloaded.value === "client") {
+        ctx.unloading_cost.value = 0;
+    }
+    
+    const { 
+        client, 
+        delivery_address, 
+        delivery_date, 
+        provider_name, 
+        provider_city, 
+        revenue, 
+        unloaded, 
+        payment_status, 
+        payment_method,
+        travel_cost,
+        unloading_cost,
+        driver,
+        receipt_date,
+        invoice,
+    } = ctx;
+    const data = {
+        stocks: ctx.stocks.filter(el => !el.ignore).map(({type, name, quantity, weight, extra }) => ({type, name, quantity, weight, extra })),
+        ...getValues({ 
+            client, 
+            delivery_address, 
+            delivery_date, 
+            provider_name, 
+            provider_city, 
+            revenue, 
+            unloaded, 
+            payment_status, 
+            payment_method,
+            travel_cost,
+            unloading_cost,
+            driver,
+            receipt_date,
+            invoice,
+        })
+    };
+    const paymentDate = ctx.payment_date?.value;
+    if (paymentDate) data.payment_date = paymentDate;
+    if (!ctx.invoice?.value) {
+        delete data.invoice;
+    } else {
+        data.invoice = ctx.invoice.value;
+    }
+
+    const errors = [];
+    const isNotPartial = ctx.$route.name !== endpoints.names.DELIVERY_CREATE_PARTIAL;
+    let filter = Boolean;
+    if (!isNotPartial) {
+        filter = (el) => ["delivery_date", "delivery_address", "unloaded", "driver", "unloading_cost", "stocks"].includes(el);
+    }
+    Object.keys(data).filter(filter).forEach(key => errors.push(verifyDelivery(key, ctx)));
+    ctx.$refs.stocks.filter(el => !el.ignore).forEach(el => 
+        ["name", "quantity", "weight"].forEach(name => 
+            errors.push(el.outFocus({target: {name}}))
+        )
+    );
+    await sleep(100);
+    if (errors.flat().filter(Boolean).length) return alert("Verifique os campos marcados e tente novamente");
+    if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
+    ctx.$store.dispatch(`deliveryMod/${action}Delivery`, {...data, ...extra});
 }

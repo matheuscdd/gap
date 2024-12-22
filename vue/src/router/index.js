@@ -65,6 +65,36 @@ const routes = [
         component: () => import("@/views/budgets/BudgetsList.vue")
     },
     {
+        path: endpoints.routes.DELIVERY_LIST,
+        name: endpoints.names.DELIVERY_LIST,
+        component: () => import("@/views/deliveries/DeliveriesList.vue")
+    },
+    {
+        path: endpoints.routes.DELIVERY_CREATE_FULL,
+        name: endpoints.names.DELIVERY_CREATE_FULL,
+        component: () => import("@/views/deliveries/DeliveriesFullCreate.vue")
+    },
+    {
+        path: endpoints.routes.DELIVERY_EDIT_FULL,
+        name: endpoints.names.DELIVERY_EDIT,
+        component: () => import("@/views/deliveries/DeliveriesFullEdit.vue")
+    },
+    {
+        path: endpoints.routes.DELIVERY_DASH,
+        name: endpoints.names.DELIVERY_DASH,
+        component: () => import("@/views/deliveries/DeliveriesDash.vue")
+    },
+    {
+        path: endpoints.routes.DELIVERY_CREATE_PARTIAL,
+        name: endpoints.names.DELIVERY_CREATE_PARTIAL,
+        component: () => import("@/views/deliveries/DeliveriesPartialCreate.vue")
+    },
+    {
+        path: endpoints.routes.DELIVERY_VIEW_FULL,
+        name: endpoints.names.DELIVERY_VIEW_FULL,
+        component: () => import("@/views/deliveries/DeliveriesFullView.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/common/NotFound.vue")

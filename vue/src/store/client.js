@@ -7,6 +7,7 @@ const getDefaultState = () => ({
     client: {}
 });
 
+// TODO - fazer um retorno de visualização de cliente já formato, uma função que retorna assim sem modificar a original
 export default {
     namespaced: true,
     state: getDefaultState(),

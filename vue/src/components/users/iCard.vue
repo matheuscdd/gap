@@ -64,14 +64,14 @@ export default {
 li {
     padding: 20px;
     display: grid;
-    grid-template-columns: 25% 25% 20% 20% 10%;
+    grid-template-columns: 25% 25% 20% 10% 20%;
     grid-auto-rows: 30px;
     grid-gap: 10px;
     margin-bottom: 10px;
     text-align: center;
-    border-radius: 5px;
+    border-radius: 12px;
     border: 2px solid var(--gray-1);
-    background-color: white;
+    background-color: var(--gray-5);
 }
 
 li > div {
@@ -98,7 +98,6 @@ button {
 
 .del {
     background-color: var(--red-1);
-    color: white;
 }
 
 .btns {
@@ -107,9 +106,9 @@ button {
     gap: 10px;
 }
 
-button:hover {
+button:hover, button:active {
     transition: 0.3s;
-    opacity: 0.8;
+    filter: brightness(1.5);
 }
 
 button:disabled {

@@ -11,6 +11,7 @@ class ValidatorConstraints {
     public const DIGITS = 'digits';
     public const DATE_FORMAT = 'date_format';
     public const REGEX = 'regex';
+    public const ARRAY = 'array';
 
     private static function dot($field, $key): string {
         return "$field.$key";

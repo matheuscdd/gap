@@ -8,6 +8,6 @@ use App\Constraints\ClientKeysConstraints as Keys;
 
 class CreateClientRequest extends ClientRequest {
     public function rules(): array {
-        return $this->getRules(false, ...Keys::ALL);
+        return $this->getRules(false, true,...Keys::ALL);
     }
 }

@@ -19,7 +19,7 @@ class UserRequest extends Request {
     protected const PASSWD_MIN = 8;
     protected const PASSWD_MAX = 64;
     
-    public function getRules($partial, ...$keys): array {
+    public function getRules($partial, $keepRequired, ...$keys): array {
         $ref = [
             Keys::EMAIL => [
                 Schema::REQUIRED,
@@ -42,7 +42,7 @@ class UserRequest extends Request {
                 Schema::REQUIRED, new Enum(TypeUser::class)
             ],
         ];
-        $rules = self::retrieveRules($partial, $ref, $keys);
+        $rules = self::retrieveRules($partial, $ref, $keys, $keepRequired);
         if (count($rules) === 0) {
             throw new Exception('getRules: No key found');
         }

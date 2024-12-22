@@ -2,14 +2,19 @@
     --gray-1: #808080; 
     --gray-2: #f2f2f2;
     --gray-3: #c9c9c9;
-    --blue-1: #76B6DC;
+    --gray-4: #d9d9d992;
+    --gray-5: #fbfbfb;
+    --blue-1: #639dbe;
     --blue-2: #76b7dc32;
     --red-1: #F4001F;
+    --red-2: #fd3852;
     --green-1: #2E9395;
     --green-2: #1E9B2D;
     --green-3: #19382D;
     --green-4: #3E9237;
+    --green-5: #56ff46;
     --yellow-1: #F7DA00;
+    --orange-1: #F6A909;
     --trans-1: 0.8s;
     --radius-1: 30px;
     --radius-2: 10px;
@@ -21,6 +26,7 @@ body {
 
 h1 {
     font-size: 30px;
+    user-select: none;
 }
 
 .bButton {

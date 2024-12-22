@@ -11,7 +11,7 @@
                         :src="require('@/assets/icons/pencil-solid.svg')"
                         width="16" 
                         height="16"
-                        fill="currentColor"
+                        fill="white"
                     />
                 </button>
             </div>
@@ -64,9 +64,9 @@ li {
     grid-gap: 10px;
     margin-bottom: 10px;
     text-align: center;
-    border-radius: 5px;
+    border-radius: 12px;
     border: 2px solid var(--gray-1);
-    background-color: white;
+    background-color: var(--gray-5);
 }
 
 li > div {
@@ -85,6 +85,7 @@ button {
     border-radius: 5px;
     display: flex;
     align-items: center;
+    color: white;
 }
 
 .btns {

@@ -3,11 +3,10 @@
 namespace App\Http\Services\Budget;
 
 use App\Constraints\BudgetKeysConstraints as Keys;
+use App\Constraints\StocksKeysConstraints;
 use App\Models\Budget;
 use App\Models\BudgetStock;
 use App\Models\Stock;
-use DateTime;
-use Illuminate\Support\Facades\Log;
 
 class BudgetService {
     public static function create(array $data) {
@@ -69,15 +68,15 @@ class BudgetService {
 
         foreach ($stocksHandle as $stock) {
             BudgetStock::create([
-                Keys::BUDGET => $budget->id,
-                Keys::STOCK => $stock->id
+                StocksKeysConstraints::BUDGET => $budget->id,
+                StocksKeysConstraints::STOCK => $stock->id
             ]);
         }
         return $stocksHandle;
     }
 
     private static function getStocks(int $id) {
-        $budgetStocks = BudgetStock::where(Keys::BUDGET, $id)->get();
+        $budgetStocks = BudgetStock::where(StocksKeysConstraints::BUDGET, $id)->get();
         $stocksIds = [];
         foreach ($budgetStocks as $el) {
             $stocksIds[] = $el->stock;

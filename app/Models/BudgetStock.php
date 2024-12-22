@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Constraints\BudgetKeysConstraints as Keys;
+use App\Constraints\StocksKeysConstraints as Keys;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

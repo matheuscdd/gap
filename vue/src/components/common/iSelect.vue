@@ -10,7 +10,7 @@
                     height="16"
                     fill="currentColor"
                 />
-                <select :id="id" :value="modelValue" @change="$emit('update:modelValue', $event.target.value)">
+                <select :id="id" :disabled="readonly" :value="modelValue" @change="$emit('update:modelValue', $event.target.value)">
                     <option
                         v-for="opt in opts"
                         :key="opt.id"
@@ -38,7 +38,8 @@ export default {
         "icon",
         "opts",
         "label",
-        "modelValue"
+        "modelValue",
+        "readonly",
     ],
     computed: {
         $style() {

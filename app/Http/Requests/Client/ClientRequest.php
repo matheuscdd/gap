@@ -19,7 +19,7 @@ class ClientRequest extends Request {
     protected const CELLPHONE_SIZE = 11;
 
 
-    public function getRules($partial, ...$keys): array {
+    public function getRules($partial, $keepRequired,...$keys): array {
         $ref = [
             Keys::NAME => [
                 Schema::REQUIRED,
@@ -45,7 +45,7 @@ class ClientRequest extends Request {
                 Schema::cUnique(Keys::TABLE),
             ]
         ];
-        $rules= self::retrieveRules($partial, $ref, $keys);
+        $rules= self::retrieveRules($partial, $ref, $keys, $keepRequired);
         if (count($rules) === 0) {
             throw new Exception('getRules: No key found');
         }
