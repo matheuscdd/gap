@@ -106,7 +106,7 @@ export default {
             return res;
         },
         formattedAddress() {
-            return this.delivery_address.slice(0, 50) + "...";
+            return this.delivery_address.slice(0, 10) + "...";
         },
         statusColor() {
             const res = this.daysRemainingNum;

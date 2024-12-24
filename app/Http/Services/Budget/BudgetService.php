@@ -7,6 +7,7 @@ use App\Constraints\StocksKeysConstraints;
 use App\Models\Budget;
 use App\Models\BudgetStock;
 use App\Models\Stock;
+use App\Utils\Utils;
 
 class BudgetService {
     public static function create(array $data) {
@@ -17,12 +18,14 @@ class BudgetService {
             $data[Keys::PAYMENT_DATE] = date(Keys::DATE_FORMAT, strtotime($data[Keys::PAYMENT_DATE]));
         }
 
+        $data[Keys::STOCKS] = Utils::groupStocks($data[Keys::STOCKS]);
         $budget = Budget::create($data);
         $stocks = self::insertStocks($budget, $data[Keys::STOCKS]);
         return self::retrieve($budget->id, $budget, $stocks);
     }
 
     public static function edit(int $id, array $data) {
+        $data[Keys::STOCKS] = Utils::groupStocks($data[Keys::STOCKS]);
         ['stocks' => $stocks, 'budgetStocks' => $budgetStocks] = self::getStocks($id);
         $stocksIds = [];
         $budgetStocksIds = [];

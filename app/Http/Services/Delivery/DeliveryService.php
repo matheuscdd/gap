@@ -10,6 +10,7 @@ use App\Models\Stock;
 use Illuminate\Support\Facades\Log;
 use App\Enums\Unloaded;
 use Illuminate\Support\Facades\DB;
+use App\Utils\Utils;
 
 class DeliveryService {
     public static function createFull(array $data) {
@@ -23,6 +24,7 @@ class DeliveryService {
             $data[Keys::PAYMENT_DATE] = date(Keys::DATE_FORMAT, strtotime($data[Keys::PAYMENT_DATE]));
         }
 
+        $data[Keys::STOCKS] = Utils::groupStocks($data[Keys::STOCKS]);
         $delivery = Delivery::create($data);
         $stocks = self::insertStocks($delivery, $data[Keys::STOCKS]);
         return self::retrieve($delivery->id, $delivery, $stocks);
@@ -39,9 +41,9 @@ class DeliveryService {
         $data[Keys::CLIENT] = $parent[Keys::CLIENT];
         $data[Keys::CREATED_BY] = auth()->user()->id;
         $data[Keys::UPDATED_BY] = auth()->user()->id;
+        $data[Keys::STOCKS] = Utils::groupStocks($data[Keys::STOCKS]);
 
-        # TODO - agrupar os nomes com tipo no front
-
+        # TODO - validar com calma essa verificação
         $valid = self::validatePartialStocksExists($parent[Keys::STOCKS], $data[Keys::STOCKS]);
         if (!$valid) {
             throw new AppError('Estoque não encontrado', 404);
@@ -77,6 +79,7 @@ class DeliveryService {
             $data[Keys::UNLOADING_COST] = 0;
         }
 
+        $data[Keys::STOCKS] = Utils::groupStocks($data[Keys::STOCKS]);
         ['stocks' => $stocks, 'deliveryStocks' => $deliveryStocks] = self::getStocks($id);
         $stocksIds = [];
         $deliveryStocksIds = [];
@@ -307,6 +310,7 @@ class DeliveryService {
             ->select(
                 'deliveries.id as delivery_id', 
                 'deliveries.ref as delivery_ref', 
+                'deliveries.finished as delivery_finished',
                 'stocks.*', 
                 'stock_type.name as type_name',
             )
@@ -336,8 +340,10 @@ class DeliveryService {
 
         foreach ($deliveries as &$delivery) {
             $ref = json_decode(json_encode($delivery['ref']), true);
-            $partials = json_decode(json_encode($delivery['partials']), true);
-            $delivery['available'] = self::validatePartialStocksValues($ref, $partials)['availableStocks'];
+            $delivery['partials'] = json_decode(json_encode($delivery['partials']), true);
+            $delivery['available'] = self::validatePartialStocksValues($ref, $delivery['partials'])['availableStocks'];
+            $partialUnfinished = array_filter($delivery['partials'], fn($el) => !$el['delivery_finished']);
+            $delivery['stocks'] = Utils::groupStocks(array_merge($delivery['available'], $partialUnfinished));
         }
         unset($delivery);
 
@@ -350,10 +356,8 @@ class DeliveryService {
             $labels[] = $identifier;
             $ids[] = $identifier;
             $parents[] = BASE;
-            # TODO - agrupar pelo nome e tipo
-            foreach($delivery['available'] as $stock) {
+            foreach($delivery['stocks'] as $stock) {
                 [
-                    'id' => $id,
                     'weight' => $weight,
                     'quantity' => $quantity,
                     'name' => $name,
@@ -366,17 +370,7 @@ class DeliveryService {
                     $label .= " ($extra)";
                 }
                 $labels[] = $label;
-                $ids[] = $id;
-                $parents[] = $identifier;
-            }
-            foreach($delivery['partials'] as $stock) {
-                if ($stock->quantity === 0) continue;
-                $label = "[$stock->quantity] $stock->name - $stock->type ($stock->weight kg)";
-                if (!is_null($stock->extra)) {
-                    $label .= " ($stock->extra)";
-                }
-                $labels[] = $label;
-                $ids[] = $stock->id;
+                $ids[] = base64_encode(random_bytes(32));
                 $parents[] = $identifier;
             }
         }
