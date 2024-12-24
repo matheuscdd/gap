@@ -82,6 +82,8 @@ export default {
         },
         finish() {
             this.$emit("finish", this.id);
+            this.showStocks = false;
+            this.$emit("focused", this.showStocks ? this.id : null);
         },
         formattedField(value, limit) {
             return value.length > limit ? value.slice(0, limit) + "..." : value;
