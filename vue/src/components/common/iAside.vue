@@ -57,6 +57,10 @@
                         :style="setColor(endpoints.routes.DELIVERY_DASH)" 
                         :to="endpoints.routes.DELIVERY_DASH"
                     >Dash</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.DELIVERY_CALENDAR)" 
+                        :to="endpoints.routes.DELIVERY_CALENDAR"
+                    >Calendário</RouterLink> 
                 </li>
             </ul>
         </div>

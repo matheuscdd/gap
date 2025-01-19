@@ -64,6 +64,10 @@ export function getNow() {
 export async function sleep(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
+
+export function itemgetter(key) {
+    return obj => obj[key];
+}
   
 export function getValues(data) {
     const result = {};

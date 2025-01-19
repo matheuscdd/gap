@@ -46,4 +46,7 @@ class DeliveryController extends Controller {
         return DeliveryService::treemap();
     }
 
+    public function calendar(Request $request) {
+        return DeliveryService::calendar();
+    }
 }

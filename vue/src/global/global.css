@@ -7,7 +7,7 @@
     --blue-1: #639dbe;
     --blue-2: #76b7dc32;
     --red-1: #F4001F;
-    --red-2: #fd3852;
+    --red-2: #FD3852;
     --green-1: #2E9395;
     --green-2: #1E9B2D;
     --green-3: #19382D;
@@ -45,4 +45,9 @@ h1 {
 .bButton:hover {
     transition: 0.3s;
     opacity: 0.8;
+}
+
+.v-calendar-weekly__day-alldayevents-container {
+    cursor: pointer;
+    user-select: none;
 }

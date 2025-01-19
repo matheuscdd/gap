@@ -31,6 +31,7 @@ alias gprodres="docker compose -f docker-compose.prod.yml stop && docker compose
 * No arquivo `nginx/Dockerfile.prod` , troque `nginx.https` por `nginx.http`, isso deve ser feito para resetar as configurações certbot
 * Instale o certbot e o certificado na mão 
 ```
+docker exec -it gap-prod-nginx-1 apt update 
 docker exec -it gap-prod-nginx-1 apt install certbot python3-certbot-nginx -y
 docker exec -it gap-prod-nginx-1 certbot certonly --nginx -n --agree-tos -d "${DOMAIN}" --email "${EMAIL_SUPPORT}"
 ```
