@@ -103,8 +103,8 @@ h6 {
 
 .btns button, .id {
     border-radius: 50%;
-    width: 35px;
-    height: 35px;
+    width: 45px;
+    height: 45px;
     border: transparent;
     color: white;
     display: flex;

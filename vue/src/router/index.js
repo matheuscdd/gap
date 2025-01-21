@@ -85,6 +85,11 @@ const routes = [
         component: () => import("@/views/deliveries/DeliveriesDash.vue")
     },
     {
+        path: endpoints.routes.DELIVERY_CALENDAR,
+        name: endpoints.names.DELIVERY_CALENDAR,
+        component: () => import("@/views/deliveries/DeliveriesCalendar.vue")
+    },
+    {
         path: endpoints.routes.DELIVERY_CREATE_PARTIAL,
         name: endpoints.names.DELIVERY_CREATE_PARTIAL,
         component: () => import("@/views/deliveries/DeliveriesPartialCreate.vue")

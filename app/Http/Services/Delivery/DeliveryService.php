@@ -383,4 +383,70 @@ class DeliveryService {
 
         return [$data];
     }
+
+
+    public static function calendar() {
+        $year = date('Y');
+        $filename = "/tmp/holidays_$year.json";
+        $holidays = [];
+
+        if (file_exists($filename)) {
+            $holidays = json_decode(file_get_contents($filename), true);
+        } else {
+            $url = "https://brasilapi.com.br/api/feriados/v1/$year";
+            $holidays = json_decode(file_get_contents($url), true);
+            $holidays[] = [
+                'date' => "$year-12-08",
+                'name' => 'Imaculada Conceição',
+                'type' => 'municipal'
+            ];
+            $holidays[] = [
+                'date' => "$year-06-13",
+                'name' => 'Santo Antonio',
+                'type' => 'municipal'
+            ];
+            $holidays[] = [
+                'date' => "$year-07-09",
+                'name' => 'Revolução de 1932',
+                'type' => 'state'
+            ];
+
+            $opts = [
+                'national' => "Nacional",
+                'state' => "Estadual",
+                'municipal' => "Municipal",
+            ];
+
+            foreach($holidays as &$el) {
+                $el['description'] = 'Feriado ' . $opts[$el['type']];
+            }
+            unset($el);
+
+            $file = fopen($filename, 'w');
+            fwrite($file, json_encode($holidays));
+            fclose($file);
+        }
+
+        $rawDeliveries = Delivery::where(Keys::FINISHED, false)->get();
+        $handleDeliveries = [];
+
+        foreach ($rawDeliveries as $el) {
+            $id = $el->id;
+            $parcial = $el->ref ? ' Parcial ' : ' ';
+            $unloaded = $el->unloaded === 'client' ? 'pelo cliente' : 'pela transportadora';
+            $handleDeliveries[] = [
+                'date' => $el->delivery_date,
+                'name' => "Entrega$parcial$id",
+                'type' => 'delivery',
+                'description' => $el->delivery_address . ' - ' . $el->driver . ' - ' . "Descarga $unloaded",
+                'redirectId' => $el->ref ?? $el->id,
+                'isPartial' => boolval($el->ref),
+            ];
+        }
+
+        return [
+            'holidays' => $holidays,
+            'deliveries' => $handleDeliveries,
+        ];
+    }
 }

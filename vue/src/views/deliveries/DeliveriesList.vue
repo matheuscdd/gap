@@ -12,6 +12,16 @@
                 <label for="finished">Fechadas</label>
             </div>
         </div>
+        <div class="container-id">
+            <iSearch
+                name="id"
+                icon="file-contract-solid"
+                label="Id"
+                :errors="[]"
+                v-model="id"
+                :opts="idsOpts"
+            />
+        </div>
         <div class="container-client">
             <iSearch
                 :name="deliveryForm.CLIENT.NAME"
@@ -34,7 +44,10 @@
         <div>Destino</div>
         <div>Ações</div>
     </ul>
-    <ul v-if="$store.state.deliveryMod.deliveries.length">
+    <ul 
+        v-if="$store.state.deliveryMod.deliveries.length"
+        v-show="filter().length"
+    >
         <iCard
             v-for="el in filter()" 
             :key="el.id"
@@ -70,12 +83,15 @@ import { endpoints } from "@/common/consts";
 import iSearch from "@/components/common/iSearch.vue";
 import iCard from "@/components/deliveries/iCard.vue";
 import mixins from "@/common/mixins";
+import { itemgetter } from "@/common/utils";
 
 export default {
     data: () => ({
         status: "open",
         clientsOpts: [],
         client: "",
+        id: "",
+        idsOpts: [],
     }),
     mixins: [mixins],
     components: {
@@ -87,13 +103,16 @@ export default {
         window.scrollTo(0,0);
         await this.$store.dispatch("clientMod/storeClients");
         await this.$store.dispatch("deliveryMod/storeDeliveries");
+        // TODO - globalizar função
         this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
+        this.idsOpts = this.$store.state.deliveryMod.deliveries.map(itemgetter("id")).map(String).map(id => ({id: id, text: id, value: id}));
     },
 
     methods: {
         edit(id) {
             this.$router.push(endpoints.routes.DELIVERY_EDIT_FULL.replace(":id", id));
         },
+
         async finish(id) {
             const continues = confirm("Tem certeza qud deseja finalizar essa entrega e todas as suas parciais caso existam? Essa ação não poderá ser desfeita");
             if (!continues) return;
@@ -111,6 +130,7 @@ export default {
 
         filter() {
             return this.$store.state.deliveryMod.deliveries
+                .filter(el => this.id ? Number(this.id) === el.id : true)
                 .filter(el => this.status === "finished" ? el.finished : !el.finished)
                 .filter(el => this.client ? el.client === this.client : true);
         }
@@ -121,7 +141,7 @@ export default {
 .filters {
     display: grid;
     grid-auto-rows: 80px;
-    grid-template-columns: 10% 30%;
+    grid-template-columns: 160px 270px 270px;
 }
 
 .header {
