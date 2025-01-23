@@ -84,6 +84,11 @@ export default {
         edit(id) {
             this.$router.push(endpoints.routes.BUDGET_EDIT.replace(":id", id));
         },
+        del(id) {
+            const continues = confirm("Tem certeza que deseja excluir esse orçamento?");
+            if (!continues) return;
+            this.$store.dispatch("budgetMod/delBudget", id);
+        },
         filter() {
             return this.$store.state.budgetMod.budgets
                 .filter(el => this.id ? Number(this.id) === el.id : true)

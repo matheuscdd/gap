@@ -1,4 +1,5 @@
 <template>
+    <div class="aside-space"></div>
     <aside v-show="this.$route.path !== endpoints.routes.LOGIN">
         <div class="container">
             <h2>Índice</h2>
@@ -62,6 +63,13 @@
                         :to="endpoints.routes.DELIVERY_CALENDAR"
                     >Calendário</RouterLink> 
                 </li>
+                <li>
+                    <h6>Caminhões</h6>
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.TRUCK_CREATE)" 
+                        :to="endpoints.routes.TRUCK_CREATE"
+                    >Criar</RouterLink> 
+                </li>
             </ul>
         </div>
     </aside>
@@ -95,12 +103,21 @@ h2 {
 
 }
 
+.aside-space {
+    min-width: 200px;
+}
+
 aside {
-    min-width: 9vw;
-    margin-top: 25px;
-    width: 9vw;
-    height: 600px;
+    padding-top: 25px;
+    height: 100vh;
     min-width: 170px;
+    position: fixed;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 255, 76, 0.075);
+    box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
+    border: 2px rgba(255,255,255,0.4) solid;
+    border-bottom: 2px rgba(40,40,40,0.35) solid;
+    border-right: 2px rgba(40,40,40,0.35) solid;
 }
 
 .container {
@@ -108,7 +125,6 @@ aside {
     position: fixed;
     min-width: 125px;
     width: 6vw;
-    border-right: 1px dashed var(--gray-1);
 }
 
 h6, a {

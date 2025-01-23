@@ -27,7 +27,10 @@ async function _api(url, method = methods.GET, body = null) {
     if ([200, 201].includes(response.status)) {
         return data;
     } 
-    return {error: `${data.msg} - ${data.errors ? JSON.stringify(data.errors) : ""}`};
+    return {
+        error: `${data.msg} - ${data.errors ? JSON.stringify(data.errors) : ""}`, 
+        status: response.status
+    };
 }
 
 export async function refreshToken() {
@@ -49,16 +52,16 @@ export async function api(url, method = methods.GET, body = null) {
     return response;
 }
 
-function convertUTC(raw) {
-    return new Date(raw.getTime() + raw.getTimezoneOffset() * 60 * 1000);
-}
+// function convertUTC(raw) {
+//     return new Date(raw.getTime() + raw.getTimezoneOffset() * 60 * 1000);
+// }
 
 export function handleDate(rawer) {
-    return convertUTC(new Date(rawer));
+    return new Date(rawer);
 }
 
 export function getNow() {
-    return convertUTC(new Date());
+    return new Date();
 }
 
 export async function sleep(time) {
@@ -77,10 +80,10 @@ export function getValues(data) {
 
 export function randomNumbers(min, max) {
     min = Math.ceil(min);
-    max = Math.floor(max+1);
+    max = Math.floor(max + 1);
     let result = Math.floor(Math.random() * (max - min) + min);
     if (result >= max) {
-      result = max-1;
+      result = max - 1;
     }
     return result;
 }
@@ -209,5 +212,5 @@ export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {
     await sleep(100);
     if (errors.flat().filter(Boolean).length) return alert("Verifique os campos marcados e tente novamente");
     if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
-    ctx.$store.dispatch(`deliveryMod/${action}Delivery`, {...data, ...extra});
+    ctx.$store.dispatch(`deliveryMod/${action}`, {...data, ...extra});
 }

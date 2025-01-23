@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Budget extends Model {
     use HasFactory;
 
-    protected $table = 'budgets';
+    protected $table = Keys::TABLE;
 
     protected $fillable = [
         Keys::CLIENT,

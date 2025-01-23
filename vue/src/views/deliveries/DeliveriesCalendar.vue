@@ -43,7 +43,6 @@ export default {
     },
     methods: {
         onEventClick(event) {
-            console.log({...event});
             if (event.isHoliday) return;
             this.$router.push(endpoints.routes.DELIVERY_VIEW_FULL.replace(":id", event.redirectId));
         },

@@ -42,9 +42,9 @@ h1 {
     font-weight: 600;
 }
 
-.bButton:hover {
+.bButton:hover:not(:disabled) {
     transition: 0.3s;
-    opacity: 0.8;
+    filter: brightness(2);;
 }
 
 .v-calendar-weekly__day-alldayevents-container {

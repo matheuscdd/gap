@@ -7,7 +7,6 @@ const getDefaultState = () => ({
     client: {}
 });
 
-// TODO - fazer um retorno de visualização de cliente já formato, uma função que retorna assim sem modificar a original
 export default {
     namespaced: true,
     state: getDefaultState(),
@@ -51,6 +50,12 @@ export default {
             if (response.error) return alert(response.error);
             ctx.commit("storeClient", response);
             router.push(endpoints.routes.CLIENT_LIST);
+        },
+
+        async delClient(ctx, id) {
+            const response = await api("/clients/" + id, methods.DELETE);
+            if (response.error) return alert(response.error);
+            ctx.dispatch("storeClients");
         },
     }
 };

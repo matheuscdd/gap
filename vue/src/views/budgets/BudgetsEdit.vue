@@ -277,7 +277,7 @@ export default {
         await this.$store.dispatch("stockTypeMod/storeStockTypes");
         await this.$store.dispatch("clientMod/storeClients");
         this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`}));
-        const budget = this.$store.state.budgetMod.budget;
+        const { budget } = this.$store.state.budgetMod;
         this.stocks = budget.stocks;
         // TODO trocar pelas keys dos consts
         const keys = ["client", "delivery_date", "delivery_address", "provider_name", "provider_city", "payment_date", "revenue", "cost", "unloaded", "payment_status", "payment_method"];

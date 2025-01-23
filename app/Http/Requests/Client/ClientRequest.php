@@ -27,11 +27,13 @@ class ClientRequest extends Request {
                 Schema::cMax(self::NAME_MAX),
             ],
             Keys::CNPJ => [
+                Schema::cNotRegex(Schema::ONLY_NUMBERS),
                 Schema::cMin(self::CNPJ_MIN),
                 Schema::cMax(self::CNPJ_MAX),
                 Schema::cUnique(Keys::TABLE),
             ],
             Keys::CEP => [
+                Schema::cNotRegex(Schema::ONLY_NUMBERS),
                 Schema::cDigits(self::CEP_SIZE),
             ],
             Keys::ADDRESS => [

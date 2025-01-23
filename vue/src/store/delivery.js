@@ -10,7 +10,7 @@ const getDefaultState = () => ({
     calendar: {}
 });
 
-function rola(el) {
+function formatEvent(el) {
     const [ year, month, day ] = el.date.split("-");
     const date = new Date();
     date.setFullYear(year);
@@ -39,7 +39,7 @@ export default {
     namespaced: true,
     state: getDefaultState(),
     mutations: {
-        storeDeliveries(state, payload) {
+        storeFull(state, payload) {
             state.deliveries = payload.toReversed();
         },
         storeDelivery(state, payload) {
@@ -53,7 +53,7 @@ export default {
         },
         storeCalendar(state, { holidays, deliveries }) {
             state.calendar = {
-                events: [...holidays.map(rola), ...deliveries.map(rola)]
+                events: [...holidays.map(formatEvent), ...deliveries.map(formatEvent)]
             };
         },
         reset(state) {
@@ -61,19 +61,19 @@ export default {
         }
     },
     actions: {
-        async createFullDelivery(ctx, data) {
+        async createFull(ctx, data) {
             const response = await api("/deliveries/full", methods.POST, data);
             if (response.error) return alert(response.error);
             router.push(endpoints.routes.DELIVERY_LIST);
         },
 
-        async createPartialDelivery(ctx, data) {
+        async createPartial(ctx, data) {
             const response = await api("/deliveries/partial/" + data.id , methods.PUT, data);
             if (response.error) return alert(response.error);
             router.push(endpoints.routes.DELIVERY_VIEW_FULL.replace(":id", data.id));
         },
 
-        async editFullDelivery(ctx, data) {
+        async editFull(ctx, data) {
             const response = await api("/deliveries/full/" + data.id, methods.PATCH, data);
             if (response.error) return alert(response.error);
             ctx.commit("storeDelivery", response);
@@ -83,21 +83,23 @@ export default {
         async finishFull(ctx, id) {
             const response = await api("/deliveries/full/finish/" + id, methods.PATCH);
             if (response.error) return alert(response.error);
+            ctx.dispatch("storeFull");
         },
 
         async finishPartial(ctx, id) {
             const response = await api("/deliveries/partial/finish/" + id, methods.PATCH);
             if (response.error) return alert(response.error);
+            ctx.dispatch("storePartials", ctx.state.delivery.id);
         },
 
-        async storeDeliveries(ctx) {
+        async storeFull(ctx) {
             const response = await api("/deliveries/full");
             const data = response.map(delivery => ({
                 ...delivery,
                 created_at: handleDate(delivery.created_at),
                 updated_at: handleDate(delivery.updated_at),
             }));
-            ctx.commit("storeDeliveries", data);
+            ctx.commit("storeFull", data);
         },
 
         async storeDelivery(ctx, id) {
@@ -108,7 +110,7 @@ export default {
 
         async storePartials(ctx, id) {
             const response = await api("/deliveries/partial/" + id);
-            if (response.error) return;
+            if (response.error && response.status !== 404) return;
             ctx.commit("storePartials", response);
         },
 
@@ -121,6 +123,18 @@ export default {
         async storeCalendar(ctx) {
             const data = await api("/deliveries/calendar/");
             ctx.commit("storeCalendar", data);
-        }
+        },
+
+        async delFull(ctx, id) {
+            const response = await api("/deliveries/full/" + id, methods.DELETE);
+            if (response.error) return alert(response.error);
+            ctx.dispatch("storeFull");
+        },
+
+        async delPartial(ctx, id) {
+            const response = await api("/deliveries/partial/" + id, methods.DELETE);
+            if (response.error) return alert(response.error);
+            ctx.dispatch("storePartials", ctx.state.delivery.id);
+        },
     }
 };

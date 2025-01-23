@@ -4,10 +4,13 @@ namespace App\Http\Services\Budget;
 
 use App\Constraints\BudgetKeysConstraints as Keys;
 use App\Constraints\StocksKeysConstraints;
+use App\Exceptions\AppError;
 use App\Models\Budget;
 use App\Models\BudgetStock;
 use App\Models\Stock;
 use App\Utils\Utils;
+use DateTime;
+use Illuminate\Support\Facades\Log;
 
 class BudgetService {
     public static function create(array $data) {
@@ -21,7 +24,7 @@ class BudgetService {
         $data[Keys::STOCKS] = Utils::groupStocks($data[Keys::STOCKS]);
         $budget = Budget::create($data);
         $stocks = self::insertStocks($budget, $data[Keys::STOCKS]);
-        return self::retrieve($budget->id, $budget, $stocks);
+        return response(self::retrieve($budget->id, $budget, $stocks), 201);
     }
 
     public static function edit(int $id, array $data) {
@@ -96,5 +99,16 @@ class BudgetService {
         $response = json_decode(json_encode($budget), true);
         $response[Keys::STOCKS] = $stocks;
         return $response;
+    }
+
+    public static function del(int $id) {
+        $budget = Budget::find($id);
+        $maxMinTime = 30;
+        $diff = intval(((new DateTime())->getTimestamp() - $budget->created_at->getTimestamp()) / 60);
+        if ($diff > $maxMinTime) {
+            throw new AppError("O tempo máximo para realizar a deleção após a criação é de $maxMinTime minutos", 423);
+        }
+        $budget->delete();
+        return response(null, 204);
     }
 }

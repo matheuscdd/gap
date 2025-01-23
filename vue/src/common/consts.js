@@ -32,6 +32,8 @@ export const endpoints = Object.freeze({
         DELIVERY_CALENDAR: "/deliveries/calendar",
         DELIVERY_CREATE_PARTIAL: "/deliveries/partial/create/:id",
         DELIVERY_VIEW_FULL: "/deliveries/full/view/:id",
+        TRUCK_CREATE: "/trucks/create",
+        TRUCK_EDIT: "/trucks/edit:/:id",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
     names: Object.freeze({
@@ -54,6 +56,8 @@ export const endpoints = Object.freeze({
         DELIVERY_CALENDAR: "deliveries-calendar",
         DELIVERY_CREATE_PARTIAL: "deliveries-partial-create",
         DELIVERY_VIEW_FULL: "deliveries-full-view",
+        TRUCK_CREATE: "trucks-create",
+        TRUCK_EDIT: "trucks-edit",
         NOT_FOUND: "not found",
     })
 });
@@ -349,5 +353,43 @@ export const deliveryForm = Object.freeze({
         TYPE: "date",
         NAME: delivery.keys.RECEIPT_DATE,
         LABEL: delivery.trans.RECEIPT_DATE
+    }),
+});
+
+export const truck = Object.freeze({
+    keys: Object.freeze({
+        PLATE: "plate",
+        AXIS: "axis",
+        PHOTO: "photo"
+    }),
+    trans: Object.freeze({
+        PLATE: "placa",
+        AXIS: "eixos",
+        PHOTO: "foto"
+    }),
+});
+
+export const truckForm = Object.freeze({
+    PLATE: Object.freeze({
+        PLACEHOLDER: "Placa do veículo",
+        ICON: "truck-front-solid",
+        TYPE: "text",
+        NAME: truck.keys.PLATE,
+        LABEL: truck.trans.PLATE
+    }),
+    AXIS: Object.freeze({
+        PLACEHOLDER: "Quantidade de eixos",
+        ICON: "truck-moving-solid",
+        TYPE: "number",
+        NAME: truck.keys.AXIS,
+        LABEL: truck.trans.AXIS
+    }),
+    PHOTO: Object.freeze({
+        PLACEHOLDER: "Foto do veículo",
+        ICON: "camera-solid",
+        TYPE: "file",
+        NAME: truck.keys.PHOTO,
+        LABEL: truck.trans.PHOTO,
+        ACCEPT: "image/png, image/jpeg",
     }),
 });

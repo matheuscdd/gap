@@ -11,7 +11,10 @@
                 <div class="id">
                     {{ id }}
                 </div>
-                <button class="create" style="display: none;">
+                <button 
+                    class="create" 
+                    style="display: none;"
+                >
                     <iSvg 
                         :src="require('@/assets/icons/truck-solid.svg')"
                         width="16" 
@@ -19,9 +22,24 @@
                         fill="white"
                     />
                 </button>
-                <button class="edit" @click="this.$emit('edit', this.id)">
+                <button 
+                    class="edit" 
+                    @click="this.$emit('edit', this.id)"
+                >
                     <iSvg 
                         :src="require('@/assets/icons/pencil-solid.svg')"
+                        width="16" 
+                        height="16"
+                        fill="white"
+                    />
+                </button>
+                <button 
+                    class="del" 
+                    @click="this.$emit('del', this.id)"
+                    :disabled="((getNow() - createdAt) / (1000 * 60)) > 30"
+                >
+                    <iSvg 
+                        :src="require('@/assets/icons/trash-solid.svg')"
                         width="16" 
                         height="16"
                         fill="white"
@@ -48,6 +66,7 @@
     </li>
 </template>
 <script>
+import { getNow } from "@/common/utils";
 
 export default {
     props: [
@@ -58,10 +77,11 @@ export default {
         "provider_city",
         "delivery_address",
         "revenue",
-        "delivery_date"
+        "delivery_date",
+        "createdAt",
     ],
     methods: {
-
+        getNow,
     }
 };
 </script>
@@ -120,9 +140,9 @@ h6 {
     background-color: var(--gray-1);
 }
 
-.btns button:hover, .btns button:active {
+.btns button:hover:not(:disabled), .btns button:active {
     transition: 0.3s;
-    filter: brightness(1.5);
+    filter: brightness(2);
 }
 
 .btns .create {
@@ -131,6 +151,18 @@ h6 {
 
 .btns .edit {
     background-color: var(--yellow-1);
+}
+
+.btns .del {
+    background-color: var(--red-1);
+}
+
+.btns button:disabled {
+    background-color: var(--gray-1);
+}
+
+.btns button:disabled svg {
+    fill: var(--gray-3);
 }
 
 .general-info {
@@ -161,7 +193,7 @@ h6 {
 .currency {
     color: var(--green-1);
     font-weight: 600;
-    margin-bottom: 35px;
+    margin-bottom: 20px;
 }
 
 .path {

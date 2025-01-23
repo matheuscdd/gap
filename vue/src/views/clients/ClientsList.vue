@@ -17,7 +17,9 @@
             :CEP="el.CEP"
             :address="el.address"
             :cellphone="el.cellphone"
+            :createdAt="el.created_at"
             @edit="edit"
+            @del="del"
         />
     </ul>
 </template>
@@ -39,6 +41,11 @@ export default {
     },
 
     methods: {
+        del(id) {
+            const continues = confirm("Tem certeza que deseja tentar excluir esse cliente? Caso ele já esteja sendo utilizado no sistema não será possível");
+            if (!continues) return;
+            this.$store.dispatch("clientMod/delClient", id);
+        },
         edit(id) {
             this.$router.push(endpoints.routes.CLIENT_EDIT.replace(":id", id));
         }

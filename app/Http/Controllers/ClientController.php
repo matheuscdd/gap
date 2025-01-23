@@ -18,6 +18,10 @@ class ClientController extends Controller {
         return ClientService::find($request->route('id'));
     }
 
+    public function del(ClientRequest $request) {
+        return ClientService::del($request->route('id'));
+    }
+
     public function list(ClientRequest $request) {
         return ClientService::list();
     }

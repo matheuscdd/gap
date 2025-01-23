@@ -40,7 +40,9 @@ export default {
     },
     methods: {
         del(id) {
-            if (confirm("Tem certeza que deseja excluir?")) this.$store.dispatch("userMod/delUser", id);
+            const continues = confirm("Tem certeza que deseja excluir?");
+            if (!continues) return;
+            this.$store.dispatch("userMod/delUser", id);
         },
 
         edit(id) {

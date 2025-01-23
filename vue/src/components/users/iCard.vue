@@ -8,7 +8,6 @@
             <button
                 class="edit"
                 @click="edit"
-                :disabled="((getNow() - createdAt) / (1000 * 60)) > 60"
             >
                     <iSvg 
                         :src="require('@/assets/icons/pencil-solid.svg')"
@@ -106,9 +105,9 @@ button {
     gap: 10px;
 }
 
-button:hover, button:active {
+button:hover:not(:disabled), button:active:not(:disabled) {
     transition: 0.3s;
-    filter: brightness(1.5);
+    filter: brightness(2);
 }
 
 button:disabled {
