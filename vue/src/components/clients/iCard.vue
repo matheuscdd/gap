@@ -6,9 +6,24 @@
         <div class="cellphone">{{ formattedCellphone }}</div>
         <div>
             <div class="btns">
-                <button @click="edit">
+                <button 
+                    @click="edit" 
+                    class="edit"
+                >
                     <iSvg 
                         :src="require('@/assets/icons/pencil-solid.svg')"
+                        width="16" 
+                        height="16"
+                        fill="white"
+                    />
+                </button>
+                <button 
+                    @click="del" 
+                    class="del" 
+                    :disabled="((getNow() - createdAt) / (1000 * 60)) > 30"
+                >
+                    <iSvg 
+                        :src="require('@/assets/icons/trash-solid.svg')"
                         width="16" 
                         height="16"
                         fill="white"
@@ -21,6 +36,7 @@
 
 <script>
 import mixins from "@/common/mixins";
+import { getNow } from "@/common/utils";
 
 export default {
     mixins: [mixins],
@@ -31,6 +47,7 @@ export default {
         "address",
         "CEP",
         "cellphone",
+        "createdAt"
     ],
     computed: {
         formattedCEP() {
@@ -51,6 +68,10 @@ export default {
         edit() {
             this.$emit("edit", this.id);
         },
+        del() {
+            this.$emit("del", this.id);
+        },
+        getNow,
     }
 };
 </script>
@@ -77,10 +98,9 @@ li > div {
     font-weight: 500;
 }
 
-button {
+.btns button {
     border: transparent;
     cursor: pointer;
-    background-color: var(--yellow-1);
     padding: 5px;
     border-radius: 5px;
     display: flex;
@@ -88,13 +108,30 @@ button {
     color: white;
 }
 
+.btns button.edit {
+    background-color: var(--yellow-1);
+}
+
+.btns button.del {
+    background-color: var(--red-1);
+}
+
+.btns button:disabled {
+    background-color: var(--gray-1);
+}
+
+.btns button:disabled svg {
+    fill: var(--gray-3);
+}
+
 .btns {
     display: flex;
     justify-content: center;
+    gap: 10px;
 }
 
-.btns button:hover {
+.btns button:hover:not(:disabled) {
     transition: 0.3s;
-    opacity: 0.8;
+    filter: brightness(2);
 }
 </style>

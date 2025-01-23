@@ -111,7 +111,8 @@ export default {
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyClient(key, this)));
             if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
-            if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
+            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (!continues) return;
             this.$store.dispatch("clientMod/createClient", getValues(data));
         },
         verifyClient

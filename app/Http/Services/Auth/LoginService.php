@@ -10,8 +10,6 @@ class LoginService {
             throw new AppError('Email ou senha incorretos', 401);
         }
 
-        return response()->json([
-            'token' => $token,
-        ]);
+        return response(['token' => $token], 201);
     }
 }

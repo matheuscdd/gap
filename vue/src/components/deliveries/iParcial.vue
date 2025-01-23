@@ -24,6 +24,18 @@
                             fill="white"
                         />
                     </button>
+                    <button
+                        @click="del"
+                        :disabled="finished"
+                        class="del"
+                    >
+                        <iSvg
+                            :src="require('@/assets/icons/trash-solid.svg')"
+                            width="16"
+                            height="16"
+                            fill="white"
+                        />
+                    </button>
                     <button @click="show" class="stocks">
                         <iSvg
                             :src="require(`@/assets/icons/bars-solid.svg`)"
@@ -80,6 +92,9 @@ export default {
             this.showStocks = !this.showStocks;
             this.$emit("focused", this.showStocks ? this.id : null);
         },
+        del() {
+            this.$emit("del", this.id);
+        },
         finish() {
             this.$emit("finish", this.id);
             this.showStocks = false;
@@ -127,19 +142,25 @@ export default {
     background-color: var(--gray-3);
 }
 /*
-TODO - Revisar todos os botões no hover
+TODO - Globalizar todos os botões no hover
 */ 
-.btns button:hover, .btns button:active {
+.btns button:hover:not(:disabled), .btns button:active:not(:disabled) {
     transition: 0.3s;
-    filter: brightness(1.5);
+    filter: brightness(2);
 }
 
 .stocks {
     background-color: var(--gray-1);
 }
-
+/*
+TODO - criar um componente para todos os botões em questão de cor
+*/
 .finish {
     background-color: var(--green-2);
+}
+
+.del {
+    background-color: var(--red-1);
 }
 
 .container-stocks {

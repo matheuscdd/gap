@@ -1,5 +1,12 @@
 import { z } from "zod";
-import { user as cUser, client as cClient, budget as cBudget, delivery as cDelivery, endpoints  } from "./consts";
+import { 
+    user as cUser, 
+    client as cClient, 
+    budget as cBudget, 
+    delivery as cDelivery, 
+    truck as cTruck,
+    endpoints  
+} from "./consts";
 import store from "@/store";
 
 const {
@@ -28,7 +35,10 @@ const {
     UNLOADING_COST,
     RECEIPT_DATE,
     INVOICE,
-} = {...cUser.keys, ...cClient.keys, ...cBudget.keys, ...cDelivery.keys  };
+    PLATE,
+    AXIS,
+    PHOTO,
+} = {...cUser.keys, ...cClient.keys, ...cBudget.keys, ...cDelivery.keys, ...cTruck.keys  };
 
 const budgetLimits = Object.freeze({
     [DELIVERY_ADDRESS]: Object.freeze({
@@ -85,7 +95,7 @@ export const base = Object.freeze({
     }),
 
     budget: budgetLimits,
-    delivery: {
+    delivery: Object.freeze({
         ...budgetLimits,
         [DRIVER]: Object.freeze({
             min: 3,
@@ -94,7 +104,12 @@ export const base = Object.freeze({
         [INVOICE]: Object.freeze({
             size: 44
         })        
-    }
+    }),
+    truck: Object.freeze({
+        [PLATE]: Object.freeze({
+            size: 7
+        }),
+    })
 });
 
 const msgs = Object.freeze({
@@ -108,6 +123,8 @@ const msgs = Object.freeze({
 });
 
 const nonempty = /^[^$]/;
+const onlyNumbers = /^[\d]/;
+const alphanumeric = /[A-Z\d]/i;
 const twoCases = /^\d{1,20}$|(?=^.{1,20}$)^\d+\.\d{0,2}$/i;
 const includes = (arr) => ((el) => arr.includes(el));
 
@@ -189,17 +206,14 @@ export function verifyClient(name, obj) {
             .max(base.client[ADDRESS].max, msgs.max(cClient.trans.ADDRESS, base.client[ADDRESS].max)),
         
         [CEP]: z
-            .number({message: msgs.size(cClient.trans.CEP, base.client[CEP].size)})
-            .int(msgs.size(cClient.trans.CEP, base.client[CEP].size))
-            .gte(Math.pow(10, base.client[CEP].size - 1), msgs.size(cClient.trans.CEP, base.client[CEP].size))
-            .lte(Math.pow(10, base.client[CEP].size) - 1, msgs.size(cClient.trans.CEP, base.client[CEP].size))
+            .string()
+            .regex(onlyNumbers, "Apenas números são permitidos")
+            .length(base.client[CEP].size, msgs.size(cClient.trans.CEP, base.client[CEP].size))
             .optional(),
 
         [CNPJ]: z
-            .number({message: msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size)})
-            .int(msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
-            .gte(Math.pow(10, base.client[CNPJ].size - 1), msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
-            .lte(Math.pow(10, base.client[CNPJ].size) - 1, msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
+            .string()
+            .length(base.client[CNPJ].size, msgs.size(cClient.trans.CNPJ, base.client[CNPJ].size))
             .optional(),
 
         [CELLPHONE]: z
@@ -370,4 +384,27 @@ export function verifyDelivery(name, obj) {
     const delivery = z.object(schema);
 
     return verify(delivery, name, sel[name], handleFields);
+}
+
+export function verifyTruck(name, obj) {
+    const sel = obj || this;
+    const handleFields = {};
+    [PLATE, AXIS, PHOTO]
+        .forEach(key => handleFields[key] = sel[key]?.value);
+
+    const truck = z.object({
+        [PLATE]: z
+            .string()
+            .regex(nonempty, msgs.required(cTruck.trans.PLATE))
+            .regex(alphanumeric, "Apenas números e letras são permitidos")
+            .length(base.truck[PLATE].size, msgs.size(cTruck.trans.PLATE, base.truck[PLATE].size)),
+        [AXIS]: z
+            .number({message: msgs.required(cTruck.trans.AXIS)})
+            .positive("O mínimo de eixos é 1")
+            .lte(7, "O máximo de eixos é 7"),
+        [PHOTO]: z
+            .string()
+            .optional()
+    });
+    return verify(truck, name, sel[name], handleFields);
 }

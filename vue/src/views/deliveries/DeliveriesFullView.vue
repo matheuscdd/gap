@@ -233,11 +233,11 @@
             />
         </ul>
     </section>
-    <section v-show="partials.length">
+    <section v-if="$store.state.deliveryMod.partials.length">
         <h4>Parciais</h4>
         <ul class="container-partials">
             <iParcial
-                v-for="el in partials"
+                v-for="el in $store.state.deliveryMod.partials"
                 :key="el.id"
                 :id="el.id"
                 :delivery-date="new Date(el.delivery_date).toLocaleDateString('pt-BR')"
@@ -251,6 +251,7 @@
                         currency: 'BRL',
                     })"
                 :stocks="el.stocks"
+                @del="del"
                 @focused="focused"
                 @finish="finish"
             />
@@ -282,12 +283,15 @@ export default {
         focused(id) {
             this.focus = id;
         },
+        del(id) {
+            const continues = confirm("Tem certeza que deseja excluir essa entrega?");
+            if (!continues) return;
+            this.$store.dispatch("deliveryMod/delPartial", id);
+        },
         async finish(id) {
             const continues = confirm(`Tem certeza qud deseja finalizar essa entrega parcial de número ${id}? Essa ação não poderá ser desfeita`);
             if (!continues) return;
             await this.$store.dispatch("deliveryMod/finishPartial", id);
-            await this.$store.dispatch("deliveryMod/storePartials", this.delivery.id);
-            this.partials = this.$store.state.deliveryMod.partials;
         },
     },
 
@@ -309,7 +313,6 @@ export default {
         this.editor = this.$store.state.userMod.users.find(
             (el) => el.id === this.delivery.updated_by
         ).name;
-        this.partials = this.$store.state.deliveryMod.partials;
     },
 };
 </script>

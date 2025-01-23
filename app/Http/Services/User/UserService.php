@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 class UserService {
     public static function create(array $data) {
         $data[Keys::EMAIL] = strtolower($data[Keys::EMAIL]);
-        return User::create($data);
+        return response(User::create($data), 201);
     }
 
     public static function find(int $id) {

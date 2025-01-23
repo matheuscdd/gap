@@ -4,6 +4,7 @@ import clientMod from "./client";
 import stockTypeMod from "./stockType";
 import budgetMod from "./budget";
 import deliveryMod from "./delivery";
+import truckMod from "./truck";
 
 export default createStore({
     modules: {
@@ -12,6 +13,7 @@ export default createStore({
         budgetMod,
         stockTypeMod,
         deliveryMod,
+        truckMod,
     },
     actions: {
         clearAll({ commit }){
@@ -21,6 +23,7 @@ export default createStore({
                 "budgetMod",
                 "stockTypeMod",
                 "deliveryMod",
+                "truckMod",
             ].forEach(mod => commit(`${mod}/reset`));
         }
     }

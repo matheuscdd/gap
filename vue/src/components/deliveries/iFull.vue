@@ -44,6 +44,18 @@
                         />
                     </button>
                     <button
+                        @click="del"
+                        class="del"
+                        :disabled="finished || has_partials || ((getNow() - createdAt) / (1000 * 60)) > 30"
+                    >
+                        <iSvg
+                            :src="require('@/assets/icons/trash-solid.svg')"
+                            width="16"
+                            height="16"
+                            fill="white"
+                        />
+                    </button>
+                    <button
                         @click="createPartial"
                         :disabled="finished"
                         class="createPartial"
@@ -77,6 +89,8 @@
     </li>
 </template>
 <script>
+import { getNow } from "@/common/utils";
+
 export default {
     props: [
         "id",
@@ -90,6 +104,7 @@ export default {
         "has_partials",
         "completed",
         "total",
+        "createdAt",
     ],
     computed: {
         daysRemainingNum() {
@@ -120,6 +135,9 @@ export default {
         edit() {
             this.$emit("edit", this.id);
         },
+        del() {
+            this.$emit("del", this.id);
+        },
         createPartial() {
             this.$emit("createPartial", this.id);
         },
@@ -129,6 +147,7 @@ export default {
         view() {
             this.$emit("view", this.id);
         },
+        getNow,
     },
 };
 </script>
@@ -200,9 +219,9 @@ button {
     gap: 7px;
 }
 
-.btns button:hover, .btns button:active {
+.btns button:hover:not(:disabled), .btns button:active:not(:disabled) {
     transition: 0.3s;
-    filter: brightness(1.5);
+    filter: brightness(2);
 }
 
 .btns .createPartial {
@@ -221,8 +240,17 @@ button {
     background-color: var(--yellow-1);
 }
 
+.btns .del {
+    background-color: var(--red-1);
+}
+
+
 .btns button:disabled {
-    background-color: var(--gray-3);
+    background-color: var(--gray-1);
+}
+
+.btns button:disabled svg {
+    fill: var(--gray-3);
 }
 
 

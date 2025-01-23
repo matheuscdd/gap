@@ -2,6 +2,9 @@
 
 namespace App\Constraints;
 
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+
 class ValidatorConstraints {
     public const REQUIRED = 'required';
     public const MIN = 'min';
@@ -11,7 +14,13 @@ class ValidatorConstraints {
     public const DIGITS = 'digits';
     public const DATE_FORMAT = 'date_format';
     public const REGEX = 'regex';
+    public const NOT_REGEX = 'not_regex';
     public const ARRAY = 'array';
+    public const NUMERIC = 'numeric';
+    public const INTEGER = 'integer';
+    public const NULLABLE = 'nullable';
+    public const ONLY_NUMBERS = '/^[\d]/i';
+    public const ALPHANUM = 'alpha_num';
 
     private static function dot($field, $key): string {
         return "$field.$key";
@@ -27,6 +36,10 @@ class ValidatorConstraints {
 
     public static function cRegex($field): string {
         return self::colon($field, self::REGEX);
+    }
+
+    public static function cNotRegex($field): string {
+        return self::colon($field, self::NOT_REGEX);
     }
 
     public static function cDate($field): string {
@@ -79,5 +92,17 @@ class ValidatorConstraints {
 
     public static function cDigits($field): string {
         return self::colon($field, self::DIGITS);
+    }
+
+    public static function UPPERCASE(): Uppercase {
+        return new Uppercase;
+    }
+}
+
+class Uppercase implements ValidationRule {
+    public function validate(string $attribute, mixed $value, Closure $fail): void {
+        if (strtoupper($value) !== $value) {
+            $fail("O atributo precisa estar em letras maiúsculas.");
+        }
     }
 }

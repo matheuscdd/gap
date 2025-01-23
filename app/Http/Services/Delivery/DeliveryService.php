@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Enums\Unloaded;
 use Illuminate\Support\Facades\DB;
 use App\Utils\Utils;
+use DateTime;
 
 class DeliveryService {
     public static function createFull(array $data) {
@@ -27,7 +28,7 @@ class DeliveryService {
         $data[Keys::STOCKS] = Utils::groupStocks($data[Keys::STOCKS]);
         $delivery = Delivery::create($data);
         $stocks = self::insertStocks($delivery, $data[Keys::STOCKS]);
-        return self::retrieve($delivery->id, $delivery, $stocks);
+        return response(self::retrieve($delivery->id, $delivery, $stocks), 201);
     }
 
     public static function createPartial(int $ref, array $data) {
@@ -58,7 +59,7 @@ class DeliveryService {
         $delivery->ref = $ref;
         $delivery->save();
         $stocks = self::insertStocks($delivery, $data[Keys::STOCKS]);
-        return self::retrieve($delivery->id, $delivery, $stocks);
+        return response(self::retrieve($delivery->id, $delivery, $stocks), 201);
     }
 
     public static function editFull(int $id, array $data) {
@@ -448,5 +449,46 @@ class DeliveryService {
             'holidays' => $holidays,
             'deliveries' => $handleDeliveries,
         ];
+    }
+
+    public static function delFull(int $id) {
+        $delivery = Delivery::find($id);
+
+        if (!is_null($delivery->ref)) {
+            throw new AppError('Entregas parciais não podem ser deletadas nesse endpoint', 403);
+        }
+
+        if ($delivery->finished) {
+            throw new AppError('Entregas finalizadas não podem ser editadas', 403);
+        }
+        
+        $maxMinTime = 30;
+        $diff = intval(((new DateTime())->getTimestamp() - $delivery->created_at->getTimestamp()) / 60);
+        if ($diff > $maxMinTime) {
+            throw new AppError("O tempo máximo para realizar a deleção após a criação é de $maxMinTime minutos", 423);
+        }
+
+        $partials = Delivery::where(Keys::REF, $id)->get();
+        if (count($partials)) {
+            throw new AppError('Entregas com parciais associadas não podem ser deletadas', 409);
+        }
+
+        $delivery->delete();
+        return response(null, 204);
+    }
+
+    public static function delPartial(int $id) {
+        $delivery = Delivery::find($id);
+
+        if (is_null($delivery->ref)) {
+            throw new AppError('Entregas completas não podem ser deletadas nesse endpoint', 403);
+        }
+
+        if ($delivery->finished) {
+            throw new AppError('Entregas finalizadas não podem ser editadas', 403);
+        }
+        
+        $delivery->delete();
+        return response(null, 204);
     }
 }

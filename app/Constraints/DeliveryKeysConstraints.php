@@ -28,6 +28,7 @@ class DeliveryKeysConstraints {
     public const STOCK = 'stock';
     public const REF = 'ref';
     public const FINISHED = 'finished';
+    public const TABLE = 'deliveries';
     public const ALL = [
         self::CLIENT,
         self::DELIVERY_DATE,

@@ -12,7 +12,7 @@ class StockTypeService {
     public static function edit(int $id, array $data) {
         $stockType = StockType::find($id);
         $stockType->update($data);
-        return $stockType;
+        return response($stockType, 201);
     }
 
     public static function list() {

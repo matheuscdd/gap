@@ -100,6 +100,16 @@ const routes = [
         component: () => import("@/views/deliveries/DeliveriesFullView.vue")
     },
     {
+        path: endpoints.routes.TRUCK_CREATE,
+        name: endpoints.names.TRUCK_CREATE,
+        component: () => import("@/views/trucks/TrucksCreate.vue")
+    },
+    {
+        path: endpoints.routes.TRUCK_EDIT,
+        name: endpoints.names.TRUCK_EDIT,
+        component: () => import("@/views/trucks/TrucksEdit.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/common/NotFound.vue")

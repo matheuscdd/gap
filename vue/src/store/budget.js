@@ -51,5 +51,11 @@ export default {
             if (response.error) return;
             ctx.commit("storeBudget", response);
         },
+
+        async delBudget(ctx, id) {
+            const response = await api("/budgets/" + id, methods.DELETE);
+            if (response.error) return alert(response.error);
+            ctx.dispatch("storeBudgets");
+        },
     }
 };
