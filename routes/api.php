@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     StockTypeController,
     DeliveryController,
     TruckController,
+    MaintenanceController,
 };
 use Illuminate\Support\Facades\Route;
 use \App\Http\Middlewares\{
@@ -18,6 +19,7 @@ use \App\Http\Middlewares\{
     StockTypeMiddleware,
     UserMiddleware,
     TruckMiddleware,
+    MaintenanceMiddleware,
 };
 
 Route::group([
@@ -77,4 +79,13 @@ Route::middleware([JWTMiddleware::class, TruckMiddleware::class])->group(functio
     Route::get('/trucks', [TruckController::class, 'list']);
     Route::patch('/trucks/{id}', [TruckController::class, 'edit']);
     Route::get('/trucks/{id}', [TruckController::class, 'find']);
+    Route::delete('/trucks/{id}', [TruckController::class, 'del']);
+});
+
+Route::middleware([JWTMiddleware::class, MaintenanceMiddleware::class])->group(function() {
+    Route::post('/maintenances', [MaintenanceController::class, 'create']);
+    Route::get('/maintenances', [MaintenanceController::class, 'list']);
+    Route::patch('/maintenances/{id}', [MaintenanceController::class, 'edit']);
+    Route::get('/maintenances/{id}', [MaintenanceController::class, 'find']);
+    Route::delete('/maintenances/{id}', [MaintenanceController::class, 'del']);
 });

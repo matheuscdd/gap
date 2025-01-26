@@ -34,6 +34,8 @@ export const endpoints = Object.freeze({
         DELIVERY_VIEW_FULL: "/deliveries/full/view/:id",
         TRUCK_CREATE: "/trucks/create",
         TRUCK_EDIT: "/trucks/edit:/:id",
+        MAINTENANCE_CREATE: "/maintenances/create",
+        MAINTENANCE_EDIT: "/maintenances/edit/:id",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
     names: Object.freeze({
@@ -58,6 +60,8 @@ export const endpoints = Object.freeze({
         DELIVERY_VIEW_FULL: "deliveries-full-view",
         TRUCK_CREATE: "trucks-create",
         TRUCK_EDIT: "trucks-edit",
+        MAINTENANCE_CREATE: "maintenances-create",
+        MAINTENANCE_EDIT: "maintenances-edit",
         NOT_FOUND: "not found",
     })
 });
@@ -391,5 +395,60 @@ export const truckForm = Object.freeze({
         NAME: truck.keys.PHOTO,
         LABEL: truck.trans.PHOTO,
         ACCEPT: "image/png, image/jpeg",
+    }),
+});
+
+export const maintenance = Object.freeze({
+    keys: Object.freeze({
+        SERVICE: "service",
+        KM: "km",
+        COST: "cost",
+        DATE: "date",
+        TRUCK: "truck",
+    }),
+    trans: Object.freeze({
+        SERVICE: "serviço",
+        KM: "quilometragem",
+        COST: "custo",
+        DATE: "data",
+        TRUCK: "caminhão",
+    }),
+});
+
+export const maintenanceForm = Object.freeze({
+    SERVICE: Object.freeze({
+        PLACEHOLDER: "Reparo realizado",
+        ICON: "screwdriver-wrench-solid",
+        TYPE: "text",
+        NAME: maintenance.keys.SERVICE,
+        LABEL: maintenance.trans.SERVICE
+    }),
+    KM: Object.freeze({
+        PLACEHOLDER: "Insira a quilometragem",
+        ICON: "gauge-high-solid",
+        TYPE: "number",
+        NAME: maintenance.keys.KM,
+        LABEL: maintenance.trans.KM
+    }),
+    COST: Object.freeze({
+        PLACEHOLDER: "Insira o custo",
+        ICON: "arrow-down-solid",
+        TYPE: "number",
+        NAME: maintenance.keys.COST,
+        LABEL: maintenance.trans.COST,
+    }),
+    DATE: Object.freeze({
+        PLACEHOLDER: "Insira a data",
+        ICON: "calendar-solid",
+        TYPE: "date",
+        NAME: maintenance.keys.DATE,
+        LABEL: maintenance.trans.DATE,
+    }),
+    TRUCK: Object.freeze({
+        PLACEHOLDER: "Insira o caminhão",
+        ICON: "truck-solid",
+        TYPE: "number",
+        NAME: maintenance.keys.TRUCK,
+        LABEL: maintenance.trans.TRUCK,
     }),
 });

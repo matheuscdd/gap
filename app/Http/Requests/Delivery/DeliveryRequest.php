@@ -29,14 +29,14 @@ class DeliveryRequest extends Request {
         $ref = [
             Keys::DELIVERY_DATE => [
                 Schema::REQUIRED,
-                Schema::cDate(Keys::DATE_FORMAT)
+                Schema::cDate()
             ],
             Keys::PAYMENT_DATE => [
-                Schema::cDate(Keys::DATE_FORMAT)
+                Schema::cDate()
             ],
             Keys::RECEIPT_DATE => [
                 Schema::REQUIRED,
-                Schema::cDate(Keys::DATE_FORMAT)
+                Schema::cDate()
             ],
             Keys::CLIENT => [
                 Schema::REQUIRED,

@@ -78,6 +78,8 @@ export default {
     },
     methods: {
         edit() {
+            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (!continues) return;
             const { plate, axis, photo } = this;
             const rawData = { axis, photo };
             const { truck } = this.$store.state.truckMod;

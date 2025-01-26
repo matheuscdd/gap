@@ -27,10 +27,10 @@ class BudgetRequest extends Request {
         $ref = [
             Keys::DELIVERY_DATE => [
                 Schema::REQUIRED,
-                Schema::cDate(Keys::DATE_FORMAT)
+                Schema::cDate()
             ],
             Keys::PAYMENT_DATE => [
-                Schema::cDate(Keys::DATE_FORMAT)
+                Schema::cDate()
             ],
             Keys::CLIENT => [
                 Schema::REQUIRED,

@@ -29,15 +29,15 @@ export default {
             ctx.commit("storeTruck", response);
         },
 
-        // async storeClients(ctx) {
-        //     const response = await api("/clients");
-        //     const data = response.map(user => ({
-        //         ...user,
-        //         created_at: handleDate(user.created_at),
-        //         updated_at: handleDate(user.updated_at),
-        //     }));
-        //     ctx.commit("storeClients", data);
-        // },
+        async storeTrucks(ctx) {
+            const response = await api("/trucks");
+            const data = response.map(truck => ({
+                ...truck,
+                created_at: handleDate(truck.created_at),
+                updated_at: handleDate(truck.updated_at),
+            }));
+            ctx.commit("storeTrucks", data);
+        },
 
         async createTruck(ctx, data) {
             const response = await api("/trucks", methods.POST, data);

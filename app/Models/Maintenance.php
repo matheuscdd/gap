@@ -2,25 +2,23 @@
 
 namespace App\Models;
 
-use App\Constraints\TruckKeysConstraints as Keys;
+use App\Constraints\MaintenanceKeysConstraints as Keys;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Truck extends Model {
+class Maintenance extends Model {
     use HasFactory;
 
     protected $table = Keys::TABLE;
 
     protected $fillable = [
-        Keys::PLATE,
-        Keys::AXIS,
-        Keys::PHOTO,
+        Keys::SERVICE,
+        Keys::KM,
+        Keys::COST,
+        Keys::DATE,
+        Keys::TRUCK,
         Keys::CREATED_BY,
         Keys::UPDATED_BY,
     ];
-
-    public function maintenances() {
-        return $this->hasMany(Maintenance::class, 'truck', 'id');
-    }
 }
 

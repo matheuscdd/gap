@@ -110,6 +110,16 @@ const routes = [
         component: () => import("@/views/trucks/TrucksEdit.vue")
     },
     {
+        path: endpoints.routes.MAINTENANCE_CREATE,
+        name: endpoints.names.MAINTENANCE_CREATE,
+        component: () => import("@/views/maintenances/MaintenancesCreate.vue")
+    },
+    {
+        path: endpoints.routes.MAINTENANCE_EDIT,
+        name: endpoints.names.MAINTENANCE_EDIT,
+        component: () => import("@/views/maintenances/MaintenancesEdit.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/common/NotFound.vue")

@@ -13,6 +13,7 @@ class ValidatorConstraints {
     public const EMAIL = 'email';
     public const DIGITS = 'digits';
     public const DATE_FORMAT = 'date_format';
+    public const DATE_SCHEMA = 'Y-m-d';
     public const REGEX = 'regex';
     public const NOT_REGEX = 'not_regex';
     public const ARRAY = 'array';
@@ -42,8 +43,8 @@ class ValidatorConstraints {
         return self::colon($field, self::NOT_REGEX);
     }
 
-    public static function cDate($field): string {
-        return self::colon($field, self::DATE_FORMAT);
+    public static function cDate(): string {
+        return self::colon(self::DATE_SCHEMA, self::DATE_FORMAT);
     }
 
     public static function dMax($field): string {

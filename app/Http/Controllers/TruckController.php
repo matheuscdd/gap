@@ -19,6 +19,10 @@ class TruckController extends Controller {
         return TruckService::find($request->route('id'));
     }
 
+    public function del(Request $request) {
+        return TruckService::del($request->route('id'));
+    }
+
     public function list(Request $request) {
         return TruckService::list();
     }
