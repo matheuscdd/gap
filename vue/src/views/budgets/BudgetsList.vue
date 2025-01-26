@@ -70,8 +70,10 @@ export default {
     mixins: [mixins],
     async beforeCreate() {
         window.scrollTo(0,0);
-        await this.$store.dispatch("clientMod/storeClients");
-        await this.$store.dispatch("budgetMod/storeBudgets");
+        await Promise.all([
+            this.$store.dispatch("clientMod/storeClients"),
+            this.$store.dispatch("budgetMod/storeBudgets"),
+        ]);
         // TODO - globalizar função
         this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
         this.idsOpts = this.$store.state.budgetMod.budgets.map(itemgetter("id")).map(String).map(id => ({id: id, text: id, value: id}));

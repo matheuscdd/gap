@@ -298,11 +298,13 @@ export default {
     async beforeCreate() {
         window.scrollTo(0, 0);
         const id = this.$route.params.id;
-        await this.$store.dispatch("deliveryMod/storeDelivery", id);
-        await this.$store.dispatch("stockTypeMod/storeStockTypes");
-        await this.$store.dispatch("clientMod/storeClients");
-        await this.$store.dispatch("userMod/storeUsers");
-        await this.$store.dispatch("deliveryMod/storePartials", id);
+        await Promise.all([
+            this.$store.dispatch("deliveryMod/storeDelivery", id),
+            this.$store.dispatch("stockTypeMod/storeStockTypes"),
+            this.$store.dispatch("clientMod/storeClients"),
+            this.$store.dispatch("userMod/storeUsers"),
+            this.$store.dispatch("deliveryMod/storePartials", id),
+        ]);
         this.delivery = this.$store.state.deliveryMod.delivery;
         this.client = this.$store.state.clientMod.clients.find(
             (el) => el.id === this.delivery.client

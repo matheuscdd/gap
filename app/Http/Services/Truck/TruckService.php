@@ -3,7 +3,8 @@
 namespace App\Http\Services\Truck;
 
 use App\Constraints\TruckKeysConstraints as Keys;
-use App\Models\Truck;
+use App\Constraints\MaintenanceKeysConstraints as MaintenanceKeys;
+use App\Models\{Truck, Maintenance};
 use Cloudinary\Api\Upload\UploadApi;
 use Cloudinary\Api\Admin\AdminApi;
 use App\Exceptions\AppError;
@@ -49,12 +50,27 @@ class TruckService {
     }
 
     public static function list() {
-        return response()->json(Truck::all(), 200, [], JSON_UNESCAPED_SLASHES);
+        $trucks = json_decode(json_encode(Truck::with('maintenances')->get()), true);
+        foreach($trucks as &$truck) {
+            $truck['maintenances'] = count($truck['maintenances']);
+        }
+        # TODO - no list do front bloquear caminhões com manutenção
+        unset($truck);
+
+        return response()->json($trucks, 200, [], JSON_UNESCAPED_SLASHES);
     }
 
     public static function find(int $id) {
         return response()->json(Truck::find($id), 200, [], JSON_UNESCAPED_SLASHES);
     }
 
-    # TODO - fazer delete depois de fazer a manutenção
+    public static function del(int $id) {
+        $hasMaintenances = boolval(Maintenance::where(MaintenanceKeys::TRUCK, '=', $id)->count());
+        if ($hasMaintenances) {
+            throw new AppError('Um caminhão com manutenções registradas não pode ser apagado', 409);
+        }
+
+        (Truck::find($id))->delete();
+        return response(null, 204); 
+    }
 }

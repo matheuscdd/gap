@@ -70,6 +70,20 @@
                         :to="endpoints.routes.TRUCK_CREATE"
                     >Criar</RouterLink> 
                 </li>
+                <li>
+                    <h6>Manutenções</h6>
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.MAINTENANCE_CREATE)" 
+                        :to="endpoints.routes.MAINTENANCE_CREATE"
+                    >Criar</RouterLink> 
+                </li>
+                <li>
+                    <h6>Garagem</h6>
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.MAINTENANCE_CREATE)" 
+                        :to="endpoints.routes.MAINTENANCE_CREATE"
+                    >Listar</RouterLink> 
+                </li>
             </ul>
         </div>
     </aside>

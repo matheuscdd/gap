@@ -12,17 +12,18 @@ use App\Enums\Unloaded;
 use Illuminate\Support\Facades\DB;
 use App\Utils\Utils;
 use DateTime;
+use App\Constraints\ValidatorConstraints as Schema;
 
 class DeliveryService {
     public static function createFull(array $data) {
         $data[Keys::CREATED_BY] = auth()->user()->id;
         $data[Keys::UPDATED_BY] = auth()->user()->id;
-        $data[Keys::DELIVERY_DATE] = date(Keys::DATE_FORMAT, strtotime($data[Keys::DELIVERY_DATE]));
+        $data[Keys::DELIVERY_DATE] = date(Schema::DATE_SCHEMA, strtotime($data[Keys::DELIVERY_DATE]));
         if ($data[Keys::UNLOADED] === Unloaded::CLIENT) {
             $data[Keys::UNLOADING_COST] = 0;
         }
         if (array_key_exists(Keys::PAYMENT_DATE, $data)) {
-            $data[Keys::PAYMENT_DATE] = date(Keys::DATE_FORMAT, strtotime($data[Keys::PAYMENT_DATE]));
+            $data[Keys::PAYMENT_DATE] = date(Schema::DATE_SCHEMA, strtotime($data[Keys::PAYMENT_DATE]));
         }
 
         $data[Keys::STOCKS] = Utils::groupStocks($data[Keys::STOCKS]);
@@ -441,7 +442,7 @@ class DeliveryService {
                 'type' => 'delivery',
                 'description' => $el->delivery_address . ' - ' . $el->driver . ' - ' . "Descarga $unloaded",
                 'redirectId' => $el->ref ?? $el->id,
-                'isPartial' => boolval($el->ref),
+                'isPartial' => is_null($el->ref),
             ];
         }
 

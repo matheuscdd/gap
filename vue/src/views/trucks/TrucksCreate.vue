@@ -77,6 +77,8 @@ export default {
     },
     methods: {
         create() {
+            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (!continues) return;
             const { plate, axis, photo } = this;
             const rawData = { plate, axis, photo };
             const errors = [];

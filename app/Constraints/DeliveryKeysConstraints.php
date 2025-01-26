@@ -23,7 +23,7 @@ class DeliveryKeysConstraints {
     public const UPDATED_BY = 'updated_by';
     public const CREATED_AT = 'created_at';
     public const UPDATED_AT = 'updated_at';
-    public const DATE_FORMAT = 'Y-m-d';
+
     public const DELIVERY = 'delivery';
     public const STOCK = 'stock';
     public const REF = 'ref';

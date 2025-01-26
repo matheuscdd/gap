@@ -165,9 +165,11 @@ export default {
     async beforeCreate() {
         window.scrollTo(0,0);
         const id = this.$route.params.id;
-        await this.$store.dispatch("deliveryMod/storeDelivery", id);
-        await this.$store.dispatch("stockTypeMod/storeStockTypes");
-        await this.$store.dispatch("clientMod/storeClients");
+        await Promise.all([
+            this.$store.dispatch("deliveryMod/storeDelivery", id),
+            this.$store.dispatch("stockTypeMod/storeStockTypes"),
+            this.$store.dispatch("clientMod/storeClients"),
+        ]);
         // TODO - transformar numa função
         this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
         const delivery = this.$store.state.deliveryMod.delivery;
