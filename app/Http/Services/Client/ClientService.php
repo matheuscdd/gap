@@ -40,7 +40,7 @@ class ClientService {
         $deliveries = Delivery::where('client', $id)->get();
         $budgets = Budget::where('client', $id)->get();
         if (count($deliveries) || count($budgets)) {
-            throw new AppError("Esse cliente já está em uso no sistema", 409);
+            throw new AppError('Esse cliente já está em uso no sistema', 409);
         }
                     
         $client->delete();

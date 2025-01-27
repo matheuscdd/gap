@@ -76,10 +76,7 @@ export default {
             const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
             if (!continues) return;
             const { name, email } = this;
-            const data = { name };
-            if (this.$store.state.userMod.user.email !== email.value) {
-                data.email = email;
-            }
+            const data = { name, email };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyUser(key, this)));
             if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");

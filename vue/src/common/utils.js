@@ -24,9 +24,9 @@ async function _api(url, method = methods.GET, body = null) {
     const response = await fetch(process.env.VUE_APP_API_URL + "/api" + url, request);
     if (response.status === 204) return {};
     const data = await response.json();
-    if ([200, 201].includes(response.status)) {
+    if (response.ok) {
         return data;
-    } 
+    }
     return {
         error: `${data.msg} - ${data.errors ? JSON.stringify(data.errors) : ""}`, 
         status: response.status
@@ -98,8 +98,6 @@ export function randomColor(alpha) {
 }
 
 export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
-    ctx.revenue.value = Number(ctx.revenue.value) || "";
-    ctx.cost.value = Number(ctx.cost.value) || "";
     const { 
         client, 
         delivery_address, 
@@ -144,12 +142,6 @@ export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
 }
 
 export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {}) {
-    ["revenue", "travel_cost", "unloading_cost"]
-        .filter(key => ctx[key])
-        .forEach(key => {
-            ctx[key].value = isNaN(Number(ctx[key]?.value)) ? "" : Number(ctx[key]?.value);
-        }
-        );
     if (ctx.unloaded.value === "client") {
         ctx.unloading_cost.value = 0;
     }

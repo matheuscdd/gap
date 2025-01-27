@@ -1,9 +1,9 @@
 <template>
     <li>
         <div class="name">{{ name }}</div>
-        <div>{{ email }}</div>
+        <div>{{ CPF }}</div>
+        <div>{{ deliveries }}</div>
         <div>{{ updatedAt.toLocaleString("pt-BR") }}</div>
-        <div>{{ isAdmin ? 'Admin' : 'Comum' }}</div>
         <div class="btns">
             <button
                 class="edit"
@@ -19,7 +19,7 @@
             <button 
                 class="del"
                 @click="del" 
-                :disabled="$store.state.userMod.logged.id === id"
+                :disabled="Boolean(deliveries) || ((getNow() - createdAt) / (1000 * 60)) > 30"
             >
                     <iSvg 
                         :src="require('@/assets/icons/trash-solid.svg')"
@@ -41,10 +41,10 @@ export default {
     props: [
         "id",
         "name",
-        "email",
+        "CPF",
+        "deliveries",
         "createdAt",
         "updatedAt",
-        "isAdmin",
     ],
     methods: {
         edit() {
@@ -63,7 +63,7 @@ export default {
 li {
     padding: 20px;
     display: grid;
-    grid-template-columns: 25% 25% 20% 10% 20%;
+    grid-template-columns: 25% 25% 10% 20% 20%;
     grid-auto-rows: 30px;
     grid-gap: 10px;
     margin-bottom: 10px;

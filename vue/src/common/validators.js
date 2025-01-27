@@ -6,6 +6,7 @@ import {
     delivery as cDelivery, 
     truck as cTruck,
     maintenance as cMaintenance,
+    driver as cDriver,
     endpoints  
 } from "./consts";
 import store from "@/store";
@@ -44,7 +45,8 @@ const {
     DATE,
     KM,
     TRUCK,
-} = {...cUser.keys, ...cClient.keys, ...cBudget.keys, ...cDelivery.keys, ...cTruck.keys, ...cMaintenance.keys  };
+    CPF,
+} = {...cUser.keys, ...cClient.keys, ...cBudget.keys, ...cDelivery.keys, ...cTruck.keys, ...cMaintenance.keys, ...cDriver.keys  };
 
 const budgetLimits = Object.freeze({
     [DELIVERY_ADDRESS]: Object.freeze({
@@ -121,7 +123,16 @@ export const base = Object.freeze({
             min: 5,
             max: 512,
         })
-    })
+    }),
+    driver: Object.freeze({
+        [NAME]: Object.freeze({
+            min: 3,
+            max: 64,
+        }),
+        [CPF]: Object.freeze({
+            size: 11,
+        }),
+    }),
 });
 
 const msgs = Object.freeze({
@@ -132,11 +143,12 @@ const msgs = Object.freeze({
     max: (field, val) => `O campo ${field} contém mais caracteres do que o permitido de ${val}`,
     size: (field, val) => `O campo ${field} deve ter o exato tamanho de dígitos de ${val}`,
     twoCases: (field) => `O campo ${field} deve ter exatamente duas casas decimais`,
-    positive: (field) => `O campo ${field} precisa ser maior que zero`
+    positive: (field) => `O campo ${field} precisa ser maior que zero`,
+    onlyNumbers: "Apenas números são permitidos",
 });
 
 const nonEmpty = /^[^$]/;
-const onlyNumbers = /^[\d]/;
+const onlyNumbers = /^[\d]+$/;
 const alphanumeric = /[A-Z\d]/i;
 const includes = (arr) => ((el) => arr.includes(el));
 
@@ -219,7 +231,7 @@ export function verifyClient(name, obj) {
         
         [CEP]: z
             .string()
-            .regex(onlyNumbers, "Apenas números são permitidos")
+            .regex(onlyNumbers, msgs.onlyNumbers)
             .length(base.client[CEP].size, msgs.size(cClient.trans.CEP, base.client[CEP].size))
             .optional(),
 
@@ -270,8 +282,6 @@ export function verifyBudget(name, obj) {
         PAYMENT_STATUS.THIS,
         PAYMENT_METHOD.THIS,
     ].forEach(key => handleFields[key] = sel[key]?.value);
-    handleFields[COST] = Number(handleFields[COST]) || handleFields[COST];
-    handleFields[REVENUE] = Number(handleFields[REVENUE]) || handleFields[REVENUE];
     
     const clients = store.state.clientMod.clients.map(({id}) => id);
     const budget = z.object({
@@ -345,6 +355,7 @@ export function verifyDelivery(name, obj) {
     
     rawFields.forEach(key => handleFields[key] = sel[key]?.value);
     const clients = store.state.clientMod.clients.map(itemgetter("id"));
+    const drivers = store.state.driverMod.drivers.map(itemgetter("id"));
     let schema = {
         [DELIVERY_DATE]: z
             .string()
@@ -359,10 +370,8 @@ export function verifyDelivery(name, obj) {
             .gte(-1),
             // .regex(twoCases, msgs.twoCases(cDelivery.trans.COST))
         [DRIVER]: z
-            .string()
-            .regex(nonEmpty, msgs.required(cDelivery.trans.DRIVER))      
-            .min(base.delivery[DRIVER].min, msgs.min(cDelivery.trans.DRIVER, base.delivery[DRIVER].min))
-            .max(base.delivery[DRIVER].max, msgs.max(cDelivery.trans.DRIVER, base.delivery[DRIVER].max)),
+            .number({ message: msgs.valid(cDelivery.trans.DRIVER) })
+            .refine(includes(drivers), { message: msgs.valid(cDelivery.trans.DRIVER) }),
     };
     if (isNotPartial) {
         // schema[UNLOADING_COST] = schema[UNLOADING_COST].lte(handleFields[REVENUE], "O custo de descarga não pode ser maior que o faturamento");
@@ -434,7 +443,6 @@ export function verifyMaintenance(name, obj) {
     const handleFields = {};
     [TRUCK, COST, DATE, KM, SERVICE]
         .forEach(key => handleFields[key] = sel[key]?.value);
-    handleFields[COST] = Number(handleFields[COST]) || handleFields[COST];
 
     const trucks = store.state.truckMod.trucks.map(itemgetter("id"));
     const truck = z.object({
@@ -457,4 +465,25 @@ export function verifyMaintenance(name, obj) {
             .refine(includes(trucks), { message: msgs.valid(cMaintenance.trans.TRUCK) }),
     });
     return verify(truck, name, sel[name], handleFields);
+}
+
+export function verifyDriver(name, obj) {
+    const sel = obj || this;
+    const handleFields = {};
+    [NAME, CPF]
+        .forEach(key => handleFields[key] = sel[key]?.value);
+    
+    const driver = z.object({
+        [NAME]: z
+            .string()
+            .regex(nonEmpty, msgs.required(cDriver.trans.NAME))      
+            .min(base.driver[NAME].min, msgs.min(cDriver.trans.NAME, base.driver[NAME].min))
+            .max(base.driver[NAME].max, msgs.max(cDriver.trans.NAME, base.driver[NAME].max)),
+        [CPF]: z
+            .string()
+            .regex(nonEmpty, msgs.required(cDriver.trans.CPF))
+            .regex(onlyNumbers, msgs.onlyNumbers)
+            .length(base.driver[CPF].size, msgs.size(cDriver.trans.CPF, base.driver[CPF].size)),    
+    });
+    return verify(driver, name, sel[name], handleFields);
 }

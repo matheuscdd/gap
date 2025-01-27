@@ -26,7 +26,7 @@ class UserRequest extends Request {
                 Schema::EMAIL,
                 Schema::cMin(self::EMAIL_MIN),
                 Schema::cMax(self::EMAIL_MAX),
-                Schema::cUnique(Keys::TABLE),
+                Schema::unique(Keys::TABLE, $this->route('id')),
             ],
             Keys::NAME  => [
                 Schema::REQUIRED,

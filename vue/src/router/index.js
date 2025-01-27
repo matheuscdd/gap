@@ -120,6 +120,21 @@ const routes = [
         component: () => import("@/views/maintenances/MaintenancesEdit.vue")
     },
     {
+        path: endpoints.routes.DRIVER_CREATE,
+        name: endpoints.names.DRIVER_CREATE,
+        component: () => import("@/views/drivers/DriversCreate.vue")
+    },
+    {
+        path: endpoints.routes.DRIVER_EDIT,
+        name: endpoints.names.DRIVER_EDIT,
+        component: () => import("@/views/drivers/DriversEdit.vue")
+    },
+    {
+        path: endpoints.routes.DRIVER_LIST,
+        name: endpoints.names.DRIVER_LIST,
+        component: () => import("@/views/drivers/DriversList.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/common/NotFound.vue")

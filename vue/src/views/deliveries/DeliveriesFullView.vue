@@ -158,7 +158,7 @@
             font="20"
         />
         <iValue
-            :value="fillField(delivery.driver)"
+            :value="fillField(driver)"
             label="Motorista"
             icon="user-solid"
             color="#8BBF4D"
@@ -243,7 +243,9 @@
                 :delivery-date="new Date(el.delivery_date).toLocaleDateString('pt-BR')"
                 :delivery-address="el.delivery_address"
                 :unloaded="el.unloaded"
-                :driver="el.driver"
+                :driver="$store.state.driverMod.drivers.find(
+                    (driver) => driver.id === el.driver 
+                ).name"
                 :finished="el.finished"
                 :focus="focus"
                 :unloading-cost="Number(el.unloading_cost).toLocaleString('pt-br', {
@@ -304,10 +306,14 @@ export default {
             this.$store.dispatch("clientMod/storeClients"),
             this.$store.dispatch("userMod/storeUsers"),
             this.$store.dispatch("deliveryMod/storePartials", id),
+            this.$store.dispatch("driverMod/storeDrivers"),
         ]);
         this.delivery = this.$store.state.deliveryMod.delivery;
         this.client = this.$store.state.clientMod.clients.find(
             (el) => el.id === this.delivery.client
+        ).name;
+        this.driver = this.$store.state.driverMod.drivers.find(
+            (el) => el.id === this.delivery.driver
         ).name;
         this.creator = this.$store.state.userMod.users.find(
             (el) => el.id === this.delivery.created_by

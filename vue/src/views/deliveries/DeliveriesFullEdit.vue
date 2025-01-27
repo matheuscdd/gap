@@ -141,15 +141,15 @@
                     v-model="travel_cost.value"
                     @validate="verifyDelivery"
                 />
-                <iInput 
+                <iSearch
                     :label="deliveryForm.DRIVER.LABEL"
-                    :placeholder="deliveryForm.DRIVER.PLACEHOLDER"
-                    :icon="deliveryForm.DRIVER.ICON"
-                    :type="deliveryForm.DRIVER.TYPE"
                     :name="deliveryForm.DRIVER.NAME"
+                    :icon="deliveryForm.DRIVER.ICON"
                     :errors="driver.errors"
                     v-model="driver.value"
+                    :opts="driversOpts"
                     @validate="verifyDelivery"
+                    :edit="true"
                 />
                 <iSelect
                     :opts="unloadedOpts"
@@ -279,6 +279,7 @@ export default {
             value: "ticket",
         },
         clientsOpts: [],
+        driversOpts: [],
         unloadedOpts: [
             {
                 id: "client",
@@ -344,8 +345,12 @@ export default {
             this.$store.dispatch("deliveryMod/storeDelivery", id),
             this.$store.dispatch("stockTypeMod/storeStockTypes"),
             this.$store.dispatch("clientMod/storeClients"),
+            this.$store.dispatch("driverMod/storeDrivers"),
         ]);
-        this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
+        this.clientsOpts = this.$store.state.clientMod.clients
+            .map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
+        this.driversOpts = this.$store.state.driverMod.drivers
+            .map(el => ({id: el.id, text: `${el.name} - ${el.CPF}`, value: `${el.name} - ${el.CPF}`})); 
         const delivery = this.$store.state.deliveryMod.delivery;
         this.stocks = delivery.stocks;
         Object

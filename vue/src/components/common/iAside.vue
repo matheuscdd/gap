@@ -34,6 +34,17 @@
                     >Listar</RouterLink> 
                 </li>
                 <li>
+                    <h6>Motoristas</h6>
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.DRIVER_CREATE)" 
+                        :to="endpoints.routes.DRIVER_CREATE"
+                    >Criar</RouterLink> 
+                    <RouterLink 
+                        :style="setColor(endpoints.routes.DRIVER_LIST)" 
+                        :to="endpoints.routes.DRIVER_LIST"
+                    >Listar</RouterLink> 
+                </li>
+                <li>
                     <h6>Orçamentos</h6>
                     <RouterLink 
                         :style="setColor(endpoints.routes.BUDGET_CREATE)" 

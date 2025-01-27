@@ -27,13 +27,13 @@ class ClientRequest extends Request {
                 Schema::cMax(self::NAME_MAX),
             ],
             Keys::CNPJ => [
-                Schema::cNotRegex(Schema::ONLY_NUMBERS),
+                Schema::cRegex(Schema::ONLY_NUMBERS),
                 Schema::cMin(self::CNPJ_MIN),
                 Schema::cMax(self::CNPJ_MAX),
-                Schema::cUnique(Keys::TABLE),
+                Schema::unique(Keys::TABLE, $this->route('id')),
             ],
             Keys::CEP => [
-                Schema::cNotRegex(Schema::ONLY_NUMBERS),
+                Schema::cRegex(Schema::ONLY_NUMBERS),
                 Schema::cDigits(self::CEP_SIZE),
             ],
             Keys::ADDRESS => [
@@ -44,7 +44,7 @@ class ClientRequest extends Request {
             Keys::CELLPHONE => [
                 Schema::REQUIRED,
                 Schema::cDigits(self::CELLPHONE_SIZE),
-                Schema::cUnique(Keys::TABLE),
+                Schema::unique(Keys::TABLE, $this->route('id')),
             ]
         ];
         $rules= self::retrieveRules($partial, $ref, $keys, $keepRequired);

@@ -9,6 +9,7 @@ use Cloudinary\Api\Upload\UploadApi;
 use Cloudinary\Api\Admin\AdminApi;
 use App\Exceptions\AppError;
 use Illuminate\Support\Facades\Log;
+use DateTime;
 
 class TruckService {
     public static function create(array $data) {
@@ -65,12 +66,20 @@ class TruckService {
     }
 
     public static function del(int $id) {
+        $truck = Truck::find($id);
+
+        $maxMinTime = 30;
+        $diff = intval(((new DateTime())->getTimestamp() - $truck->created_at->getTimestamp()) / 60);
+        if ($diff > $maxMinTime) {
+            throw new AppError("O tempo máximo para realizar a deleção após a criação é de $maxMinTime minutos", 423);
+        }
+
         $hasMaintenances = boolval(Maintenance::where(MaintenanceKeys::TRUCK, '=', $id)->count());
         if ($hasMaintenances) {
             throw new AppError('Um caminhão com manutenções registradas não pode ser apagado', 409);
         }
 
-        (Truck::find($id))->delete();
+        $truck->delete();
         return response(null, 204); 
     }
 }

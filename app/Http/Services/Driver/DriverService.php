@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Http\Services\Driver;
+use App\Constraints\DriverKeysConstraints as Keys;
+use App\Exceptions\AppError;
+use App\Models\Driver;
+use DateTime;
+
+class DriverService {
+    public static function create(array $data) {
+        $data[Keys::CREATED_BY] = auth()->user()->id;
+        $data[Keys::UPDATED_BY] = auth()->user()->id;
+        return response(Driver::create($data), 201);
+    }
+
+    public static function find(int $id) {
+        return Driver::find($id);
+    }
+
+    public static function edit(int $id, array $data) {
+        $data[Keys::UPDATED_BY] = auth()->user()->id;
+        $driver = Driver::find($id);
+        $driver->update($data);
+        return $driver;
+    }
+
+    public static function list() {
+        $trucks = json_decode(json_encode(Driver::with('deliveries')->get()), true);
+        foreach($trucks as &$truck) {
+            $truck['deliveries'] = count($truck['deliveries']);
+        }
+        # TODO - no list do front bloquear motoristas com entrega
+        unset($truck);
+
+        return response()->json($trucks, 200, [], JSON_UNESCAPED_SLASHES);
+    }
+    public static function del(int $id) {
+        $driver = Driver::find($id);
+
+        $maxMinTime = 30;
+        $diff = intval(((new DateTime())->getTimestamp() - $driver->created_at->getTimestamp()) / 60);
+        if ($diff > $maxMinTime) {
+            throw new AppError("O tempo máximo para realizar a deleção após a criação é de $maxMinTime minutos", 423);
+        }
+
+        if (count($driver->deliveries)) {
+            throw new AppError('Esse motorista já está em uso no sistema', 409);
+        }
+                    
+        $driver->delete();
+   
+        return response(null, 204);
+    }
+}

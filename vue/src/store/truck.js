@@ -52,10 +52,10 @@ export default {
             // router.push(endpoints.routes.CLIENT_LIST);
         },
 
-        // async delClient(ctx, id) {
-        //     const response = await api("/clients/" + id, methods.DELETE);
-        //     if (response.error) return alert(response.error);
-        //     ctx.dispatch("storeClients");
-        // },
+        async delTruck(ctx, id) {
+            const response = await api("/trucks/" + id, methods.DELETE);
+            if (response.error) return alert(response.error);
+            ctx.dispatch("storeTrucks");
+        },
     }
 };

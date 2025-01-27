@@ -31,5 +31,11 @@ class Delivery extends Model {
         Keys::CREATED_BY,
         Keys::UPDATED_BY,
     ];
+
+    protected $casts = [
+        Keys::TRAVEL_COST => 'float',
+        Keys::UNLOADING_COST => 'float',
+        Keys::REVENUE => 'float',
+    ];
 }
 
