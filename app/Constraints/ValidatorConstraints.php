@@ -4,6 +4,7 @@ namespace App\Constraints;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use \Illuminate\Validation\Rule;
 
 class ValidatorConstraints {
     public const REQUIRED = 'required';
@@ -20,7 +21,7 @@ class ValidatorConstraints {
     public const NUMERIC = 'numeric';
     public const INTEGER = 'integer';
     public const NULLABLE = 'nullable';
-    public const ONLY_NUMBERS = '/^[\d]/i';
+    public const ONLY_NUMBERS = '/^[\d]+$/';
     public const ALPHANUM = 'alpha_num';
 
     private static function dot($field, $key): string {
@@ -79,8 +80,8 @@ class ValidatorConstraints {
         return self::colon($field, self::MIN);
     }
 
-    public static function cUnique($field): string {
-        return self::colon($field, self::UNIQUE);
+    public static function unique($table, $id = null): string {
+        return Rule::unique($table)->ignore($id);
     }
 
     public static function cEmail($field): string {
@@ -95,7 +96,7 @@ class ValidatorConstraints {
         return self::colon($field, self::DIGITS);
     }
 
-    public static function UPPERCASE(): Uppercase {
+    public static function uppercase(): Uppercase {
         return new Uppercase;
     }
 }

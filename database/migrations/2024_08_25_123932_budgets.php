@@ -21,8 +21,8 @@ return new class extends Migration
             $table->enum('payment_status', ['paid', 'pending']);
             $table->enum('payment_method', ['pix', 'ticket']);
             $table->date('payment_date')->nullable();
-            $table->double('revenue');
-            $table->double('cost');
+            $table->decimal('revenue', 10, 2);
+            $table->decimal('cost', 10, 2);
             $table->timestamps();
             $table->foreignId('created_by')->references('id')->on('users')->constrained();
             $table->foreignId('updated_by')->references('id')->on('users')->constrained();

@@ -27,5 +27,10 @@ class Budget extends Model {
         Keys::CREATED_BY,
         Keys::UPDATED_BY,
     ];
+
+    protected $casts = [
+        Keys::COST => 'float',
+        Keys::REVENUE => 'float'
+    ];
 }
 

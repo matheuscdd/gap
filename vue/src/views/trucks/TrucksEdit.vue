@@ -81,13 +81,9 @@ export default {
             const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
             if (!continues) return;
             const { plate, axis, photo } = this;
-            const rawData = { axis, photo };
-            const { truck } = this.$store.state.truckMod;
+            const rawData = { plate, axis, photo };
             const errors = [];
-            if (truck.plate !== plate.value) {
-                rawData.plate = plate;
-                rawData.plate.value = rawData.plate.value.toUpperCase();
-            }
+            rawData.plate.value = rawData.plate.value.toUpperCase();
             Object.keys(rawData).forEach(key => errors.push(verifyTruck(key, this)));
             if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
             const handleData = getValues(rawData);
@@ -111,7 +107,6 @@ export default {
             if (!this[key]) continue;
             this[key].value = truck[key];
         }
-
     }
 };
 </script>

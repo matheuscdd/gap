@@ -36,6 +36,9 @@ export const endpoints = Object.freeze({
         TRUCK_EDIT: "/trucks/edit:/:id",
         MAINTENANCE_CREATE: "/maintenances/create",
         MAINTENANCE_EDIT: "/maintenances/edit/:id",
+        DRIVER_CREATE: "/drivers/create",
+        DRIVER_EDIT: "/drivers/edit/:id",
+        DRIVER_LIST: "/drivers/list",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
     names: Object.freeze({
@@ -62,6 +65,9 @@ export const endpoints = Object.freeze({
         TRUCK_EDIT: "trucks-edit",
         MAINTENANCE_CREATE: "maintenances-create",
         MAINTENANCE_EDIT: "maintenances-edit",
+        DRIVER_CREATE: "drivers-create",
+        DRIVER_EDIT: "drivers-edit",
+        DRIVER_LIST: "drivers-list",
         NOT_FOUND: "not found",
     })
 });
@@ -450,5 +456,33 @@ export const maintenanceForm = Object.freeze({
         TYPE: "number",
         NAME: maintenance.keys.TRUCK,
         LABEL: maintenance.trans.TRUCK,
+    }),
+});
+
+export const driver = Object.freeze({
+    keys: Object.freeze({
+        NAME: "name",
+        CPF: "CPF",
+    }),
+    trans: Object.freeze({
+        NAME: "nome",
+        CPF: "CPF",
+    }),
+});
+
+export const driverForm = Object.freeze({
+    NAME: Object.freeze({
+        PLACEHOLDER: "Insira o nome",
+        ICON: "user-solid",
+        TYPE: "text",
+        NAME: driver.keys.NAME,
+        LABEL: driver.trans.NAME
+    }),
+    CPF: Object.freeze({
+        PLACEHOLDER: "Insira o CPF",
+        ICON: "id-card-solid",
+        TYPE: "text",
+        NAME: driver.keys.CPF,
+        LABEL: driver.trans.CPF
     }),
 });

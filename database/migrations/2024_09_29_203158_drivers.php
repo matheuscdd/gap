@@ -10,14 +10,11 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void {
-        Schema::create('maintenances', function (Blueprint $table) {
+        Schema::create('drivers', function (Blueprint $table) {
             $table->id('id');
-            $table->string('service', 512);
-            $table->integer('km');
-            $table->decimal('cost', 10, 2);
-            $table->date('date');
+            $table->string('name', 64);
+            $table->string('CPF', 11)->unique();
             $table->timestamps();
-            $table->foreignId('truck')->references('id')->on('trucks')->constrained();
             $table->foreignId('created_by')->references('id')->on('users')->constrained();
             $table->foreignId('updated_by')->references('id')->on('users')->constrained();
         });
@@ -27,6 +24,6 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void {
-        Schema::dropIfExists('maintenances');
+        Schema::dropIfExists('drivers');
     }
 };

@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     DeliveryController,
     TruckController,
     MaintenanceController,
+    DriverController,
 };
 use Illuminate\Support\Facades\Route;
 use \App\Http\Middlewares\{
@@ -20,6 +21,7 @@ use \App\Http\Middlewares\{
     UserMiddleware,
     TruckMiddleware,
     MaintenanceMiddleware,
+    DriverMiddleware,
 };
 
 Route::group([
@@ -88,4 +90,12 @@ Route::middleware([JWTMiddleware::class, MaintenanceMiddleware::class])->group(f
     Route::patch('/maintenances/{id}', [MaintenanceController::class, 'edit']);
     Route::get('/maintenances/{id}', [MaintenanceController::class, 'find']);
     Route::delete('/maintenances/{id}', [MaintenanceController::class, 'del']);
+});
+
+Route::middleware([JWTMiddleware::class, DriverMiddleware::class])->group(function() {
+    Route::post('/drivers', [DriverController::class, 'create']);
+    Route::get('/drivers', [DriverController::class, 'list']);
+    Route::patch('/drivers/{id}', [DriverController::class, 'edit']);
+    Route::get('/drivers/{id}', [DriverController::class, 'find']);
+    Route::delete('/drivers/{id}', [DriverController::class, 'del']);
 });

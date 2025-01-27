@@ -1,35 +1,31 @@
 <?php
 
-namespace App\Http\Requests\Truck;
+namespace App\Http\Requests\Driver;
 
 use App\Http\Requests\Request;
 use Exception;
-use App\Constraints\TruckKeysConstraints as Keys;
-use App\Constraints\TruckTransConstraints as Trans;
+use App\Constraints\DriverKeysConstraints as Keys;
+use App\Constraints\DriverTransConstraints as Trans;
 use App\Constraints\ValidatorConstraints as Schema;
 
-class TruckRequest extends Request {
-    protected const PLATE_SIZE = 7;
-    protected const PHOTO_MIN = 5;
+class DriverRequest extends Request {
+    protected const CPF_SIZE = 11;
+    protected const NAME_MIN = 3;
+    protected const NAME_MAX = 64;
 
     public function getRules($partial, $keepRequired, ...$keys): array {
         $ref = [
-            Keys::PLATE => [
+            Keys::NAME => [
                 Schema::REQUIRED,
-                Schema::ALPHANUM,
-                Schema::cMin(self::PLATE_SIZE),
-                Schema::cMax(self::PLATE_SIZE),
+                Schema::cMin(self::NAME_MIN),
+                Schema::cMax(self::NAME_MAX),
+            ],
+            Keys::CPF => [
+                Schema::REQUIRED,
+                Schema::cRegex(Schema::ONLY_NUMBERS),
+                Schema::cMin(self::CPF_SIZE),
+                Schema::cMax(self::CPF_SIZE),
                 Schema::unique(Keys::TABLE, $this->route('id')),
-                Schema::uppercase(),
-            ],
-            Keys::PHOTO => [
-                Schema::cMin(self::PHOTO_MIN),
-                Schema::NULLABLE,
-            ],
-            Keys::AXIS => [
-                Schema::REQUIRED,
-                Schema::INTEGER,
-                Schema::NUMERIC,
             ],
         ];
 

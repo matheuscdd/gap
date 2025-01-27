@@ -107,14 +107,7 @@ export default {
     methods: {        
         edit() {
             const { CNPJ, CEP, name, address, cellphone } = this;
-            const data = { CEP, name, address };
-            const { client } = this.$store.state.clientMod;
-            if (client.cellphone !== cellphone.value) {
-                data.cellphone = cellphone;
-            }
-            if (client.CNPJ !== CNPJ.value) {
-                data.CNPJ = CNPJ;
-            }
+            const data = { CEP, name, address, cellphone, CNPJ };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyClient(key, this)));
             if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
