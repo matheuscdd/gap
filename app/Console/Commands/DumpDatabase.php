@@ -22,7 +22,7 @@ class DumpDatabase extends Command {
         $db = env('POSTGRES_DB');
         $user = env('POSTGRES_USER');
         $port = env('DB_PORT');
-        $content = $this->execSys("pg_dump -Z 9 --data-only -h pgsql -p $port -U $user -d $db");
+        $content = $this->execSys("pg_dump -Z 9 -h pgsql -p $port -U $user -d $db");
         if (is_null($content)) return;
         $content = base64_encode($content);
         $integrityCode1 = base64_encode($this->getHashSha256($content));
