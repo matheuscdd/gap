@@ -2,6 +2,15 @@
     <h1>Criar Manutenção</h1>
     <form @submit.prevent="create">
         <section>
+            <iInput 
+                label="Número"
+                placeholder="Indefinido"
+                readonly="true"
+                icon="file-contract-solid"
+                type="text"
+                name="identifier"
+                :errors="[]"
+            />
             <iSearch
                 :name="maintenanceForm.TRUCK.NAME"
                 :icon="maintenanceForm.TRUCK.ICON"

@@ -33,6 +33,7 @@ export default {
             const response = await api("/maintenances");
             const data = response.map(maintenance => ({
                 ...maintenance,
+                date: handleDate(maintenance.date),
                 created_at: handleDate(maintenance.created_at),
                 updated_at: handleDate(maintenance.updated_at),
             }));
@@ -42,20 +43,20 @@ export default {
         async createMaintenance(ctx, data) {
             const response = await api("/maintenances", methods.POST, data);
             if (response.error) return alert(response.error);
-            // router.push(endpoints.routes.CLIENT_LIST);
+            router.push(endpoints.routes.GARAGE_LIST);
         },
 
         async editMaintenance(ctx, data) {
             const response = await api("/maintenances/" + data.id, methods.PATCH, data);
             if (response.error) return alert(response.error);
             ctx.commit("storeMaintenance", response);
-            // router.push(endpoints.routes.CLIENT_LIST);
+            router.push(endpoints.routes.GARAGE_LIST);
         },
 
-        // async delClient(ctx, id) {
-        //     const response = await api("/clients/" + id, methods.DELETE);
-        //     if (response.error) return alert(response.error);
-        //     ctx.dispatch("storeClients");
-        // },
+        async delMaintenance(ctx, id) {
+            const response = await api("/maintenances/" + id, methods.DELETE);
+            if (response.error) return alert(response.error);
+            ctx.dispatch("storeMaintenances");
+        },
     }
 };

@@ -1,4 +1,5 @@
 :root {
+    --black-1: #000000;
     --gray-1: #808080; 
     --gray-2: #f2f2f2;
     --gray-3: #c9c9c9;
@@ -6,6 +7,7 @@
     --gray-5: #fbfbfb;
     --blue-1: #639dbe;
     --blue-2: #76b7dc32;
+    --blue-3: #003194;
     --red-1: #F4001F;
     --red-2: #FD3852;
     --green-1: #2E9395;
@@ -14,6 +16,7 @@
     --green-4: #3E9237;
     --green-5: #56ff46;
     --yellow-1: #F7DA00;
+    --yellow-2: #726500;
     --orange-1: #F6A909;
     --trans-1: 0.8s;
     --radius-1: 30px;

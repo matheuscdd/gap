@@ -2,6 +2,15 @@
     <h1>Editar Manutenção</h1>
     <form @submit.prevent="edit">
         <section>
+            <iInput 
+                label="Número"
+                :placeholder="this.$route.params.id"
+                readonly="true"
+                icon="file-contract-solid"
+                type="text"
+                name="identifier"
+                :errors="[]"
+            />
             <iSearch
                 :name="maintenanceForm.TRUCK.NAME"
                 :icon="maintenanceForm.TRUCK.ICON"
