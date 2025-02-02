@@ -67,4 +67,4 @@ h1 {
     text-align: center;
     padding: 0 20px;
 }
-</style>    {{ $store.state.userMod.users }}
+</style>

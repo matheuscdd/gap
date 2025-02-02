@@ -42,14 +42,14 @@ export default {
         async createTruck(ctx, data) {
             const response = await api("/trucks", methods.POST, data);
             if (response.error) return alert(response.error);
-            // router.push(endpoints.routes.CLIENT_LIST);
+            router.push(endpoints.routes.GARAGE_LIST);
         },
 
         async editTruck(ctx, data) {
             const response = await api("/trucks/" + data.id, methods.PATCH, data);
             if (response.error) return alert(response.error);
             ctx.commit("storeTruck", response);
-            // router.push(endpoints.routes.CLIENT_LIST);
+            router.push(endpoints.routes.GARAGE_LIST);
         },
 
         async delTruck(ctx, id) {

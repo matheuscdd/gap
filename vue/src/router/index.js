@@ -75,8 +75,8 @@ const routes = [
         component: () => import("@/views/deliveries/DeliveriesFullCreate.vue")
     },
     {
-        path: endpoints.routes.DELIVERY_EDIT_FULL,
-        name: endpoints.names.DELIVERY_EDIT,
+        path: endpoints.routes.DELIVERY_EDIT_FULL_FULL,
+        name: endpoints.names.DELIVERY_EDIT_FULL,
         component: () => import("@/views/deliveries/DeliveriesFullEdit.vue")
     },
     {
@@ -133,6 +133,11 @@ const routes = [
         path: endpoints.routes.DRIVER_LIST,
         name: endpoints.names.DRIVER_LIST,
         component: () => import("@/views/drivers/DriversList.vue")
+    },
+    {
+        path: endpoints.routes.GARAGE_LIST,
+        name: endpoints.names.GARAGE_LIST,
+        component: () => import("@/views/garage/GarageList.vue")
     },
     {
         path: endpoints.routes.NOT_FOUND,

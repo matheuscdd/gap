@@ -34,7 +34,7 @@
         </div>
     </div>
     <ul class="header">
-        <div>Id</div>
+        <div>Número</div>
         <div>Faturamento</div>
         <div>Cliente</div>
         <div>Chegada</div>
@@ -119,7 +119,7 @@ export default {
         },
 
         edit(id) {
-            this.$router.push(endpoints.routes.DELIVERY_EDIT_FULL.replace(":id", id));
+            this.$router.push(endpoints.routes.DELIVERY_EDIT_FULL_FULL.replace(":id", id));
         },
 
         async finish(id) {
