@@ -7,21 +7,18 @@ const getDefaultState = () => ({
     deliveries: [],
     partials: [],
     treemap: [],
-    calendar: {}
+    scatter: [],
+    calendar: {},
 });
 
 function formatEvent(el) {
-    const [ year, month, day ] = el.date.split("-");
-    const date = new Date();
-    date.setFullYear(year);
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMonth(Number(month) - 1);
-    date.setDate(day);
+    const date = handleDate(el.date);
+
     let color = "--green-1";
     if (el.type === "delivery") {
-        color = el.isPartial ? "--orange-1" : "--red-2";
+        if (el.finished) color = "--blue-3";
+        else if (el.isPartial) color = "--orange-1";
+        else color =  "--red-2";
     }
     
     return {
@@ -50,6 +47,9 @@ export default {
         },
         storeTreemap(state, payload) {
             state.treemap = payload;
+        },
+        storeScatter(state, payload) {
+            state.scatter = payload;
         },
         storeCalendar(state, { holidays, deliveries }) {
             state.calendar = {
@@ -98,6 +98,9 @@ export default {
                 ...delivery,
                 created_at: handleDate(delivery.created_at),
                 updated_at: handleDate(delivery.updated_at),
+                delivery_date: handleDate(delivery.delivery_date),
+                payment_date: handleDate(delivery.payment_date),
+                receipt_date: handleDate(delivery.receipt_date),
             }));
             ctx.commit("storeFull", data);
         },
@@ -115,9 +118,17 @@ export default {
         },
 
         async storeTreemap(ctx) {
-            const response = await api("/deliveries/treemap/");
+            const response = await api("/deliveries/charts/treemap/");
             if (response.error) return;
             ctx.commit("storeTreemap", response);
+        },
+
+        async storeScatter(ctx, {start_date, end_date}) {
+            const response = await api(
+                "/deliveries/charts/scatter?" + new URLSearchParams({ start_date, end_date })
+            );
+            if (response.error) return;
+            ctx.commit("storeScatter", response);
         },
 
         async storeCalendar(ctx) {

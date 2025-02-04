@@ -42,6 +42,8 @@ export default {
                 ...budget,
                 created_at: handleDate(budget.created_at),
                 updated_at: handleDate(budget.updated_at),
+                delivery_date: handleDate(budget.delivery_date),
+                payment_date: handleDate(budget.payment_date),
             }));
             ctx.commit("storeBudgets", data);
         },

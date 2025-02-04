@@ -179,11 +179,13 @@ class DeliveryService {
             throw new AppError('Entregas parciais não podem ser finalizadas nesse endpoint', 403);
         }
         $delivery->finished = true;
+        $delivery->updated_by = auth()->user()->id;
         $delivery->save();
 
         $partials = Delivery::where(Keys::REF, $id)->get();
         foreach($partials as $partial) {
             $partial->finished = true;
+            $partial->updated_by = auth()->user()->id;
             $partial->save();
         }
         return response()->noContent();
@@ -195,6 +197,7 @@ class DeliveryService {
             throw new AppError('Entregas completas não podem ser finalizadas nesse endpoint', 403);
         }
         $delivery->finished = true;
+        $delivery->updated_by = auth()->user()->id;
         $delivery->save();
 
         return response()->noContent();
@@ -299,7 +302,7 @@ class DeliveryService {
         return json_decode(json_encode($partialStocks), true);
     }
 
-    public static function treemap() {
+    public static function chartsTreemap($request) {
         $stocks = DB::table('stocks')
             ->join('deliveries_stocks', 'deliveries_stocks.stock', '=', 'stocks.id')
             ->join('deliveries', 'deliveries.id', '=', 'deliveries_stocks.delivery')
@@ -381,13 +384,111 @@ class DeliveryService {
             'labels' => $labels,
             'parents' => $parents,
             'ids' => $ids,
+            'marker' => [
+                'cornerradius' => 3,
+            ],
         ];
 
         return [$data];
     }
 
+    public static function chartsScatter($request) {
 
-    public static function calendar() {
+        if(!$request->has('start_date') || !$request->has('end_date')) {
+            throw new AppError('[start_date] e [end_date] são requeridos', 400);
+        }
+        $startDate = date(Schema::DATE_SCHEMA, strtotime($request->query('start_date')));
+        $endDate = date(Schema::DATE_SCHEMA, strtotime($request->query('end_date')));
+        $deliveries = Delivery
+            ::where(Keys::FINISHED, true)
+            ->where(Keys::REF, null)
+            ->where(Keys::DELIVERY_DATE, '>=', $startDate)
+            ->where(Keys::DELIVERY_DATE, '<=', $endDate)
+            ->orderBy(Keys::DELIVERY_DATE, 'asc')
+            ->get();
+
+        $hovertemplate = '(%{x}, R$ %{y}, %{text})';
+        $type = 'lines+markers';
+
+        if (!count($deliveries)) return [];
+
+        $revenues = [
+            'name' => 'Faturamento',
+            'x' => [],
+            'y' => [],
+            'text' => [],
+            'hovertemplate' => $hovertemplate,
+            'type' => $type,
+            'line' => [
+                'color' => '#35E56C'
+            ]
+        ];
+        $travelCosts = [
+            'name' => 'Custos de Viagem',
+            'x' => [],
+            'y' => [],
+            'text' => [],
+            'hovertemplate' => $hovertemplate,
+            'type' => $type,
+            'line' => [
+                'color' => '#EC001E'
+            ]
+        ];
+        $unloadingCosts = [
+            'name' => 'Custos de Descarga',
+            'x' => [],
+            'y' => [],
+            'text' => [],
+            'hovertemplate' => $hovertemplate,
+            'type' => $type,
+            'line' => [
+                'color' => '#EE784D'
+            ]
+        ];
+
+        $keys = [];
+
+        
+        foreach($deliveries as $el) {
+            $deliveryDate = date('d/m/Y', strtotime($el->delivery_date));
+
+            if (!array_key_exists($deliveryDate, $keys)) {
+                $keys[$deliveryDate] = [];
+            }
+            $keys[$deliveryDate][] = $el;
+        }
+
+        foreach($keys as $deliveryDate => $arr) {
+            $text = 'Entrega(s) ';
+            $y = [
+                'revenue' => 0,
+                'travel_cost' => 0,
+                'unloading_cost' => 0,
+            ];
+            
+            foreach($arr as $el) {
+                $text .= $el->id . ',';
+                $y['revenue'] += $el->revenue;
+                $y['travel_cost'] += $el->travel_cost;
+                $y['unloading_cost'] += $el->unloading_cost;
+            }
+
+            $text = substr($text, 0, -1);
+            $revenues['y'][] = $y['revenue'];
+            $revenues['x'][] = $deliveryDate;
+            $revenues['text'][] = $text;
+            $travelCosts['x'][] = $deliveryDate;
+            $travelCosts['y'][] = $y['travel_cost'];
+            $travelCosts['text'][] = $text;
+            $unloadingCosts['x'][] = $deliveryDate;
+            $unloadingCosts['y'][] = $y['unloading_cost'];
+            $unloadingCosts['text'][] = $text;
+        }
+
+        return response()->json([$revenues, $travelCosts, $unloadingCosts], 200, [], JSON_UNESCAPED_SLASHES);
+    }
+
+    public static function calendar($request) {
         $year = date('Y');
         $filename = "/tmp/holidays_$year.json";
         $holidays = [];
@@ -429,20 +530,23 @@ class DeliveryService {
             fclose($file);
         }
 
-        $rawDeliveries = Delivery::where(Keys::FINISHED, false)->get();
+        $rawDeliveries = Delivery::all();
         $handleDeliveries = [];
 
         foreach ($rawDeliveries as $el) {
             $id = $el->id;
-            $parcial = $el->ref ? ' Parcial ' : ' ';
+            $parcial = $el->ref ? 'Parcial' : 'Completa';
             $unloaded = $el->unloaded === 'client' ? 'pelo cliente' : 'pela transportadora';
+            $status = $el->finished ? 'finalizada' : 'aberta';
+            
             $handleDeliveries[] = [
                 'date' => $el->delivery_date,
-                'name' => "Entrega$parcial$id",
+                'name' => "Entrega $parcial $id",
                 'type' => 'delivery',
-                'description' => $el->delivery_address . ' - ' . $el->driver . ' - ' . "Descarga $unloaded",
+                'description' => $el->delivery_address . ' - ' . $el->driver . ' - ' . "Descarga $unloaded ($status)",
                 'redirectId' => $el->ref ?? $el->id,
                 'isPartial' => is_null($el->ref),
+                'finished' => $el->finished,
             ];
         }
 

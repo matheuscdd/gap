@@ -72,8 +72,9 @@ Route::middleware([JWTMiddleware::class, DeliveryMiddleware::class])->group(func
     Route::get('/deliveries/partial/{id}', [DeliveryController::class, 'listPartial']);
     Route::delete('/deliveries/partial/{id}', [DeliveryController::class, 'delPartial']);
     Route::patch('/deliveries/partial/finish/{id}', [DeliveryController::class, 'finishPartial']);
-    Route::get('/deliveries/treemap', [DeliveryController::class, 'treemap']);
     Route::get('/deliveries/calendar', [DeliveryController::class, 'calendar']);
+    Route::get('/deliveries/charts/treemap', [DeliveryController::class, 'chartsTreemap']);
+    Route::get('/deliveries/charts/scatter', [DeliveryController::class, 'chartsScatter']);
 });
 
 Route::middleware([JWTMiddleware::class, TruckMiddleware::class])->group(function() {

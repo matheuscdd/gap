@@ -11,8 +11,8 @@
                 }}
             </div>
             <div class="client-name">{{ client_name }}</div>
-            <div class="receipt-date">{{ new Date(receipt_date).toLocaleDateString("pt-BR") }}</div>
-            <div class="delivery-date">{{ new Date(delivery_date).toLocaleDateString("pt-BR") }}</div>
+            <div class="receipt-date">{{ receipt_date.toLocaleDateString("pt-BR") }}</div>
+            <div class="delivery-date">{{ delivery_date.toLocaleDateString("pt-BR") }}</div>
             <div class="days-remaining">{{ daysRemaining }}</div>
             <div class="provider-city">{{ provider_city }}</div>
             <div class="delivery-address" :title="delivery_address">

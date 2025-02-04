@@ -52,14 +52,6 @@ export async function api(url, method = methods.GET, body = null) {
     return response;
 }
 
-// function convertUTC(raw) {
-//     return new Date(raw.getTime() + raw.getTimezoneOffset() * 60 * 1000);
-// }
-
-export function handleDate(rawer) {
-    return new Date(rawer);
-}
-
 export function getNow() {
     return new Date();
 }
@@ -95,6 +87,27 @@ export function randomColor(alpha) {
     let color = `rgb(${red},${green},${blue})`;
     let colora = `rgba(${red},${green},${blue},${alpha})`;
     return {color, colora};
+}
+
+
+
+export function handleDate(rawestDate) {
+    try {
+        const rawerDate = new Date(rawestDate);
+        const rawDate = new Date(rawerDate.getTime() + rawerDate.getTimezoneOffset() * 60000);
+
+        const [ year, month, day ] = rawDate.toLocaleDateString("sv").split("-");
+        const date = new Date();
+        date.setFullYear(year);
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMonth(Number(month) - 1);
+        date.setDate(day);
+        return date;
+    } catch(e) {
+        return null;
+    } 
 }
 
 export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
