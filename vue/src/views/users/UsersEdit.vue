@@ -74,14 +74,12 @@ export default {
 
         edit() {
             const { name, email } = this;
-            const data = { name };
-            if (this.$store.state.userMod.user.email !== email.value) {
-                data.email = email;
-            }
+            const data = { name, email };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyUser(key, this)));
             if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
-            if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
+            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (!continues) return;
             this.$store.dispatch("userMod/editUser", {
                 ...getValues(data), 
                 id: this.$route.params.id

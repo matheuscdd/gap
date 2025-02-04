@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Budget extends Model {
     use HasFactory;
 
-    protected $table = 'budgets';
+    protected $table = Keys::TABLE;
 
     protected $fillable = [
         Keys::CLIENT,
@@ -26,6 +26,11 @@ class Budget extends Model {
         Keys::COST,
         Keys::CREATED_BY,
         Keys::UPDATED_BY,
+    ];
+
+    protected $casts = [
+        Keys::COST => 'float',
+        Keys::REVENUE => 'float'
     ];
 }
 

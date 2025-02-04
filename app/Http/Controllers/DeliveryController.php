@@ -22,6 +22,10 @@ class DeliveryController extends Controller {
         return DeliveryService::findFull($request->route('id'));
     }
 
+    public function delFull(Request $request) {
+        return DeliveryService::delFull($request->route('id'));
+    }
+
     public function listFull(Request $request) {
         return DeliveryService::listFull();
     }
@@ -42,11 +46,19 @@ class DeliveryController extends Controller {
         return DeliveryService::finishPartial($request->route('id'));
     }
 
-    public function treemap(Request $request) {
-        return DeliveryService::treemap();
+    public function delPartial(Request $request) {
+        return DeliveryService::delPartial($request->route('id'));
+    }
+
+    public function chartsTreemap(Request $request) {
+        return DeliveryService::chartsTreemap($request);
+    }
+
+    public function chartsScatter(Request $request) {
+        return DeliveryService::chartsScatter($request);
     }
 
     public function calendar(Request $request) {
-        return DeliveryService::calendar();
+        return DeliveryService::calendar($request);
     }
 }

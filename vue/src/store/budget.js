@@ -40,8 +40,10 @@ export default {
             const response = await api("/budgets");
             const data = response.map(budget => ({
                 ...budget,
-                created_at: handleDate(budget.created_at),
-                updated_at: handleDate(budget.updated_at),
+                created_at: new Date(budget.created_at),
+                updated_at: new Date(budget.updated_at),
+                delivery_date: handleDate(budget.delivery_date),
+                payment_date: handleDate(budget.payment_date),
             }));
             ctx.commit("storeBudgets", data);
         },
@@ -50,6 +52,12 @@ export default {
             const response = await api("/budgets/" + id);
             if (response.error) return;
             ctx.commit("storeBudget", response);
+        },
+
+        async delBudget(ctx, id) {
+            const response = await api("/budgets/" + id, methods.DELETE);
+            if (response.error) return alert(response.error);
+            ctx.dispatch("storeBudgets");
         },
     }
 };

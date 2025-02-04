@@ -104,35 +104,15 @@ export default {
     components: {
         iInput
     },
-
-    mounted() {
-        this.fill();
-    },
-    methods: {
-        async fill() {
-            const id = this.$route.params.id;
-            await this.$store.dispatch("clientMod/storeClient", id);
-            const client = this.$store.state.clientMod.client;
-            for (const key in client) {
-                if (!this[key]) continue;
-                this[key].value = client[key];
-            }
-        },
-        
+    methods: {        
         edit() {
             const { CNPJ, CEP, name, address, cellphone } = this;
-            const data = { CEP, name, address };
-            const { client } = this.$store.state.clientMod;
-            if (client.cellphone !== cellphone.value) {
-                data.cellphone = cellphone;
-            }
-            if (client.CNPJ !== CNPJ.value) {
-                data.CNPJ = CNPJ;
-            }
+            const data = { CEP, name, address, cellphone, CNPJ };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyClient(key, this)));
             if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
-            if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
+            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (!continues) return;
             this.$store.dispatch("clientMod/editClient", {
                 ...getValues(data), 
                 id: this.$route.params.id
@@ -140,8 +120,15 @@ export default {
         },
         verifyClient
     },
-    beforeCreate() {
+    async beforeCreate() {
         window.scrollTo(0,0);
+        const id = this.$route.params.id;
+        await this.$store.dispatch("clientMod/storeClient", id);
+        const { client } = this.$store.state.clientMod;
+        for (const key in client) {
+            if (!this[key]) continue;
+            this[key].value = client[key];
+        }
     }
 };
 </script>

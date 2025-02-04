@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class StockType extends Model {
     use HasFactory;
 
-    protected $table = 'stock_type';
+    protected $table = Keys::TABLE;
 
     protected $fillable = [
         Keys::NAME,

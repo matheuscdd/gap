@@ -24,10 +24,13 @@ async function _api(url, method = methods.GET, body = null) {
     const response = await fetch(process.env.VUE_APP_API_URL + "/api" + url, request);
     if (response.status === 204) return {};
     const data = await response.json();
-    if ([200, 201].includes(response.status)) {
+    if (response.ok) {
         return data;
-    } 
-    return {error: `${data.msg} - ${data.errors ? JSON.stringify(data.errors) : ""}`};
+    }
+    return {
+        error: `${data.msg} - ${data.errors ? JSON.stringify(data.errors) : ""}`, 
+        status: response.status
+    };
 }
 
 export async function refreshToken() {
@@ -49,16 +52,8 @@ export async function api(url, method = methods.GET, body = null) {
     return response;
 }
 
-function convertUTC(raw) {
-    return new Date(raw.getTime() + raw.getTimezoneOffset() * 60 * 1000);
-}
-
-export function handleDate(rawer) {
-    return convertUTC(new Date(rawer));
-}
-
 export function getNow() {
-    return convertUTC(new Date());
+    return new Date();
 }
 
 export async function sleep(time) {
@@ -77,10 +72,10 @@ export function getValues(data) {
 
 export function randomNumbers(min, max) {
     min = Math.ceil(min);
-    max = Math.floor(max+1);
+    max = Math.floor(max + 1);
     let result = Math.floor(Math.random() * (max - min) + min);
     if (result >= max) {
-      result = max-1;
+      result = max - 1;
     }
     return result;
 }
@@ -94,9 +89,28 @@ export function randomColor(alpha) {
     return {color, colora};
 }
 
+
+
+export function handleDate(rawestDate) {
+    try {
+        const rawerDate = new Date(rawestDate);
+        const rawDate = new Date(rawerDate.getTime() + rawerDate.getTimezoneOffset() * 60000);
+
+        const [ year, month, day ] = rawDate.toLocaleDateString("sv").split("-");
+        const date = new Date();
+        date.setFullYear(year);
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMonth(Number(month) - 1);
+        date.setDate(day);
+        return date;
+    } catch(e) {
+        return null;
+    } 
+}
+
 export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
-    ctx.revenue.value = Number(ctx.revenue.value) || "";
-    ctx.cost.value = Number(ctx.cost.value) || "";
     const { 
         client, 
         delivery_address, 
@@ -141,12 +155,6 @@ export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
 }
 
 export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {}) {
-    ["revenue", "travel_cost", "unloading_cost"]
-        .filter(key => ctx[key])
-        .forEach(key => {
-            ctx[key].value = isNaN(Number(ctx[key]?.value)) ? "" : Number(ctx[key]?.value);
-        }
-        );
     if (ctx.unloaded.value === "client") {
         ctx.unloading_cost.value = 0;
     }
@@ -209,5 +217,5 @@ export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {
     await sleep(100);
     if (errors.flat().filter(Boolean).length) return alert("Verifique os campos marcados e tente novamente");
     if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
-    ctx.$store.dispatch(`deliveryMod/${action}Delivery`, {...data, ...extra});
+    ctx.$store.dispatch(`deliveryMod/${action}`, {...data, ...extra});
 }

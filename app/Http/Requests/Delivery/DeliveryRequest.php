@@ -6,6 +6,7 @@ use App\Http\Requests\Request;
 use Exception;
 use App\Constraints\DeliveryKeysConstraints as Keys;
 use App\Constraints\ClientKeysConstraints as Client;
+use App\Constraints\DriverKeysConstraints as Driver;
 use App\Constraints\ValidatorConstraints as Schema;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -19,8 +20,6 @@ class DeliveryRequest extends Request {
     protected const PROVIDER_NAME_MIN = 3;
     protected const PROVIDER_CITY_MAX = 128;
     protected const PROVIDER_CITY_MIN = 2;
-    protected const DRIVER_MIN = 3;
-    protected const DRIVER_MAX = 128;
     protected const INVOICE_SIZE = 44;
     protected const FLOAT_CASES = 2;
     
@@ -29,14 +28,14 @@ class DeliveryRequest extends Request {
         $ref = [
             Keys::DELIVERY_DATE => [
                 Schema::REQUIRED,
-                Schema::cDate(Keys::DATE_FORMAT)
+                Schema::cDate()
             ],
             Keys::PAYMENT_DATE => [
-                Schema::cDate(Keys::DATE_FORMAT)
+                Schema::cDate()
             ],
             Keys::RECEIPT_DATE => [
                 Schema::REQUIRED,
-                Schema::cDate(Keys::DATE_FORMAT)
+                Schema::cDate()
             ],
             Keys::CLIENT => [
                 Schema::REQUIRED,
@@ -52,8 +51,7 @@ class DeliveryRequest extends Request {
             ],
             Keys::DRIVER => [
                 Schema::REQUIRED,
-                Schema::cMin(self::DRIVER_MIN),
-                Schema::cMax(self::DRIVER_MAX),
+                Rule::exists(Driver::TABLE, 'id')
             ],
             Keys::PROVIDER_NAME => [
                 Schema::REQUIRED,

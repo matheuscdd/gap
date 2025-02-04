@@ -10,8 +10,6 @@ class RefreshService {
             throw new AppError('Token incorreto', 401);
         }
 
-        return response()->json([
-            'token' => $token
-        ]);
+        return response(['token' => $token], 201);
     }
 }

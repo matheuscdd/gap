@@ -7,21 +7,18 @@ const getDefaultState = () => ({
     deliveries: [],
     partials: [],
     treemap: [],
-    calendar: {}
+    scatter: [],
+    calendar: {},
 });
 
-function rola(el) {
-    const [ year, month, day ] = el.date.split("-");
-    const date = new Date();
-    date.setFullYear(year);
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMonth(Number(month) - 1);
-    date.setDate(day);
+function formatEvent(el) {
+    const date = handleDate(el.date);
+
     let color = "--green-1";
     if (el.type === "delivery") {
-        color = el.isPartial ? "--orange-1" : "--red-2";
+        if (el.finished) color = "--blue-3";
+        else if (el.isPartial) color = "--orange-1";
+        else color =  "--red-2";
     }
     
     return {
@@ -39,7 +36,7 @@ export default {
     namespaced: true,
     state: getDefaultState(),
     mutations: {
-        storeDeliveries(state, payload) {
+        storeFull(state, payload) {
             state.deliveries = payload.toReversed();
         },
         storeDelivery(state, payload) {
@@ -51,9 +48,12 @@ export default {
         storeTreemap(state, payload) {
             state.treemap = payload;
         },
+        storeScatter(state, payload) {
+            state.scatter = payload;
+        },
         storeCalendar(state, { holidays, deliveries }) {
             state.calendar = {
-                events: [...holidays.map(rola), ...deliveries.map(rola)]
+                events: [...holidays.map(formatEvent), ...deliveries.map(formatEvent)]
             };
         },
         reset(state) {
@@ -61,19 +61,19 @@ export default {
         }
     },
     actions: {
-        async createFullDelivery(ctx, data) {
+        async createFull(ctx, data) {
             const response = await api("/deliveries/full", methods.POST, data);
             if (response.error) return alert(response.error);
             router.push(endpoints.routes.DELIVERY_LIST);
         },
 
-        async createPartialDelivery(ctx, data) {
+        async createPartial(ctx, data) {
             const response = await api("/deliveries/partial/" + data.id , methods.PUT, data);
             if (response.error) return alert(response.error);
             router.push(endpoints.routes.DELIVERY_VIEW_FULL.replace(":id", data.id));
         },
 
-        async editFullDelivery(ctx, data) {
+        async editFull(ctx, data) {
             const response = await api("/deliveries/full/" + data.id, methods.PATCH, data);
             if (response.error) return alert(response.error);
             ctx.commit("storeDelivery", response);
@@ -83,21 +83,26 @@ export default {
         async finishFull(ctx, id) {
             const response = await api("/deliveries/full/finish/" + id, methods.PATCH);
             if (response.error) return alert(response.error);
+            ctx.dispatch("storeFull");
         },
 
         async finishPartial(ctx, id) {
             const response = await api("/deliveries/partial/finish/" + id, methods.PATCH);
             if (response.error) return alert(response.error);
+            ctx.dispatch("storePartials", ctx.state.delivery.id);
         },
 
-        async storeDeliveries(ctx) {
+        async storeFull(ctx) {
             const response = await api("/deliveries/full");
             const data = response.map(delivery => ({
                 ...delivery,
-                created_at: handleDate(delivery.created_at),
-                updated_at: handleDate(delivery.updated_at),
+                created_at: new Date(delivery.created_at),
+                updated_at: new Date(delivery.updated_at),
+                delivery_date: handleDate(delivery.delivery_date),
+                payment_date: handleDate(delivery.payment_date),
+                receipt_date: handleDate(delivery.receipt_date),
             }));
-            ctx.commit("storeDeliveries", data);
+            ctx.commit("storeFull", data);
         },
 
         async storeDelivery(ctx, id) {
@@ -108,19 +113,39 @@ export default {
 
         async storePartials(ctx, id) {
             const response = await api("/deliveries/partial/" + id);
-            if (response.error) return;
+            if (response.error && response.status !== 404) return;
             ctx.commit("storePartials", response);
         },
 
         async storeTreemap(ctx) {
-            const response = await api("/deliveries/treemap/");
+            const response = await api("/deliveries/charts/treemap/");
             if (response.error) return;
             ctx.commit("storeTreemap", response);
+        },
+
+        async storeScatter(ctx, { start_date, end_date }) {
+            const response = await api(
+                "/deliveries/charts/scatter?" + new URLSearchParams({ start_date, end_date })
+            );
+            if (response.error) return;
+            ctx.commit("storeScatter", response);
         },
 
         async storeCalendar(ctx) {
             const data = await api("/deliveries/calendar/");
             ctx.commit("storeCalendar", data);
-        }
+        },
+
+        async delFull(ctx, id) {
+            const response = await api("/deliveries/full/" + id, methods.DELETE);
+            if (response.error) return alert(response.error);
+            ctx.dispatch("storeFull");
+        },
+
+        async delPartial(ctx, id) {
+            const response = await api("/deliveries/partial/" + id, methods.DELETE);
+            if (response.error) return alert(response.error);
+            ctx.dispatch("storePartials", ctx.state.delivery.id);
+        },
     }
 };

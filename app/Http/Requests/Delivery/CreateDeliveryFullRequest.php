@@ -6,7 +6,7 @@ use App\Constraints\DeliveryKeysConstraints as Keys;
 
 class CreateDeliveryFullRequest extends DeliveryRequest {
     public function rules(): array {
-        return $this->getRules(false, true);
+        return $this->getRules(false, true, ...Keys::ALL);
     }
 }
 

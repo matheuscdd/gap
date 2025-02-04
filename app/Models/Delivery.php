@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Delivery extends Model {
     use HasFactory;
 
-    protected $table = 'deliveries';
+    protected $table = Keys::TABLE;
 
     protected $fillable = [
         Keys::CLIENT,
@@ -30,6 +30,12 @@ class Delivery extends Model {
         Keys::REVENUE,
         Keys::CREATED_BY,
         Keys::UPDATED_BY,
+    ];
+
+    protected $casts = [
+        Keys::TRAVEL_COST => 'float',
+        Keys::UNLOADING_COST => 'float',
+        Keys::REVENUE => 'float',
     ];
 }
 

@@ -2,6 +2,10 @@
 
 namespace App\Constraints;
 
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use \Illuminate\Validation\Rule;
+
 class ValidatorConstraints {
     public const REQUIRED = 'required';
     public const MIN = 'min';
@@ -10,8 +14,15 @@ class ValidatorConstraints {
     public const EMAIL = 'email';
     public const DIGITS = 'digits';
     public const DATE_FORMAT = 'date_format';
+    public const DATE_SCHEMA = 'Y-m-d';
     public const REGEX = 'regex';
+    public const NOT_REGEX = 'not_regex';
     public const ARRAY = 'array';
+    public const NUMERIC = 'numeric';
+    public const INTEGER = 'integer';
+    public const NULLABLE = 'nullable';
+    public const ONLY_NUMBERS = '/^[\d]+$/';
+    public const ALPHANUM = 'alpha_num';
 
     private static function dot($field, $key): string {
         return "$field.$key";
@@ -29,8 +40,12 @@ class ValidatorConstraints {
         return self::colon($field, self::REGEX);
     }
 
-    public static function cDate($field): string {
-        return self::colon($field, self::DATE_FORMAT);
+    public static function cNotRegex($field): string {
+        return self::colon($field, self::NOT_REGEX);
+    }
+
+    public static function cDate(): string {
+        return self::colon(self::DATE_SCHEMA, self::DATE_FORMAT);
     }
 
     public static function dMax($field): string {
@@ -65,8 +80,8 @@ class ValidatorConstraints {
         return self::colon($field, self::MIN);
     }
 
-    public static function cUnique($field): string {
-        return self::colon($field, self::UNIQUE);
+    public static function unique($table, $id = null): string {
+        return Rule::unique($table)->ignore($id);
     }
 
     public static function cEmail($field): string {
@@ -79,5 +94,16 @@ class ValidatorConstraints {
 
     public static function cDigits($field): string {
         return self::colon($field, self::DIGITS);
+    }
+
+    public static function uppercase(): Uppercase {
+        return new Uppercase;
+    }
+}
+
+class Uppercase implements ValidationRule {
+    public function validate(string $attribute, mixed $value, Closure $fail): void {
+        if (strtoupper($value) === $value) return;
+        $fail("O atributo precisa estar em letras maiúsculas.");
     }
 }

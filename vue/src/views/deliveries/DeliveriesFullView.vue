@@ -158,7 +158,7 @@
             font="20"
         />
         <iValue
-            :value="fillField(delivery.driver)"
+            :value="fillField(driver)"
             label="Motorista"
             icon="user-solid"
             color="#8BBF4D"
@@ -233,17 +233,19 @@
             />
         </ul>
     </section>
-    <section v-show="partials.length">
+    <section v-if="$store.state.deliveryMod.partials.length">
         <h4>Parciais</h4>
         <ul class="container-partials">
             <iParcial
-                v-for="el in partials"
+                v-for="el in $store.state.deliveryMod.partials"
                 :key="el.id"
                 :id="el.id"
                 :delivery-date="new Date(el.delivery_date).toLocaleDateString('pt-BR')"
                 :delivery-address="el.delivery_address"
                 :unloaded="el.unloaded"
-                :driver="el.driver"
+                :driver="$store.state.driverMod.drivers.find(
+                    (driver) => driver.id === el.driver 
+                ).name"
                 :finished="el.finished"
                 :focus="focus"
                 :unloading-cost="Number(el.unloading_cost).toLocaleString('pt-br', {
@@ -251,6 +253,7 @@
                         currency: 'BRL',
                     })"
                 :stocks="el.stocks"
+                @del="del"
                 @focused="focused"
                 @finish="finish"
             />
@@ -282,26 +285,35 @@ export default {
         focused(id) {
             this.focus = id;
         },
+        del(id) {
+            const continues = confirm("Tem certeza que deseja excluir essa entrega?");
+            if (!continues) return;
+            this.$store.dispatch("deliveryMod/delPartial", id);
+        },
         async finish(id) {
             const continues = confirm(`Tem certeza qud deseja finalizar essa entrega parcial de número ${id}? Essa ação não poderá ser desfeita`);
             if (!continues) return;
             await this.$store.dispatch("deliveryMod/finishPartial", id);
-            await this.$store.dispatch("deliveryMod/storePartials", this.delivery.id);
-            this.partials = this.$store.state.deliveryMod.partials;
         },
     },
 
     async beforeCreate() {
         window.scrollTo(0, 0);
         const id = this.$route.params.id;
-        await this.$store.dispatch("deliveryMod/storeDelivery", id);
-        await this.$store.dispatch("stockTypeMod/storeStockTypes");
-        await this.$store.dispatch("clientMod/storeClients");
-        await this.$store.dispatch("userMod/storeUsers");
-        await this.$store.dispatch("deliveryMod/storePartials", id);
+        await Promise.all([
+            this.$store.dispatch("deliveryMod/storeDelivery", id),
+            this.$store.dispatch("stockTypeMod/storeStockTypes"),
+            this.$store.dispatch("clientMod/storeClients"),
+            this.$store.dispatch("userMod/storeUsers"),
+            this.$store.dispatch("deliveryMod/storePartials", id),
+            this.$store.dispatch("driverMod/storeDrivers"),
+        ]);
         this.delivery = this.$store.state.deliveryMod.delivery;
         this.client = this.$store.state.clientMod.clients.find(
             (el) => el.id === this.delivery.client
+        ).name;
+        this.driver = this.$store.state.driverMod.drivers.find(
+            (el) => el.id === this.delivery.driver
         ).name;
         this.creator = this.$store.state.userMod.users.find(
             (el) => el.id === this.delivery.created_by
@@ -309,7 +321,6 @@ export default {
         this.editor = this.$store.state.userMod.users.find(
             (el) => el.id === this.delivery.updated_by
         ).name;
-        this.partials = this.$store.state.deliveryMod.partials;
     },
 };
 </script>

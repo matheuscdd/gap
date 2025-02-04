@@ -24,4 +24,8 @@ class BudgetController extends Controller {
         return BudgetService::edit($request->route('id'), $request->validated());
     }
 
+    public function del(Request $request) {
+        return BudgetService::del($request->route('id'));
+    }
+
 }

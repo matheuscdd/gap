@@ -70,11 +70,13 @@ export default {
     mixins: [mixins],
     async beforeCreate() {
         window.scrollTo(0,0);
-        await this.$store.dispatch("clientMod/storeClients");
-        await this.$store.dispatch("budgetMod/storeBudgets");
+        await Promise.all([
+            this.$store.dispatch("clientMod/storeClients"),
+            this.$store.dispatch("budgetMod/storeBudgets"),
+        ]);
         // TODO - globalizar função
-        this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
-        this.idsOpts = this.$store.state.budgetMod.budgets.map(itemgetter("id")).map(String).map(id => ({id: id, text: id, value: id}));
+        this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, name: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
+        this.idsOpts = this.$store.state.budgetMod.budgets.map(itemgetter("id")).map(String).map(id => ({id: id, name: id, value: id}));
     },
     components: {
         iCard,
@@ -83,6 +85,11 @@ export default {
     methods: {
         edit(id) {
             this.$router.push(endpoints.routes.BUDGET_EDIT.replace(":id", id));
+        },
+        del(id) {
+            const continues = confirm("Tem certeza que deseja excluir esse orçamento?");
+            if (!continues) return;
+            this.$store.dispatch("budgetMod/delBudget", id);
         },
         filter() {
             return this.$store.state.budgetMod.budgets

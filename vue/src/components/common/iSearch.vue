@@ -21,9 +21,9 @@
             <option
                 v-for="opt in opts"
                 :key="opt.id"
-                :value="opt.text"
+                :value="opt.name"
             >
-                {{ opt.text }}
+                {{ opt.name }}
             </option>
         </datalist>
         <ul v-show="errors.length" :class="$style.errors">
@@ -60,13 +60,13 @@ export default {
         modelValue() {
             const id = this.modelValue;
             if (!id || !this.edit) return;
-            const text = this.opts.find(opt => opt.id === id).text;
-            this.$refs.input.value = text;
+            const name = this.opts.find(opt => opt.id === id).name;
+            this.$refs.input.value = name;
         }
     },
     methods: {
         updateValue(e) {
-            const opt = this.opts.find(opt => opt.text === e.target.value)?.id || "";
+            const opt = this.opts.find(opt => opt.name === e.target.value)?.id || "";
             this.$emit("update:modelValue", opt);
         },
         outFocus() {

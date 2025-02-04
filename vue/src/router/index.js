@@ -75,8 +75,8 @@ const routes = [
         component: () => import("@/views/deliveries/DeliveriesFullCreate.vue")
     },
     {
-        path: endpoints.routes.DELIVERY_EDIT_FULL,
-        name: endpoints.names.DELIVERY_EDIT,
+        path: endpoints.routes.DELIVERY_EDIT_FULL_FULL,
+        name: endpoints.names.DELIVERY_EDIT_FULL,
         component: () => import("@/views/deliveries/DeliveriesFullEdit.vue")
     },
     {
@@ -98,6 +98,51 @@ const routes = [
         path: endpoints.routes.DELIVERY_VIEW_FULL,
         name: endpoints.names.DELIVERY_VIEW_FULL,
         component: () => import("@/views/deliveries/DeliveriesFullView.vue")
+    },
+    {
+        path: endpoints.routes.TRUCK_CREATE,
+        name: endpoints.names.TRUCK_CREATE,
+        component: () => import("@/views/trucks/TrucksCreate.vue")
+    },
+    {
+        path: endpoints.routes.TRUCK_EDIT,
+        name: endpoints.names.TRUCK_EDIT,
+        component: () => import("@/views/trucks/TrucksEdit.vue")
+    },
+    {
+        path: endpoints.routes.MAINTENANCE_CREATE,
+        name: endpoints.names.MAINTENANCE_CREATE,
+        component: () => import("@/views/maintenances/MaintenancesCreate.vue")
+    },
+    {
+        path: endpoints.routes.MAINTENANCE_EDIT,
+        name: endpoints.names.MAINTENANCE_EDIT,
+        component: () => import("@/views/maintenances/MaintenancesEdit.vue")
+    },
+    {
+        path: endpoints.routes.DRIVER_CREATE,
+        name: endpoints.names.DRIVER_CREATE,
+        component: () => import("@/views/drivers/DriversCreate.vue")
+    },
+    {
+        path: endpoints.routes.DRIVER_EDIT,
+        name: endpoints.names.DRIVER_EDIT,
+        component: () => import("@/views/drivers/DriversEdit.vue")
+    },
+    {
+        path: endpoints.routes.DRIVER_LIST,
+        name: endpoints.names.DRIVER_LIST,
+        component: () => import("@/views/drivers/DriversList.vue")
+    },
+    {
+        path: endpoints.routes.GARAGE_LIST,
+        name: endpoints.names.GARAGE_LIST,
+        component: () => import("@/views/garage/GarageList.vue")
+    },
+    {
+        path: endpoints.routes.GARAGE_DASH,
+        name: endpoints.names.GARAGE_DASH,
+        component: () => import("@/views/garage/GarageDash.vue")
     },
     {
         path: endpoints.routes.NOT_FOUND,

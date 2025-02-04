@@ -34,7 +34,7 @@
         </div>
     </div>
     <ul class="header">
-        <div>Id</div>
+        <div>Número</div>
         <div>Faturamento</div>
         <div>Cliente</div>
         <div>Chegada</div>
@@ -64,6 +64,7 @@
             :has_partials="el.has_partials"
             :finished="el.finished"
             :total="el.total"
+            @del="del"
             @edit="edit"
             @createPartial="createPartial"
             @finish="finish"
@@ -81,7 +82,7 @@
 <script>
 import { endpoints } from "@/common/consts";
 import iSearch from "@/components/common/iSearch.vue";
-import iCard from "@/components/deliveries/iCard.vue";
+import iCard from "@/components/deliveries/iFull.vue";
 import mixins from "@/common/mixins";
 import { itemgetter } from "@/common/utils";
 
@@ -101,23 +102,30 @@ export default {
 
     async beforeCreate() {
         window.scrollTo(0,0);
-        await this.$store.dispatch("clientMod/storeClients");
-        await this.$store.dispatch("deliveryMod/storeDeliveries");
+        await Promise.all([
+            this.$store.dispatch("clientMod/storeClients"),
+            this.$store.dispatch("deliveryMod/storeFull"),
+        ]);
         // TODO - globalizar função
-        this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
-        this.idsOpts = this.$store.state.deliveryMod.deliveries.map(itemgetter("id")).map(String).map(id => ({id: id, text: id, value: id}));
+        this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, name:`${el.name} - ${el.CNPJ}`}));
+        this.idsOpts = this.$store.state.deliveryMod.deliveries.map(itemgetter("id")).map(String).map(id => ({id: id, name:id}));
     },
 
     methods: {
+        del(id) {
+            const continues = confirm("Tem certeza que deseja excluir essa entrega?");
+            if (!continues) return;
+            this.$store.dispatch("deliveryMod/delFull", id);
+        },
+
         edit(id) {
-            this.$router.push(endpoints.routes.DELIVERY_EDIT_FULL.replace(":id", id));
+            this.$router.push(endpoints.routes.DELIVERY_EDIT_FULL_FULL.replace(":id", id));
         },
 
         async finish(id) {
             const continues = confirm("Tem certeza qud deseja finalizar essa entrega e todas as suas parciais caso existam? Essa ação não poderá ser desfeita");
             if (!continues) return;
             await this.$store.dispatch("deliveryMod/finishFull", id);
-            await this.$store.dispatch("deliveryMod/storeDeliveries");
         },
 
         createPartial(id) {

@@ -19,7 +19,7 @@ class BudgetKeysConstraints {
     public const UPDATED_BY = 'updated_by';
     public const CREATED_AT = 'created_at';
     public const UPDATED_AT = 'updated_at';
-    public const DATE_FORMAT = 'Y-m-d';
+    public const TABLE = 'budgets';
     public const ALL = [self::CLIENT, self::DELIVERY_DATE, self::DELIVERY_ADDRESS, self::PROVIDER_NAME, self::PROVIDER_CITY, self::UNLOADED, self::PAYMENT_METHOD, self::PAYMENT_STATUS, self::PAYMENT_DATE, self::REVENUE, self::COST, self::STOCKS];
 }
 

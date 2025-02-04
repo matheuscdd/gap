@@ -40,7 +40,7 @@ main {
   background-size: 100%;
   min-height: 100vh;
   background-repeat: no-repeat;
-  margin-top: 90px;
+  margin-top: 80px;
   padding-bottom: 100px;
 }
 

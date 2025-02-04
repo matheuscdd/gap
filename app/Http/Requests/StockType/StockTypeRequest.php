@@ -17,7 +17,7 @@ class StockTypeRequest extends Request {
                 Schema::REQUIRED,
                 Schema::cMin(self::NAME_MIN),
                 Schema::cMax(self::NAME_MAX),
-                Schema::cUnique(Keys::TABLE),
+                Schema::unique(Keys::TABLE, $this->route('id')),
             ]
         ];
     }

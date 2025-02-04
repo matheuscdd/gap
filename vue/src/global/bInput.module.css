@@ -102,6 +102,13 @@
     position: absolute;
 }
 
+.filename {
+    font-size: 14px;
+    color: var(--gray-1);
+    margin-left: 2px;
+    white-space: nowrap;
+}
+
 select {
     background-color: transparent;
     height: 25px;
