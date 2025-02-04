@@ -173,7 +173,7 @@ export default {
         ]);
         // TODO - transformar numa função
         this.driversOpts = this.$store.state.driverMod.drivers
-            .map(el => ({id: el.id, text: `${el.name} - ${el.CPF}`, value: `${el.name} - ${el.CPF}`})); 
+            .map(el => ({id: el.id, name:`${el.name} - ${el.CPF}`})); 
         const delivery = this.$store.state.deliveryMod.delivery;
         this.stocks = delivery.available.map(el => ({...el, ignore: false}));
         structuredClone(delivery.available)

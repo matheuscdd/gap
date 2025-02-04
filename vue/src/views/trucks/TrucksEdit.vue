@@ -78,14 +78,14 @@ export default {
     },
     methods: {
         edit() {
-            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
-            if (!continues) return;
             const { plate, axis, photo } = this;
             const rawData = { plate, axis, photo };
             const errors = [];
             rawData.plate.value = rawData.plate.value.toUpperCase();
             Object.keys(rawData).forEach(key => errors.push(verifyTruck(key, this)));
             if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
+            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (!continues) return;
             const handleData = getValues(rawData);
             handleData.photo = handleData.photo || null;
             this.$store.dispatch("truckMod/editTruck", {

@@ -115,7 +115,7 @@ export default {
             let val = e.target.value;
             if (this.type === "number") {
                 val = e.target.value.replace(/[^0-9.]/g, "").replace(/\.(?=.*\.)/g, "");
-                if (e.target.value.length && !["CEP", "CNPJ"].includes(this.name)) val = Number(val);
+                if (e.target.value.length && !["CEP", "CPF", "CNPJ"].includes(this.name)) val = Number(val);
             }
             this.$emit("update:modelValue", val);
         },

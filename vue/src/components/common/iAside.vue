@@ -115,6 +115,10 @@
                         :class="setColor(endpoints.names.GARAGE_LIST)" 
                         :to="endpoints.routes.GARAGE_LIST"
                     >Listar</RouterLink> 
+                    <RouterLink 
+                        :class="setColor(endpoints.names.GARAGE_DASH)" 
+                        :to="endpoints.routes.GARAGE_DASH"
+                    >Dash</RouterLink> 
                 </li>
             </ul>
         </div>
@@ -174,7 +178,29 @@ aside {
     margin-left: 20px;
     position: fixed;
     min-width: 125px;
-    width: 6vw;
+    width: 7vw;
+}
+
+ul {
+    overflow-y: scroll;
+    height: 75vh;
+}
+
+ul::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+ul::-webkit-scrollbar {
+	width: 5px;
+	background-color: #F5F5F5;
+}
+
+ul::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #555;
 }
 
 h6, a {

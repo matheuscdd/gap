@@ -96,8 +96,8 @@ export default {
             const response = await api("/deliveries/full");
             const data = response.map(delivery => ({
                 ...delivery,
-                created_at: handleDate(delivery.created_at),
-                updated_at: handleDate(delivery.updated_at),
+                created_at: new Date(delivery.created_at),
+                updated_at: new Date(delivery.updated_at),
                 delivery_date: handleDate(delivery.delivery_date),
                 payment_date: handleDate(delivery.payment_date),
                 receipt_date: handleDate(delivery.receipt_date),
@@ -123,7 +123,7 @@ export default {
             ctx.commit("storeTreemap", response);
         },
 
-        async storeScatter(ctx, {start_date, end_date}) {
+        async storeScatter(ctx, { start_date, end_date }) {
             const response = await api(
                 "/deliveries/charts/scatter?" + new URLSearchParams({ start_date, end_date })
             );

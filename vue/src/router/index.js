@@ -140,6 +140,11 @@ const routes = [
         component: () => import("@/views/garage/GarageList.vue")
     },
     {
+        path: endpoints.routes.GARAGE_DASH,
+        name: endpoints.names.GARAGE_DASH,
+        component: () => import("@/views/garage/GarageDash.vue")
+    },
+    {
         path: endpoints.routes.NOT_FOUND,
         name: endpoints.names.NOT_FOUND,
         component: () => import("../views/common/NotFound.vue")

@@ -29,7 +29,6 @@ class DriverService {
         foreach($trucks as &$truck) {
             $truck['deliveries'] = count($truck['deliveries']);
         }
-        # TODO - no list do front bloquear motoristas com entrega
         unset($truck);
 
         return response()->json($trucks, 200, [], JSON_UNESCAPED_SLASHES);
@@ -48,7 +47,6 @@ class DriverService {
         }
                     
         $driver->delete();
-   
         return response(null, 204);
     }
 }

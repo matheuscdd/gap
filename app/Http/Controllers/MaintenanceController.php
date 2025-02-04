@@ -26,4 +26,8 @@ class MaintenanceController extends Controller {
     public function list(Request $request) {
         return MaintenanceService::list();
     }
+
+    public function chartsScatter(Request $request) {
+        return MaintenanceService::chartsScatter($request);
+    }
 }

@@ -40,6 +40,7 @@ export const endpoints = Object.freeze({
         DRIVER_EDIT: "/drivers/edit/:id",
         DRIVER_LIST: "/drivers/list",
         GARAGE_LIST: "/garage/list",
+        GARAGE_DASH: "/garage/dash",
         NOT_FOUND: "/:pathMatch(.*)*",
     }),
     names: Object.freeze({
@@ -70,6 +71,7 @@ export const endpoints = Object.freeze({
         DRIVER_EDIT: "drivers-edit",
         DRIVER_LIST: "drivers-list",
         GARAGE_LIST: "garage-list",
+        GARAGE_DASH: "garage-dash",
         NOT_FOUND: "not found",
     })
 });
@@ -483,7 +485,7 @@ export const driverForm = Object.freeze({
     CPF: Object.freeze({
         PLACEHOLDER: "Insira o CPF",
         ICON: "id-card-solid",
-        TYPE: "text",
+        TYPE: "number",
         NAME: driver.keys.CPF,
         LABEL: driver.trans.CPF
     }),

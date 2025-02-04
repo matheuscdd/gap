@@ -33,8 +33,8 @@ export default {
             const response = await api("/trucks");
             const data = response.map(truck => ({
                 ...truck,
-                created_at: handleDate(truck.created_at),
-                updated_at: handleDate(truck.updated_at),
+                created_at: new Date(truck.created_at),
+                updated_at: new Date(truck.updated_at),
             }));
             ctx.commit("storeTrucks", data);
         },

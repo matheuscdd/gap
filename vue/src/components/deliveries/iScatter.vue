@@ -1,7 +1,7 @@
 <template>
   <div v-show="data.length" class="container">
     <Plotly :data="data" :layout="{ title: this.name }" :display-mode-bar="false" @plotly_legendclick="handleLegendClick"></Plotly>
-    <h6>Totais</h6>
+    <h6>{{ data.length > 1 ? 'Totais' : 'Total'}}</h6>
     <ul class="cards">
       <li
       v-for="(el, i) in data"
@@ -21,7 +21,7 @@
 import Plotly from "@aurium/vue-plotly";
  
  export default {
-   props: ["data", "name", "indexPositive"],
+   props: ["data", "name"],
    components: {
      Plotly
    },

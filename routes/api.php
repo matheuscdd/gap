@@ -91,6 +91,7 @@ Route::middleware([JWTMiddleware::class, MaintenanceMiddleware::class])->group(f
     Route::patch('/maintenances/{id}', [MaintenanceController::class, 'edit']);
     Route::get('/maintenances/{id}', [MaintenanceController::class, 'find']);
     Route::delete('/maintenances/{id}', [MaintenanceController::class, 'del']);
+    Route::get('/maintenances/charts/scatter', [MaintenanceController::class, 'chartsScatter']);
 });
 
 Route::middleware([JWTMiddleware::class, DriverMiddleware::class])->group(function() {

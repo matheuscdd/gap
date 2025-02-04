@@ -393,10 +393,10 @@ class DeliveryService {
     }
 
     public static function chartsScatter($request) {
-
         if(!$request->has('start_date') || !$request->has('end_date')) {
             throw new AppError('[start_date] e [end_date] são requeridos', 400);
         }
+
         $startDate = date(Schema::DATE_SCHEMA, strtotime($request->query('start_date')));
         $endDate = date(Schema::DATE_SCHEMA, strtotime($request->query('end_date')));
         $deliveries = Delivery
@@ -459,7 +459,7 @@ class DeliveryService {
         }
 
         foreach($keys as $deliveryDate => $arr) {
-            $text = 'Entrega(s) ';
+            $text = 'Entregas ';
             $y = [
                 'revenue' => 0,
                 'travel_cost' => 0,

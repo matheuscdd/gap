@@ -69,4 +69,66 @@ class MaintenanceService {
         (Maintenance::find($id))->delete();
         return response(null, 204); 
     }
+
+    public static function chartsScatter($request) {
+        if(!$request->has('start_date') || !$request->has('end_date')) {
+            throw new AppError('[start_date] e [end_date] são requeridos', 400);
+        }
+        
+        $startDate = date(Schema::DATE_SCHEMA, strtotime($request->query('start_date')));
+        $endDate = date(Schema::DATE_SCHEMA, strtotime($request->query('end_date')));
+        $query = Maintenance::
+            where(Keys::DATE, '>=', $startDate)
+            ->where(Keys::DATE, '<=', $endDate);
+
+        if ($request->has('truck')) {
+            $query = $query->where(Keys::TRUCK, $request->query('truck'));
+        }
+            
+        $maintenances = $query
+            ->orderBy(Keys::DATE, 'asc')
+            ->get();
+
+        if (!count($maintenances)) return [];
+
+        $costs = [
+            'name' => 'Manutenções',
+            'x' => [],
+            'y' => [],
+            'text' => [],
+            'hovertemplate' => '(%{x}, R$ %{y}, %{text})',
+            'type' => 'lines+markers',
+            'line' => [
+                'color' => '#EC001E'
+            ]
+        ];
+       
+        $keys = [];
+
+        foreach($maintenances as $el) {
+            $date = date('d/m/Y', strtotime($el->date));
+
+            if (!array_key_exists($date, $keys)) {
+                $keys[$date] = [];
+            }
+            $keys[$date][] = $el;
+        }
+
+        foreach($keys as $date => $arr) {
+            $text = 'Manutenções ';
+            $y = 0;
+            
+            foreach($arr as $el) {
+                $text .= $el->id . ',';
+                $y += $el->cost;
+            }
+
+            $text = substr($text, 0, -1);
+            $costs['x'][] = $date;
+            $costs['y'][] = $y;
+            $costs['text'][] = $text;
+        }
+
+        return response()->json([$costs], 200, [], JSON_UNESCAPED_SLASHES);
+    }
 }

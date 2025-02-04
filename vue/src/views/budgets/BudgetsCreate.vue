@@ -282,7 +282,7 @@ export default {
             this.$store.dispatch("stockTypeMod/storeStockTypes"), 
             this.$store.dispatch("clientMod/storeClients")
         ]);
-        this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, text: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
+        this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, name: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
     }
 };
 </script>

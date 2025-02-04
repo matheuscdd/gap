@@ -33,8 +33,8 @@ export default {
             const response = await api("/drivers");
             const data = response.map(driver => ({
                 ...driver,
-                created_at: handleDate(driver.created_at),
-                updated_at: handleDate(driver.updated_at),
+                created_at: new Date(driver.created_at),
+                updated_at: new Date(driver.updated_at),
             }));
             ctx.commit("storeDrivers", data);
         },

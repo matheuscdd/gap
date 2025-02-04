@@ -113,13 +113,13 @@ export default {
     },
     methods: {
         create() {
-            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
-            if (!continues) return;
             const { service, truck, cost, date, km } = this;
             const data = { service, truck, cost, date, km };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyMaintenance(key, this)));
             if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
+            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (!continues) return;
             this.$store.dispatch("maintenanceMod/createMaintenance", getValues(data));
         },
         verifyMaintenance
@@ -127,7 +127,7 @@ export default {
     async beforeCreate() {
         window.scrollTo(0,0);
         await this.$store.dispatch("truckMod/storeTrucks");
-        this.trucksOpts = this.$store.state.truckMod.trucks.map(el => ({id: el.id, text: `${el.plate} - ${el.axis}`, value: `${el.plate} - ${el.axis}`}));
+        this.trucksOpts = this.$store.state.truckMod.trucks.map(el => ({id: el.id, name:`${el.plate} - ${el.axis}`}));
     }
 };
 </script>

@@ -4,17 +4,20 @@ import router from "@/router";
 
 const getDefaultState = () => ({
     maintenances: [],
-    maintenance: {}
+    maintenance: {},
+    scatter: [],
 });
 
 export default {
     namespaced: true,
     state: getDefaultState(),
     mutations: {
+        storeScatter(state, payload) {
+            state.scatter = payload;
+        },
         storeMaintenance(state, payload) {
             state.maintenance = payload;
         },
-
         storeMaintenances(state, payload) {
             state.maintenances = payload;
         },
@@ -34,8 +37,8 @@ export default {
             const data = response.map(maintenance => ({
                 ...maintenance,
                 date: handleDate(maintenance.date),
-                created_at: handleDate(maintenance.created_at),
-                updated_at: handleDate(maintenance.updated_at),
+                created_at: new Date(maintenance.created_at),
+                updated_at: new Date(maintenance.updated_at),
             }));
             ctx.commit("storeMaintenances", data);
         },
@@ -57,6 +60,16 @@ export default {
             const response = await api("/maintenances/" + id, methods.DELETE);
             if (response.error) return alert(response.error);
             ctx.dispatch("storeMaintenances");
+        },
+
+        async storeScatter(ctx, { start_date, end_date, truck }) {
+            const params = { start_date, end_date };
+            if (truck) params.truck = truck;
+            const response = await api(
+                "/maintenances/charts/scatter?" + new URLSearchParams(params)
+            );
+            if (response.error) return;
+            ctx.commit("storeScatter", response);
         },
     }
 };

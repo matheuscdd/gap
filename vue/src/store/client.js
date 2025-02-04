@@ -33,8 +33,8 @@ export default {
             const response = await api("/clients");
             const data = response.map(user => ({
                 ...user,
-                created_at: handleDate(user.created_at),
-                updated_at: handleDate(user.updated_at),
+                created_at: new Date(user.created_at),
+                updated_at: new Date(user.updated_at),
             }));
             ctx.commit("storeClients", data);
         },

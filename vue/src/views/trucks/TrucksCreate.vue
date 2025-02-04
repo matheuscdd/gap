@@ -77,13 +77,13 @@ export default {
     },
     methods: {
         create() {
-            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
-            if (!continues) return;
             const { plate, axis, photo } = this;
             const rawData = { plate, axis, photo };
             const errors = [];
             Object.keys(rawData).forEach(key => errors.push(verifyTruck(key, this)));
             if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
+            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (!continues) return;
             const handleData = getValues(rawData);
             handleData.plate = handleData.plate.toUpperCase();
             handleData.photo = handleData.photo || null;

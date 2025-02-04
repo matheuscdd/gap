@@ -103,8 +103,7 @@ class ValidatorConstraints {
 
 class Uppercase implements ValidationRule {
     public function validate(string $attribute, mixed $value, Closure $fail): void {
-        if (strtoupper($value) !== $value) {
-            $fail("O atributo precisa estar em letras maiúsculas.");
-        }
+        if (strtoupper($value) === $value) return;
+        $fail("O atributo precisa estar em letras maiúsculas.");
     }
 }

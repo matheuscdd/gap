@@ -1,6 +1,5 @@
 <template>
     <h1>Dashboard</h1>
-    <iTreemap :data="$store.state.deliveryMod.treemap"/>
     <div>
         <div class="container-filters">
             <iInput 
@@ -29,6 +28,15 @@
                 icon="clock-solid"
                 v-model="period"
             />
+            <iSearch
+                name="truck"
+                icon="truck-solid"
+                label="Caminhão"
+                :errors="[]"
+                v-model="truck"
+                :opts="trucksOpts"
+                :edit="true"
+            />
             <button
                 @click="updateRange"
             >
@@ -41,7 +49,7 @@
             </button>
         </div>
         <iScatter 
-            :data="$store.state.deliveryMod.scatter" 
+            :data="$store.state.maintenanceMod.scatter" 
             :name="chartTitle"
         />
     </div>
@@ -50,19 +58,21 @@
 <script>
 import { handleDate } from "@/common/utils";
 import iInput from "@/components/common/iInput.vue";
+import iSearch from "@/components/common/iSearch.vue";
 import iSelect from "@/components/common/iSelect.vue";
 import iScatter from "@/components/deliveries/iScatter.vue";
-import iTreemap from "@/components/deliveries/iTreemap.vue";
 
 
-function getChartTitle(start_date, end_date) {
+function getChartTitle(start_date, end_date, truck=0, opts=[]) {
     const start = handleDate(start_date).toLocaleDateString("pt-BR");
     const end = handleDate(end_date).toLocaleDateString("pt-BR");
-    return `Entregas finalizadas entre ${start} e ${end}`;
+    const plate = opts.find(el => el?.id === truck)?.name;
+    return `Manutenções realizadas entre ${start} e ${end}` + (plate ? ` com o caminhão ${plate}` : "");
 }
 
 export default {
     data: () => ({
+        // TODO globalizar essas opções 
         dateOpts: [
             {
                 id: 0,
@@ -82,12 +92,14 @@ export default {
             },
         ],
         period: 0,
+        truck: "",
+        trucksOpts: [],
      }),
     components: {
-        iTreemap,
         iScatter,
         iInput,
         iSelect,
+        iSearch,
     },
     async beforeCreate() {
         window.scrollTo(0,0);
@@ -97,18 +109,21 @@ export default {
         this.end_date = end_date;
         this.chartTitle = getChartTitle(start_date, end_date);
         await Promise.all([
-            this.$store.dispatch("deliveryMod/storeTreemap"),
-            this.$store.dispatch("deliveryMod/storeScatter", { start_date, end_date }),
+            this.$store.dispatch("truckMod/storeTrucks"),
+            this.$store.dispatch("maintenanceMod/storeScatter", { start_date, end_date }),
         ]);
+        this.trucksOpts = this.$store.state.truckMod.trucks
+            .map(el => ({id: el.id, name:`${el.plate} - ${el.axis}`}));
+        this.trucksOpts.push({id: 0, name: "Sem filtro"});
     }, 
     methods: {
         updateSelect() {
             this.period = 0;
         },
         updateRange() {
-            const { start_date, end_date } = this;
-            this.chartTitle = getChartTitle(start_date, end_date);
-            this.$store.dispatch("deliveryMod/storeScatter", { start_date, end_date });
+            const { start_date, end_date, truck, trucksOpts } = this;
+            this.chartTitle = getChartTitle(start_date, end_date, truck, trucksOpts);
+            this.$store.dispatch("maintenanceMod/storeScatter", { start_date, end_date, truck });
         },
     },
     watch: {

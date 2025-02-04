@@ -61,13 +61,13 @@ export default {
     },
     methods: {
         edit() {
-            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
-            if (!continues) return;
             const { name, CPF } = this;
             const data = { name, CPF };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyDriver(key, this)));
             if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
+            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (!continues) return;
             this.$store.dispatch("driverMod/editDriver", {
                 ...getValues(data),
                 id: this.$route.params.id,
