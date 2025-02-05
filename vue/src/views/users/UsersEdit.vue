@@ -9,7 +9,7 @@
                 :type="userForm.NAME.TYPE"
                 :name="userForm.NAME.NAME"
                 :errors="name.errors"
-                :maxlength="limits.user.name"
+                :maxlength="limits.user.name.max"
                 v-model="name.value"
                 @validate="verifyUser"
             />
@@ -20,7 +20,7 @@
                 :type="userForm.EMAIL.TYPE"
                 :name="userForm.EMAIL.NAME"
                 :errors="email.errors"
-                :maxlength="limits.user.email"
+                :maxlength="limits.user.email.max"
                 v-model="email.value"
                 @validate="verifyUser"
             />
@@ -47,11 +47,11 @@ import { getValues } from "@/common/utils";
 export default {
     mixins: [mixins],
     data: () => ({
-        [mixins.data().user.keys.EMAIL]: {
+        [mixins.data().cUser.keys.EMAIL]: {
             errors: [],
             value: ""
         },
-        [mixins.data().user.keys.NAME]: {
+        [mixins.data().cUser.keys.NAME]: {
             errors: [],
             value: ""
         },

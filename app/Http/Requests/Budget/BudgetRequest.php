@@ -12,6 +12,7 @@ use App\Constraints\ValidatorConstraints as Schema;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use App\Enums\{Unloaded, PaymentMethod, PaymentStatus};
+use Illuminate\Support\Facades\Log;
 
 class BudgetRequest extends Request {
     protected const DELIVERY_ADDRESS_MAX = 256;
@@ -43,8 +44,8 @@ class BudgetRequest extends Request {
             ],
             Keys::PROVIDER_NAME => [
                 Schema::REQUIRED,
-                Schema::cMin(self::DELIVERY_ADDRESS_MIN),
-                Schema::cMax(self::DELIVERY_ADDRESS_MAX),
+                Schema::cMin(self::PROVIDER_NAME_MIN),
+                Schema::cMax(self::PROVIDER_NAME_MAX),
             ],
             Keys::PROVIDER_CITY => [
                 Schema::REQUIRED,
@@ -77,7 +78,7 @@ class BudgetRequest extends Request {
             
         ];
 
-        $rules = self::retrieveRules($partial, $ref, $keys, $keepRequired);
+        $rules = self::retrieveRules($partial, $ref, $keys, $keepRequired); 
         if (count($rules) === 0) {
             throw new Exception('getRules: No key found');
         }

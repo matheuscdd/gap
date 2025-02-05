@@ -47,7 +47,7 @@ export default {
 
         edit(id) {
             this.$router.push(endpoints.routes.USER_EDIT.replace(":id", id));
-        }
+        },
     },
 };
 </script>

@@ -78,23 +78,23 @@ import { getValues } from "@/common/utils";
 
 export default {
     data: () => ({
-        [mixins.data().client.keys.NAME]: {
+        [mixins.data().cClient.keys.NAME]: {
             errors: [],
             value: ""
         },
-        [mixins.data().client.keys.CNPJ]: {
+        [mixins.data().cClient.keys.CNPJ]: {
             errors: [],
             value: ""
         },
-        [mixins.data().client.keys.CEP]: {
+        [mixins.data().cClient.keys.CEP]: {
             errors: [],
             value: ""
         },
-        [mixins.data().client.keys.ADDRESS]: {
+        [mixins.data().cClient.keys.ADDRESS]: {
             errors: [],
             value: ""
         },
-        [mixins.data().client.keys.CELLPHONE]: {
+        [mixins.data().cClient.keys.CELLPHONE]: {
             errors: [],
             value: ""
         },

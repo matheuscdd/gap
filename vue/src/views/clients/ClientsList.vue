@@ -13,10 +13,10 @@
             :key="el.id"
             :id="el.id"
             :name="el.name"
-            :CNPJ="el.CNPJ"
-            :CEP="el.CEP"
+            :CNPJ="formatCNPJ(el.CNPJ)"
+            :CEP="formatCEP(el.CEP)"
             :address="el.address"
-            :cellphone="el.cellphone"
+            :cellphone="formatCellphone(el.cellphone)"
             :createdAt="el.created_at"
             @edit="edit"
             @del="del"
@@ -28,6 +28,7 @@
 import iCard from "@/components/clients/iCard.vue";
 import mixins from "@/common/mixins";
 import { endpoints } from "@/common/consts";
+import { formatCEP, formatCNPJ, formatCellphone, formatField } from "@/common/utils";
 
 
 export default {
@@ -48,7 +49,11 @@ export default {
         },
         edit(id) {
             this.$router.push(endpoints.routes.CLIENT_EDIT.replace(":id", id));
-        }
+        },
+        formatCNPJ,
+        formatCEP,
+        formatCellphone,
+        formatField,
     },
     
 };

@@ -1,6 +1,6 @@
 <template>
     <li>
-        <div class="name">{{ name }}</div>
+        <div class="name" :title=name>{{ formatField(name, 20) }}</div>
         <div>{{ email }}</div>
         <div>{{ updatedAt.toLocaleString("pt-BR") }}</div>
         <div>{{ isAdmin ? 'Admin' : 'Comum' }}</div>
@@ -33,7 +33,7 @@
 </template>
 <script>
 import mixins from "@/common/mixins";
-import { getNow } from "@/common/utils";
+import { formatField, getNow } from "@/common/utils";
 
 
 export default {
@@ -55,6 +55,7 @@ export default {
             this.$emit("del", this.id);
         },
         getNow,
+        formatField,
     }
 };
 </script>

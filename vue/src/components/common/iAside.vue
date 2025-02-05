@@ -11,7 +11,7 @@
                         :to="endpoints.routes.HOME"
                     >Home</RouterLink> 
                 </li>
-                <li v-show="this.$store.state.userMod.logged.type === user.keys.TYPE.ADMIN">
+                <li v-show="$store.state.userMod.logged.type === user.keys.TYPE.ADMIN">
                     <h6>Usuários</h6>
                     <RouterLink 
                         :class="setColor(endpoints.names.USER_CREATE)" 
@@ -59,6 +59,9 @@
                         :class="setColor(endpoints.names.BUDGET_CREATE)" 
                         :to="endpoints.routes.BUDGET_CREATE"
                     >Criar</RouterLink> 
+                    <a v-show="isInPage(endpoints.names.BUDGET_VIEW)"
+                        :class="setColor(endpoints.names.BUDGET_VIEW)" 
+                    >Visualizar</a> 
                     <a v-show="isInPage(endpoints.names.BUDGET_EDIT)"
                         :class="setColor(endpoints.names.BUDGET_EDIT)" 
                     >Editar</a> 
@@ -76,6 +79,9 @@
                     <a v-show="isInPage(endpoints.names.DELIVERY_EDIT_FULL)"
                         :class="setColor(endpoints.names.DELIVERY_EDIT_FULL)" 
                     >Editar</a> 
+                    <a v-show="isInPage(endpoints.names.DELIVERY_VIEW_FULL)"
+                        :class="setColor(endpoints.names.DELIVERY_VIEW_FULL)" 
+                    >Visualizar</a> 
                     <RouterLink 
                         :class="setColor(endpoints.names.DELIVERY_LIST)" 
                         :to="endpoints.routes.DELIVERY_LIST"

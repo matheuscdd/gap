@@ -218,63 +218,63 @@ export default {
             weight: "",
             extra: null
         }],
-        [mixins.data().delivery.keys.INVOICE]: {
+        [mixins.data().cDelivery.keys.INVOICE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.CLIENT]: {
+        [mixins.data().cDelivery.keys.CLIENT]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.DELIVERY_DATE]: {
+        [mixins.data().cDelivery.keys.DELIVERY_DATE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.DELIVERY_ADDRESS]: {
+        [mixins.data().cDelivery.keys.DELIVERY_ADDRESS]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.PROVIDER_NAME]: {
+        [mixins.data().cDelivery.keys.PROVIDER_NAME]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.PROVIDER_CITY]: {
+        [mixins.data().cDelivery.keys.PROVIDER_CITY]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.PAYMENT_DATE]: {
+        [mixins.data().cDelivery.keys.PAYMENT_DATE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.REVENUE]: {
+        [mixins.data().cDelivery.keys.REVENUE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.TRAVEL_COST]: {
+        [mixins.data().cDelivery.keys.TRAVEL_COST]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.UNLOADING_COST]: {
+        [mixins.data().cDelivery.keys.UNLOADING_COST]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.DRIVER]: {
+        [mixins.data().cDelivery.keys.DRIVER]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.RECEIPT_DATE]: {
+        [mixins.data().cDelivery.keys.RECEIPT_DATE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.UNLOADED.THIS]: {
+        [mixins.data().cDelivery.keys.UNLOADED.THIS]: {
             errors: [],
             value: "carrier",
         },
-        [mixins.data().delivery.keys.PAYMENT_STATUS.THIS]: {
+        [mixins.data().cDelivery.keys.PAYMENT_STATUS.THIS]: {
             errors: [],
             value: "pending",
         },
-        [mixins.data().delivery.keys.PAYMENT_METHOD.THIS]: {
+        [mixins.data().cDelivery.keys.PAYMENT_METHOD.THIS]: {
             errors: [],
             value: "ticket",
         },
@@ -354,7 +354,7 @@ export default {
         const delivery = this.$store.state.deliveryMod.delivery;
         this.stocks = delivery.stocks;
         Object
-            .values(this.delivery.keys)
+            .values(this.cDelivery.keys)
             .filter(Boolean)
             .map(key => key?.THIS || key)
             .forEach(key => this[key].value = delivery[key]);

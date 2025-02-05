@@ -1,22 +1,41 @@
 <template>
     <li>
-        <div class="general-info">
-            <div>
-                <h3>{{ client_name }}</h3>
-                <h4>{{ provider_name }}</h4>
-                <h5>ENTREGA: {{ new Date(delivery_date).toLocaleDateString("pt-BR")  }}</h5>
-                <h6>ATUALIZAÇÃO: {{ updatedAt.toLocaleString("pt-BR") }}</h6>
+        <div class="container">
+            <div class="general-info">
+                <div>
+                    <h3>{{ client_name }}</h3>
+                    <h4>{{ provider_name }}</h4>
+                    <h5>ENTREGA: {{ handleDate(delivery_date).toLocaleDateString("pt-BR")  }}</h5>
+                    <h6>ATUALIZAÇÃO: {{ updatedAt.toLocaleString("pt-BR") }}</h6>
+                </div>
             </div>
-            <div class="btns">
+            <div>
+                <h4 class="currency">{{ Number(revenue).toLocaleString("pt-BR", {style: "currency", currency: "BRL"}) }}</h4>
+            </div>
+            <div class="path">
+                <legend>Trajeto</legend>
+                <div class="container">
+                    <div>
+                        <span>A</span>
+                        <h6>{{ provider_city }}</h6>
+                    </div>
+                    <div>
+                        <span>B</span>
+                        <h6>{{ delivery_address }}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btns">
                 <div class="id">
                     {{ id }}
                 </div>
                 <button 
-                    class="create" 
-                    style="display: none;"
+                    class="view"
+                    @click="this.$emit('view', this.id)"
                 >
                     <iSvg 
-                        :src="require('@/assets/icons/truck-solid.svg')"
+                        :src="require('@/assets/icons/eye-solid.svg')"
                         width="16" 
                         height="16"
                         fill="white"
@@ -46,27 +65,10 @@
                     />
                 </button>
             </div>
-        </div>
-        <div>
-            <h4 class="currency">{{ Number(revenue).toLocaleString("pt-br", {style: "currency", currency: "BRL"}) }}</h4>
-        </div>
-        <div class="path">
-            <legend>Trajeto</legend>
-            <div class="container">
-                <div>
-                    <span>A</span>
-                    <h6>{{ provider_city }}</h6>
-                </div>
-                <div>
-                    <span>B</span>
-                    <h6>{{ delivery_address }}</h6>
-                </div>
-            </div>
-        </div>
     </li>
 </template>
 <script>
-import { getNow } from "@/common/utils";
+import { getNow, handleDate } from "@/common/utils";
 
 export default {
     props: [
@@ -82,6 +84,7 @@ export default {
     ],
     methods: {
         getNow,
+        handleDate,
     }
 };
 </script>
@@ -93,6 +96,7 @@ li {
     height: 300px;
     background-color: white;
     border-radius: 12px;
+    display: flex;
 }
 
 h3 {
@@ -145,7 +149,7 @@ h6 {
     filter: brightness(2);
 }
 
-.btns .create {
+.btns .view {
     background-color: var(--green-1);
 }
 
@@ -166,7 +170,7 @@ h6 {
 }
 
 .general-info {
-    width: 330px;
+    width: 280px;
     display: flex;
     justify-content: space-between;
 }

@@ -3,6 +3,26 @@
     <main>
         <section>
             <h2>Caminhões</h2>
+            <div class="btns">
+                <RouterLink v-show="TRACKER_LOCALIZATION" :href="TRACKER_LOCALIZATION" target="_blank" class="integration">
+                    Localização
+                    <iSvg 
+                        :src="require('@/assets/icons/map-location-dot-solid.svg')"
+                        width="16" 
+                        height="16"
+                        fill="white"
+                    />
+                </RouterLink>
+                <RouterLink v-show="ROUTE_CALCULATOR" :href="ROUTE_CALCULATOR" target="_blank" class="calc">
+                    Calcular 
+                    <iSvg 
+                        :src="require('@/assets/icons/calculator-solid.svg')"
+                        width="16" 
+                        height="16"
+                        fill="white"
+                    />
+                </RouterLink>
+            </div>
             <ul v-if="$store.state.truckMod.trucks.length">
                 <iTruck
                     v-for="el in $store.state.truckMod.trucks" 
@@ -52,8 +72,15 @@ import mixins from "@/common/mixins";
 import { endpoints } from "@/common/consts";
 import iTruck from "@/components/garage/iTruck.vue";
 import iMaintenance from "@/components/garage/iMaintenance.vue";
+import { RouterLink } from "vue-router";
+
+console.log(process.env.VUE_APP_TRACKER_LOCALIZATION);
 
 export default {
+    data: () => ({
+        TRACKER_LOCALIZATION: process.env.VUE_APP_TRACKER_LOCALIZATION,
+        ROUTE_CALCULATOR: process.env.VUE_APP_ROUTE_CALCULATOR,
+    }),
     mixins: [mixins],
     async beforeCreate() {
         window.scrollTo(0,0);
@@ -65,6 +92,7 @@ export default {
     components: {
         iTruck, 
         iMaintenance,
+        RouterLink,
     },
     methods: {
         delTruck(id) {
@@ -115,5 +143,27 @@ h2 {
     text-align: center;
     justify-items: center;
     align-items: center;
+}
+
+.btns {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.btns a {
+    text-decoration: none;
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btns .calc {
+    background-color: var(--blue-1);
+}
+
+.btns .integration {
+    background-color: var(--orange-1);
 }
 </style>

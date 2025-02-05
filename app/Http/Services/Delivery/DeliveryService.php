@@ -278,7 +278,7 @@ class DeliveryService {
         }
 
         return [
-            'stocks' => Stock::whereIn('id', $stocksIds)->get()->toArray(),
+            'stocks' => Stock::whereIn('id', $stocksIds)->orderBy('id', 'asc')->get()->toArray(),
             'deliveryStocks' => $deliveryStocks
         ];
     }

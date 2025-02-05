@@ -60,6 +60,11 @@ const routes = [
         component: () => import("@/views/budgets/BudgetsEdit.vue")
     },
     {
+        path: endpoints.routes.BUDGET_VIEW,
+        name: endpoints.names.BUDGET_VIEW,
+        component: () => import("@/views/budgets/BudgetsView.vue")
+    },
+    {
         path: endpoints.routes.BUDGET_LIST,
         name: endpoints.names.BUDGET_LIST,
         component: () => import("@/views/budgets/BudgetsList.vue")
@@ -161,6 +166,10 @@ router.beforeEach(async (to, from, next) => {
     const isLogin = to.path === endpoints.routes.LOGIN;
     const path = !isLogin ? endpoints.routes.LOGIN : undefined;
     if (!token) return next(path);
+
+    if (from.fullPath === endpoints.routes.DELIVERY_CREATE_FULL) {
+        store.commit("deliveryMod/storeBudget", {});
+    }
 
     await refreshToken();
     if (!localStorage.getItem(consts.TOKEN)) return next(path);

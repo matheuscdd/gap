@@ -45,11 +45,11 @@ import { getValues } from "@/common/utils";
 
 export default {
     data: () => ({
-        [mixins.data().driver.keys.NAME]: {
+        [mixins.data().cDriver.keys.NAME]: {
             errors: [],
             value: ""
         },
-        [mixins.data().driver.keys.CPF]: {
+        [mixins.data().cDriver.keys.CPF]: {
             errors: [],
             value: ""
         },

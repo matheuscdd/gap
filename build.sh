@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # SSL requirements
 source .env
 sudo apt install certbot python3-certbot-nginx -y
@@ -38,13 +40,13 @@ sudo apt install unzip php8.3 php8.3-curl php8.3-xml php8.3-zip -y
 sudo systemctl disable apache2
 sudo apt remove apache2*
 curDir=$(pwd)
-cd ~
+cd ~ || exit
 curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
 HASH=$(curl -sS https://composer.github.io/installer.sig)
 echo $HASH
 php -r "if (hash_file('SHA384', '/tmp/composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 sudo php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
-cd $curDir
+cd $curDir || exit
 composer update
 sudo chown -R $USER:$USER ~/gap
 sudo apt update && sudo apt upgrade -y

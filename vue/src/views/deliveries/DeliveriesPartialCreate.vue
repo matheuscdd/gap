@@ -114,23 +114,23 @@ export default {
             extra: null
         }],
         max: {},
-        [mixins.data().delivery.keys.DELIVERY_DATE]: {
+        [mixins.data().cDelivery.keys.DELIVERY_DATE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.DELIVERY_ADDRESS]: {
+        [mixins.data().cDelivery.keys.DELIVERY_ADDRESS]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.UNLOADING_COST]: {
+        [mixins.data().cDelivery.keys.UNLOADING_COST]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.DRIVER]: {
+        [mixins.data().cDelivery.keys.DRIVER]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.UNLOADED.THIS]: {
+        [mixins.data().cDelivery.keys.UNLOADED.THIS]: {
             errors: [],
             value: "carrier",
         },

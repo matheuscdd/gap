@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { getUUID } from "@/common/utils";
+import { getUUID, renderFileReader } from "@/common/utils";
 import styles from "@/global/bInput.module.css";
 
 export default {
@@ -119,16 +119,8 @@ export default {
             }
             this.$emit("update:modelValue", val);
         },
-        renderFileReader(file) {
-            return new Promise((resolve, reject) => {
-                if (!file) return resolve();
-                const fileReader = new FileReader();
-                fileReader.readAsDataURL(file);
-                fileReader.onload = () => resolve(fileReader.result);
-                fileReader.onerror = reject;
-            });
-        },
-        getUUID
+        renderFileReader,
+        getUUID,
     }
 };
 

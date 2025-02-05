@@ -1,7 +1,8 @@
 <template>
     <header>
-        <img src="@/assets/common/brazil.png"/>
-        <h6>GAP - Logística e Transportes LTDA. <span style="color: yellow; font-weight: 600;">(AMBIENTE DE TESTES)</span></h6>
+        <img src="@/assets/common/brazil-white.png"/>
+        <h6>{{ CARRIER_COMPLETE_NAME }} <span style="color: yellow; font-weight: 600;">(AMBIENTE DE TESTES)</span></h6>
+        <span>{{ $store.state.userMod.logged.name }}</span>
         <button @click="clean" v-show="this.$route.path !== endpoints.routes.LOGIN">
             <iSvg 
                 :src="require('@/assets/icons/right-from-bracket-solid.svg')"
@@ -10,7 +11,6 @@
                 fill="white"
             />
         </button>
-        
     </header>      
 </template>
 <script>
@@ -19,7 +19,8 @@ import router from "@/router";
 
 export default {
     data: () => ({
-        endpoints
+        endpoints,
+        CARRIER_COMPLETE_NAME: process.env.VUE_APP_CARRIER_COMPLETE_NAME,
     }),
     methods: {
         clean() {
@@ -37,9 +38,9 @@ header {
   background-color: var(--green-4);
   color: white;
   display: grid;
-  grid-template-columns: repeat(24, 1fr); 
+  grid-template-columns: repeat(36, 1fr); 
   grid-template-areas: 
-    "logo title title title title title title title title title title title title . . . . . . . . . . button";
+    "logo title title title title title title title title title title title title title title title title title title title title title title title title title title title title . . . . . username button";
   position: fixed; 
   align-items: center;
   left: 0;
@@ -59,6 +60,10 @@ button {
     cursor: pointer;
     justify-self: end;
     grid-area: button;
+}
+
+span {
+    grid-area: username;
 }
 
 img {

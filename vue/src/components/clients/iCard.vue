@@ -1,9 +1,9 @@
 <template>
     <li>
-        <div class="name">{{ name }}</div>
+        <div class="name" :title="name">{{ formatField(name, 20) }}</div>
         <div>{{ CNPJ }}</div>
-        <div class="address" :title="`${address} - ${formattedCEP}`">{{ formattedAddress }}</div>
-        <div class="cellphone">{{ formattedCellphone }}</div>
+        <div class="address" :title="`${address} - ${CEP}`">{{ formatField(address, 30) }}</div>
+        <div class="cellphone">{{ cellphone }}</div>
         <div>
             <div class="btns">
                 <button 
@@ -36,7 +36,7 @@
 
 <script>
 import mixins from "@/common/mixins";
-import { getNow } from "@/common/utils";
+import { formatField, getNow } from "@/common/utils";
 
 export default {
     mixins: [mixins],
@@ -49,21 +49,6 @@ export default {
         "cellphone",
         "createdAt"
     ],
-    computed: {
-        formattedCEP() {
-            return `${this.CEP.substring(0, 5)}-${this.CEP.substring(5, 8)}`;
-        },
-        formattedAddress(){
-            return this.address.slice(0, 50) + "...";
-        },
-        formattedCellphone() {
-            const ddd = this.cellphone.substring(0, 2);
-            const first = this.cellphone.substring(2, 3);
-            const second = this.cellphone.substring(3, 7);
-            const third = this.cellphone.substring(7, 13);
-            return `(${ddd}) ${first} ${second} ${third}`;
-        }
-    },
     methods: {
         edit() {
             this.$emit("edit", this.id);
@@ -72,6 +57,7 @@ export default {
             this.$emit("del", this.id);
         },
         getNow,
+        formatField,
     }
 };
 </script>

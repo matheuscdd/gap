@@ -22,10 +22,6 @@ class Request extends FormRequest {
         return auth()->user()->type === 'admin';
     }
 
-    protected function isTimeNotExpired(Model $model, int $id): bool {
-        return $model::find($id)->created_at->diffInHours(new DateTime()) < $this::MAX_HOURS;
-    }
-
     protected function getMsgSizeMax(string $field, int $val): string {
         return "O campo $field contém mais caracteres do que o permitido de $val";
     }

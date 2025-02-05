@@ -18,7 +18,7 @@
             :value="
                 fillField(
                     delivery.delivery_date,
-                    new Date(delivery.delivery_date).toLocaleDateString('pt-BR')
+                    handleDate(delivery.delivery_date).toLocaleDateString('pt-BR')
                 )
             "
             label="Data de entrega"
@@ -63,7 +63,7 @@
             :value="
                 fillField(
                     delivery.receipt_date,
-                    new Date(delivery.receipt_date).toLocaleDateString('pt-BR')
+                    handleDate(delivery.receipt_date).toLocaleDateString('pt-BR')
                 )
             "
             label="Data de recebimento"
@@ -110,7 +110,7 @@
             :value="
                 fillField(
                     delivery.created_at,
-                    new Date(delivery.created_at).toLocaleDateString('pt-BR')
+                    handleDate(delivery.created_at).toLocaleDateString('pt-BR')
                 )
             "
             label="Data de criação"
@@ -120,7 +120,7 @@
         />
         <iValue
             :value="
-                Number(delivery.revenue).toLocaleString('pt-br', {
+                Number(delivery.revenue).toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL',
                 })
@@ -134,7 +134,7 @@
             :value="
                 fillField(
                     delivery.travel_cost,
-                    Number(delivery.travel_cost).toLocaleString('pt-br', {
+                    Number(delivery.travel_cost).toLocaleString('pt-BR', {
                         style: 'currency',
                         currency: 'BRL',
                     })
@@ -149,7 +149,7 @@
             :value="
                 fillField(
                     delivery.payment_date,
-                    new Date(delivery.payment_date).toLocaleDateString('pt-BR')
+                    handleDate(delivery.payment_date).toLocaleDateString('pt-BR')
                 )
             "
             label="Data de pagamento"
@@ -168,7 +168,7 @@
             :value="
                 fillField(
                     delivery.unloading_cost,
-                    Number(delivery.unloading_cost).toLocaleString('pt-br', {
+                    Number(delivery.unloading_cost).toLocaleString('pt-BR', {
                         style: 'currency',
                         currency: 'BRL',
                     })
@@ -202,7 +202,7 @@
             :value="
                 fillField(
                     delivery.updated_at,
-                    new Date(delivery.updated_at).toLocaleDateString('pt-BR')
+                    handleDate(delivery.updated_at).toLocaleDateString('pt-BR')
                 )
             "
             label="Data de edição"
@@ -240,7 +240,7 @@
                 v-for="el in $store.state.deliveryMod.partials"
                 :key="el.id"
                 :id="el.id"
-                :delivery-date="new Date(el.delivery_date).toLocaleDateString('pt-BR')"
+                :delivery-date="handleDate(el.delivery_date).toLocaleDateString('pt-BR')"
                 :delivery-address="el.delivery_address"
                 :unloaded="el.unloaded"
                 :driver="$store.state.driverMod.drivers.find(
@@ -248,7 +248,7 @@
                 ).name"
                 :finished="el.finished"
                 :focus="focus"
-                :unloading-cost="Number(el.unloading_cost).toLocaleString('pt-br', {
+                :unloading-cost="Number(el.unloading_cost).toLocaleString('pt-BR', {
                         style: 'currency',
                         currency: 'BRL',
                     })"
@@ -264,6 +264,7 @@
 import iStock from "@/components/deliveries/iStock.vue";
 import iValue from "@/components/deliveries/iValue.vue";
 import iParcial from "@/components/deliveries/iParcial.vue";
+import { handleDate } from "@/common/utils";
 
 // TODO - fazer função global para as conversões de moeda e data
 export default {
@@ -280,6 +281,7 @@ export default {
 
     methods: {
         fillField(field, transformed) {
+            if (field === null) return "Pendente";
             return field !== undefined ? transformed || field : "⠶⠚⠛";
         },
         focused(id) {
@@ -295,6 +297,7 @@ export default {
             if (!continues) return;
             await this.$store.dispatch("deliveryMod/finishPartial", id);
         },
+        handleDate,
     },
 
     async beforeCreate() {
@@ -303,15 +306,13 @@ export default {
         await Promise.all([
             this.$store.dispatch("deliveryMod/storeDelivery", id),
             this.$store.dispatch("stockTypeMod/storeStockTypes"),
-            this.$store.dispatch("clientMod/storeClients"),
             this.$store.dispatch("userMod/storeUsers"),
             this.$store.dispatch("deliveryMod/storePartials", id),
             this.$store.dispatch("driverMod/storeDrivers"),
         ]);
         this.delivery = this.$store.state.deliveryMod.delivery;
-        this.client = this.$store.state.clientMod.clients.find(
-            (el) => el.id === this.delivery.client
-        ).name;
+        await this.$store.dispatch("clientMod/storeClient", this.delivery.client),
+        this.client = this.$store.state.clientMod.client.name;
         this.driver = this.$store.state.driverMod.drivers.find(
             (el) => el.id === this.delivery.driver
         ).name;

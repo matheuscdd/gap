@@ -13,7 +13,7 @@
             :key="el.id"
             :id="el.id"
             :name="el.name"
-            :CPF="el.CPF"
+            :CPF="formatCPF(el.CPF)"
             :deliveries="el.deliveries"
             :createdAt="el.created_at"
             :updatedAt="el.updated_at"
@@ -27,6 +27,7 @@
 import iCard from "@/components/drivers/iCard.vue";
 import mixins from "@/common/mixins";
 import { endpoints } from "@/common/consts";
+import { formatCPF } from "@/common/utils";
 
 
 export default {
@@ -47,7 +48,8 @@ export default {
 
         edit(id) {
             this.$router.push(endpoints.routes.DRIVER_EDIT.replace(":id", id));
-        }
+        },
+        formatCPF,
     },
 };
 </script>
