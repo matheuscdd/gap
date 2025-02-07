@@ -8,7 +8,7 @@
             />
             <iInternalStock
                 icon="box-solid"
-                :value="typeName"
+                :value="$store.state.stockTypeMod.stockTypes.find(({ id }) => id === type).name"
             />
             <iInternalStock
                 icon="boxes-stacked-solid"
@@ -21,6 +21,7 @@
             <iInternalStock
                 icon="ruler-combined-solid"
                 :value="extra"
+                title="Largura | Altura"
             />
         </div>
     </li>
@@ -45,10 +46,6 @@ export default {
             const limit = 8;
             return this.name.length > limit ? this.name.slice(0, limit) + "..." : this.name;
         },
-
-        typeName() {
-            return this.$store.state.stockTypeMod.stockTypes.find(({ id }) => id === this.type).name;
-        }
     }
 };
 </script>

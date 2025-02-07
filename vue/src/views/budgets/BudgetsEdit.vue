@@ -168,47 +168,47 @@ import iStock from "@/components/common/iStock.vue";
 export default {
     data: () => ({
         stocks: [],
-        [mixins.data().budget.keys.CLIENT]: {
+        [mixins.data().cBudget.keys.CLIENT]: {
             errors: [],
             value: "",
         },
-        [mixins.data().budget.keys.DELIVERY_DATE]: {
+        [mixins.data().cBudget.keys.DELIVERY_DATE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().budget.keys.DELIVERY_ADDRESS]: {
+        [mixins.data().cBudget.keys.DELIVERY_ADDRESS]: {
             errors: [],
             value: "",
         },
-        [mixins.data().budget.keys.PROVIDER_NAME]: {
+        [mixins.data().cBudget.keys.PROVIDER_NAME]: {
             errors: [],
             value: "",
         },
-        [mixins.data().budget.keys.PROVIDER_CITY]: {
+        [mixins.data().cBudget.keys.PROVIDER_CITY]: {
             errors: [],
             value: "",
         },
-        [mixins.data().budget.keys.PAYMENT_DATE]: {
+        [mixins.data().cBudget.keys.PAYMENT_DATE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().budget.keys.REVENUE]: {
+        [mixins.data().cBudget.keys.REVENUE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().budget.keys.COST]: {
+        [mixins.data().cBudget.keys.COST]: {
             errors: [],
             value: "",
         },
-        [mixins.data().budget.keys.UNLOADED.THIS]: {
+        [mixins.data().cBudget.keys.UNLOADED.THIS]: {
             errors: [],
             value: "carrier",
         },
-        [mixins.data().budget.keys.PAYMENT_STATUS.THIS]: {
+        [mixins.data().cBudget.keys.PAYMENT_STATUS.THIS]: {
             errors: [],
             value: "pending",
         },
-        [mixins.data().budget.keys.PAYMENT_METHOD.THIS]: {
+        [mixins.data().cBudget.keys.PAYMENT_METHOD.THIS]: {
             errors: [],
             value: "ticket",
         },

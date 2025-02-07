@@ -377,6 +377,9 @@ export function verifyDelivery(name, obj) {
         // schema[UNLOADING_COST] = schema[UNLOADING_COST].lte(handleFields[REVENUE], "O custo de descarga não pode ser maior que o faturamento");
         schema = {
             ...schema,
+            [RECEIPT_DATE]: z
+                .string()
+                .date(msgs.required(cDelivery.trans.RECEIPT_DATE)),
             [INVOICE]: z
                 .string()
                 .min(base.delivery[INVOICE].size, msgs.min(cDelivery.trans.INVOICE, base.delivery[INVOICE].size))

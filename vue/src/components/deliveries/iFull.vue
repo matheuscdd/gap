@@ -4,19 +4,19 @@
             <div>{{ id }}</div>
             <div class="revenue">
                 {{
-                    Number(revenue).toLocaleString("pt-br", {
+                    Number(revenue).toLocaleString("pt-BR", {
                         style: "currency",
                         currency: "BRL",
                     })
                 }}
             </div>
-            <div class="client-name">{{ client_name }}</div>
-            <div class="receipt-date">{{ receipt_date.toLocaleDateString("pt-BR") }}</div>
-            <div class="delivery-date">{{ delivery_date.toLocaleDateString("pt-BR") }}</div>
+            <div class="client-name" :title="client_name">{{ formatField(client_name, 15) }}</div>
+            <div class="receipt-date">{{ handleDate(receipt_date).toLocaleDateString("pt-BR") }}</div>
+            <div class="delivery-date">{{ handleDate(delivery_date).toLocaleDateString("pt-BR") }}</div>
             <div class="days-remaining">{{ daysRemaining }}</div>
-            <div class="provider-city">{{ provider_city }}</div>
+            <div class="provider-city" :title="provider_city">{{ formatField(provider_city, 10) }}</div>
             <div class="delivery-address" :title="delivery_address">
-                {{ formattedAddress }}
+                {{ formatField(delivery_address, 10) }}
             </div>
             <div>
                 <div class="btns">
@@ -89,7 +89,7 @@
     </li>
 </template>
 <script>
-import { getNow } from "@/common/utils";
+import { formatField, getNow, handleDate } from "@/common/utils";
 
 export default {
     props: [
@@ -108,9 +108,9 @@ export default {
     ],
     computed: {
         daysRemainingNum() {
-            if (new Date() > new Date(this.delivery_date)) return -1;
+            if (new Date() > handleDate(this.delivery_date)) return -1;
             const res = Math.ceil(
-                (new Date(this.delivery_date) - new Date()) /
+                (handleDate(this.delivery_date) - new Date()) /
                     (1000 * 60 * 60 * 24)
             );
             return res;
@@ -119,9 +119,6 @@ export default {
             const res = this.daysRemainingNum;
             if (res === -1) return "Atrasado!";
             return res;
-        },
-        formattedAddress() {
-            return this.delivery_address.slice(0, 10) + "...";
         },
         statusColor() {
             const res = this.daysRemainingNum;
@@ -148,6 +145,8 @@ export default {
             this.$emit("view", this.id);
         },
         getNow,
+        handleDate,
+        formatField,
     },
 };
 </script>

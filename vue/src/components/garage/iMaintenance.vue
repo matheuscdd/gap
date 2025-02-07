@@ -3,14 +3,14 @@
         <div>{{ id }}</div>
         <div class="cost">
         {{ 
-            Number(cost).toLocaleString("pt-br", {
+            Number(cost).toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
             }) 
         }}
         </div>
         <div :title="service">{{ formattedService }}</div>
-        <div>{{ new Date(date).toLocaleDateString("pt-BR") }}</div>
+        <div>{{ handleDate(date).toLocaleDateString("pt-BR") }}</div>
         <div class="km">{{ new Intl.NumberFormat('pt-Br').format(km) }} km</div>
         <iPlate
             :plate="plate"
@@ -42,6 +42,7 @@
     </div>
 </template>
 <script>
+import { handleDate } from "@/common/utils";
 import iPlate from "./iPlate.vue";
 
 export default {
@@ -68,6 +69,7 @@ export default {
         del() {
             this.$emit("del", this.id);
         },
+        handleDate,
     }
 };
 </script>

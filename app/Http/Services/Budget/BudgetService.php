@@ -35,7 +35,7 @@ class BudgetService {
         $budgetStocksIds = [];
         
         foreach ($stocks as $stock) {
-            $stocksIds[] = $stock->id;
+            $stocksIds[] = $stock['id'];
         }
 
         foreach ($budgetStocks as $budgetStock) {
@@ -89,7 +89,7 @@ class BudgetService {
             $stocksIds[] = $el->stock;
         }
         return [
-            'stocks' => Stock::whereIn('id', $stocksIds)->get(),
+            'stocks' => Stock::whereIn('id', $stocksIds)->orderBy('id', 'asc')->get()->toArray(),
             'budgetStocks' => $budgetStocks
         ];
     }

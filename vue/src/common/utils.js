@@ -1,6 +1,7 @@
 import router from "@/router";
 import { methods, consts, endpoints } from "./consts";
 import { jwtDecode } from "jwt-decode";
+import { inject } from "vue";
 
 export function getUUID() {
     const id =
@@ -8,6 +9,41 @@ export function getUUID() {
             ? crypto.randomUUID()
             : String(Math.random()).replace(".", "");
     return "i" + id.substring(1);
+}
+
+export function formatCNPJ(CNPJ) {
+    return CNPJ.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+}
+
+export function formatCEP(CEP) {
+    return CEP.replace(/^(\d{5})(\d)/,"$1-$2");
+}
+
+export function formatField(value, limit) {
+    return value.length > limit ? value.slice(0, limit) + "..." : value;
+}
+
+export function renderFileReader(file) {
+    return new Promise((resolve, reject) => {
+        if (!file) return resolve();
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = () => resolve(fileReader.result);
+        fileReader.onerror = reject;
+    });
+}
+
+export function formatCPF(CPF) {
+    return CPF.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, "$1.$2.$3-$4");
+}
+
+export function formatCellphone(cellphone) {
+    return cellphone.replace(/(\d{2})(\d)(\d{4})/,"($1) $2$3-");
+}
+
+export function setup() {
+    const iChoice = inject("iChoice");
+    return { iChoice };
 }
 
 async function _api(url, method = methods.GET, body = null) {
@@ -217,5 +253,6 @@ export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {
     await sleep(100);
     if (errors.flat().filter(Boolean).length) return alert("Verifique os campos marcados e tente novamente");
     if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
-    ctx.$store.dispatch(`deliveryMod/${action}`, {...data, ...extra});
+    await ctx.$store.dispatch(`deliveryMod/${action}`, {...data, ...extra});
+    ctx.$store.commit("deliveryMod/storeBudget", {});
 }

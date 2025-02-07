@@ -1,8 +1,7 @@
 <template>
-    {{ name }}
     <div :class="[$style.external]">
         <div :class="$style.intermediary" :for="id">
-            <legend>{{ label }}</legend>
+            <legend v-show="label">{{ label }}</legend>
             <div :class="$style.internal">
                 <iSvg 
                     :src="require(`@/assets/icons/${icon}.svg`)"

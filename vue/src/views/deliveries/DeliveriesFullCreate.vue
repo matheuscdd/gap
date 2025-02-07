@@ -97,6 +97,7 @@
                     v-model="client.value"
                     :opts="clientsOpts"
                     @validate="verifyDelivery"
+                    :edit="true"
                 />
                 <iSelect
                     :opts="paymentStatusOpts"
@@ -216,63 +217,63 @@ export default {
             weight: "",
             extra: null
         }],
-        [mixins.data().delivery.keys.CLIENT]: {
+        [mixins.data().cDelivery.keys.CLIENT]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.INVOICE]: {
+        [mixins.data().cDelivery.keys.INVOICE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.DELIVERY_DATE]: {
+        [mixins.data().cDelivery.keys.DELIVERY_DATE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.DELIVERY_ADDRESS]: {
+        [mixins.data().cDelivery.keys.DELIVERY_ADDRESS]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.PROVIDER_NAME]: {
+        [mixins.data().cDelivery.keys.PROVIDER_NAME]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.PROVIDER_CITY]: {
+        [mixins.data().cDelivery.keys.PROVIDER_CITY]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.PAYMENT_DATE]: {
+        [mixins.data().cDelivery.keys.PAYMENT_DATE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.REVENUE]: {
+        [mixins.data().cDelivery.keys.REVENUE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.TRAVEL_COST]: {
+        [mixins.data().cDelivery.keys.TRAVEL_COST]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.UNLOADING_COST]: {
+        [mixins.data().cDelivery.keys.UNLOADING_COST]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.DRIVER]: {
+        [mixins.data().cDelivery.keys.DRIVER]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.RECEIPT_DATE]: {
+        [mixins.data().cDelivery.keys.RECEIPT_DATE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().delivery.keys.UNLOADED.THIS]: {
+        [mixins.data().cDelivery.keys.UNLOADED.THIS]: {
             errors: [],
             value: "carrier",
         },
-        [mixins.data().delivery.keys.PAYMENT_STATUS.THIS]: {
+        [mixins.data().cDelivery.keys.PAYMENT_STATUS.THIS]: {
             errors: [],
             value: "pending",
         },
-        [mixins.data().delivery.keys.PAYMENT_METHOD.THIS]: {
+        [mixins.data().cDelivery.keys.PAYMENT_METHOD.THIS]: {
             errors: [],
             value: "ticket",
         },
@@ -328,6 +329,7 @@ export default {
                 extra: null
             });
         },
+
         removeStock(id) {
             this.stocks = this.stocks.filter(el => el.id !== id);
         },
@@ -347,7 +349,17 @@ export default {
             .map(el => ({id: el.id, name:`${el.name} - ${el.CNPJ}`}));
         this.driversOpts = this.$store.state.driverMod.drivers
             .map(el => ({id: el.id, name:`${el.name} - ${el.CPF}`})); 
-    }
+
+        const budget = this.$store.state.deliveryMod.budget?.id ? structuredClone(this.$store.state.deliveryMod.budget) : null;
+        if (!budget) return;
+        this.stocks = budget.stocks;
+        Object
+            .values(this.cDelivery.keys)
+            .map(key => key?.THIS || key)
+            .filter(key => this[key])
+            .forEach(key => this[key].value = budget[key]);
+        this.travel_cost.value = budget.cost;
+    },
 };
 </script>
 <style scoped>

@@ -84,23 +84,23 @@ import iSearch from "@/components/common/iSearch.vue";
 
 export default {
     data: () => ({
-        [mixins.data().maintenance.keys.SERVICE]: {
+        [mixins.data().cMaintenance.keys.SERVICE]: {
             errors: [],
             value: ""
         },
-        [mixins.data().maintenance.keys.TRUCK]: {
+        [mixins.data().cMaintenance.keys.TRUCK]: {
             errors: [],
             value: ""
         },
-        [mixins.data().maintenance.keys.COST]: {
+        [mixins.data().cMaintenance.keys.COST]: {
             errors: [],
             value: "",
         },
-        [mixins.data().maintenance.keys.DATE]: {
+        [mixins.data().cMaintenance.keys.DATE]: {
             errors: [],
             value: "",
         },
-        [mixins.data().maintenance.keys.KM]: {
+        [mixins.data().cMaintenance.keys.KM]: {
             errors: [],
             value: "",
         },

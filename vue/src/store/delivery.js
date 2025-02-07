@@ -3,6 +3,7 @@ import { api, handleDate } from "@/common/utils";
 import router from "@/router";
 
 const getDefaultState = () => ({
+    budget: {},
     delivery: {},
     deliveries: [],
     partials: [],
@@ -41,6 +42,9 @@ export default {
         },
         storeDelivery(state, payload) {
             state.delivery = payload;
+        },
+        storeBudget(state, payload) {
+            state.budget = payload;
         },
         storePartials(state, payload) {
             state.partials = payload;

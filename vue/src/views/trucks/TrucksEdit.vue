@@ -57,15 +57,15 @@ import { getValues } from "@/common/utils";
 
 export default {
     data: () => ({
-        [mixins.data().truck.keys.PLATE]: {
+        [mixins.data().cTruck.keys.PLATE]: {
             errors: [],
             value: ""
         },
-        [mixins.data().truck.keys.AXIS]: {
+        [mixins.data().cTruck.keys.AXIS]: {
             errors: [],
             value: ""
         },
-        [mixins.data().truck.keys.PHOTO]: {
+        [mixins.data().cTruck.keys.PHOTO]: {
             errors: [],
             value: "",
             fakeValue: "",

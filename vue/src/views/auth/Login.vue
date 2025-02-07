@@ -9,7 +9,7 @@
                 :type="userForm.EMAIL.TYPE"
                 :name="userForm.EMAIL.NAME"
                 :errors="email.errors"
-                :maxlength="limits.user.email"
+                :maxlength="limits.user.email.max"
                 v-model="email.value"
                 @validate="verifyUser"
             />
@@ -20,7 +20,7 @@
                 :type="userForm.PASSWORD.TYPE"
                 :name="userForm.PASSWORD.NAME"
                 :errors="password.errors"
-                :maxlength="limits.user.password"
+                :maxlength="limits.user.password.max"
                 v-model="password.value"
                 @validate="verifyUser"
             />
@@ -51,11 +51,11 @@ export default {
         iInput,
     },
     data: () => ({
-        [mixins.data().user.keys.EMAIL]: {
+        [mixins.data().cUser.keys.EMAIL]: {
             value: "",
             errors: []
         },
-        [mixins.data().user.keys.PASSWORD]: {
+        [mixins.data().cUser.keys.PASSWORD]: {
             value: "",
             errors: []
         },

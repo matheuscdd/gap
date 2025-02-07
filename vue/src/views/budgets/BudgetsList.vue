@@ -41,6 +41,7 @@
                 :updatedAt="el.updated_at"
                 @del="del"
                 @edit="edit"
+                @view="view"
             />
         </ul>
         <div 
@@ -86,6 +87,9 @@ export default {
         edit(id) {
             this.$router.push(endpoints.routes.BUDGET_EDIT.replace(":id", id));
         },
+        view(id) {
+            this.$router.push(endpoints.routes.BUDGET_VIEW.replace(":id", id));
+        },
         del(id) {
             const continues = confirm("Tem certeza que deseja excluir esse orçamento?");
             if (!continues) return;
@@ -98,7 +102,7 @@ export default {
         }
     }
 };
-</script>2024-12-22 05:40:18.000
+</script>
 <style scoped>
 h1 {
     text-align: center;

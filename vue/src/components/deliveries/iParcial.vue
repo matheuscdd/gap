@@ -4,12 +4,12 @@
             <div class="container-internal">
                 <iInternal icon="file-contract-solid" :value="id" />
                 <iInternal icon="calendar-solid" :value="deliveryDate" />
-                <iInternal icon="map-solid" :value="formattedField(deliveryAddress, 20)" :title="deliveryAddress" />
+                <iInternal icon="map-solid" :value="formatField(deliveryAddress, 20)" :title="deliveryAddress" />
                 <iInternal
                     icon="dolly-solid"
                     :value="unloaded === 'client' ? 'Cliente' : 'Transportadora'"
                 />
-                <iInternal icon="user-solid" :value="formattedField(driver, 10)" :title="driver"/>
+                <iInternal icon="user-solid" :value="formatField(driver, 10)" :title="driver"/>
                 <iInternal icon="cart-flatbed-solid" :value="unloadingCost" />
                 <div class="btns">
                     <button
@@ -63,7 +63,7 @@
     </div>
 </template>
 <script>
-import { randomColor } from "@/common/utils";
+import { formatField, randomColor } from "@/common/utils";
 import iInternal from "./iInternal.vue";
 import iStock from "./iStock.vue";
 
@@ -100,9 +100,7 @@ export default {
             this.showStocks = false;
             this.$emit("focused", this.showStocks ? this.id : null);
         },
-        formattedField(value, limit) {
-            return value.length > limit ? value.slice(0, limit) + "..." : value;
-        }
+        formatField,
     }
 };
 </script>

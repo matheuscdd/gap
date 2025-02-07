@@ -36,7 +36,7 @@ import Plotly from "@aurium/vue-plotly";
       this.hiddenTotals[visible ? "delete" : "add"](traceIndex);
     },
     sum(arr) {
-      return arr.reduce((a, c) => a + c , 0).toLocaleString("pt-br", {style: "currency", currency: "BRL"});
+      return arr.reduce((a, c) => a + c , 0).toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
     }
    }
 };

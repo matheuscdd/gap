@@ -218,7 +218,7 @@ export default {
             return errors;
         },
         updateExtra() {
-            if (!this.width.trim() || !this.height.trim()) return;
+            if (!this.width?.trim() || !this.height?.trim()) return;
             this.$emit("update:extra", `${this.width}|${this.height}`);
         },
         verifyStock

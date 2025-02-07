@@ -53,7 +53,7 @@
             :key="el.id"
             :id="el.id"
             :client_name="$store.state.clientMod.clients.find(client => client.id === el.client).name"
-            :provider_city="el.provider_city"
+            :provider_city="formatField(el.provider_city, 20)"
             :receipt_date="el.receipt_date"
             :delivery_address="el.delivery_address"
             :revenue="el.revenue"
@@ -84,7 +84,7 @@ import { endpoints } from "@/common/consts";
 import iSearch from "@/components/common/iSearch.vue";
 import iCard from "@/components/deliveries/iFull.vue";
 import mixins from "@/common/mixins";
-import { itemgetter } from "@/common/utils";
+import { formatField, itemgetter } from "@/common/utils";
 
 export default {
     data: () => ({
@@ -141,7 +141,9 @@ export default {
                 .filter(el => this.id ? Number(this.id) === el.id : true)
                 .filter(el => this.status === "finished" ? el.finished : !el.finished)
                 .filter(el => this.client ? el.client === this.client : true);
-        }
+        },
+
+        formatField,
     }
 };
 </script>

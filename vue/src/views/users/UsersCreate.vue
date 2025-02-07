@@ -9,7 +9,7 @@
                 :type="userForm.NAME.TYPE"
                 :name="userForm.NAME.NAME"
                 :errors="name.errors"
-                :maxlength="limits.user.name"
+                :maxlength="limits.user.name.max"
                 v-model="name.value"
                 @validate="verifyUser"
             />
@@ -20,7 +20,7 @@
                 :type="userForm.EMAIL.TYPE"
                 :name="userForm.EMAIL.NAME"
                 :errors="email.errors"
-                :maxlength="limits.user.email"
+                :maxlength="limits.user.email.max"
                 v-model="email.value"
                 @validate="verifyUser"
             />
@@ -31,7 +31,7 @@
                 :type="userForm.PASSWORD.TYPE"
                 :name="userForm.PASSWORD.NAME"
                 :errors="password.errors"
-                :maxlength="limits.user.password"
+                :maxlength="limits.user.password.max"
                 v-model="password.value"
                 @validate="verifyUser"
             />
@@ -42,7 +42,7 @@
                 :type="userForm.CONFIRM_PASSWORD.TYPE"
                 :name="userForm.CONFIRM_PASSWORD.NAME"
                 :errors="confirmPassword.errors"
-                :maxlength="limits.user.password"
+                :maxlength="limits.user.password.max"
                 v-model="confirmPassword.value"
                 @validate="verifyUser"
             />
@@ -87,23 +87,23 @@ export default {
             },
         ],
 
-        [mixins.data().user.keys.EMAIL]: {
+        [mixins.data().cUser.keys.EMAIL]: {
             errors: [],
             value: ""
         },
-        [mixins.data().user.keys.NAME]: {
+        [mixins.data().cUser.keys.NAME]: {
             errors: [],
             value: ""
         },
-        [mixins.data().user.keys.PASSWORD]: {
+        [mixins.data().cUser.keys.PASSWORD]: {
             errors: [],
             value: ""
         },
-        [mixins.data().user.keys.CONFIRM_PASSWORD]: {
+        [mixins.data().cUser.keys.CONFIRM_PASSWORD]: {
             errors: [],
             value: ""
         },
-        [mixins.data().user.keys.TYPE.THIS]: {
+        [mixins.data().cUser.keys.TYPE.THIS]: {
             errors: [],
             value: "common",
         },

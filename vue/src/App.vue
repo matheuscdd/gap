@@ -4,25 +4,36 @@
     <section>
       <iAside/>
       <div>
+        <iChoice ref="iChoiceRef"/>
         <RouterView/>
       </div>
     </section>
     <footer>
-      Copyright © GAP 2024
+      Copyright © {{ CARRIER_PARCIAL_NAME }} {{ new Date().getFullYear() }}
     </footer>
   </main>
 </template>
-
 <script>
-import { endpoints } from "./common/consts";
+import { provide, ref } from "vue";
 import iAside from "./components/common/iAside.vue";
+import iChoice from "./components/common/iChoice.vue";
 import iHeader from "./components/common/iHeader.vue";
+
 
 export default {
   name: "App",
+  data: () => ({
+    CARRIER_PARCIAL_NAME: process.env.VUE_APP_CARRIER_PARCIAL_NAME,
+  }),
   components: {
     iAside,
-    iHeader
+    iHeader,
+    iChoice
+  },
+  setup() {
+    const iChoiceRef = ref(null);
+    provide("iChoice", iChoiceRef);
+    return { iChoiceRef };
   },
   beforeCreate() {
       if (!localStorage.getItem("token")) return;
@@ -68,5 +79,4 @@ section {
 div {
   width: 100%;
 }
-
 </style>

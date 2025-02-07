@@ -11,6 +11,9 @@ import InlineSvg from "vue-inline-svg";
 import "@/global/reset.css";
 import "@/global/global.css";
 import "@mdi/font/css/materialdesignicons.css";
+import VueHtml2Canvas from "vue-html2canvas";
+import _ from "regenerator-runtime"; // This import is necessary for html2canvas
+
 
 const vuetify = createVuetify({
     components: {
@@ -30,5 +33,6 @@ createApp(App)
     .use(router)
     .use(store)
     .use(vuetify)
+    .use(VueHtml2Canvas)
     .component("iSvg", InlineSvg)
     .mount("#app");

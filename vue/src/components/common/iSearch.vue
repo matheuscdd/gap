@@ -1,10 +1,10 @@
 <template>
-    <div :class="[$style.external, {[$style.focused]: focused}, {[$style.invalid]: empty || errors.length}]">
+    <div :class="[$style.external, {[$style.invalid]: errors.length}]">
         <div :class="$style.intermediary" @click="toggleOpen">
             <legend>{{ label }}</legend>
             <div :class="$style.internal">
                 <iSvg 
-                    :src="require(`@/assets/icons/${iconSelected || icon}.svg`)"
+                    :src="require(`@/assets/icons/${icon}.svg`)"
                     width="16" 
                     height="16"
                     fill="currentColor"
