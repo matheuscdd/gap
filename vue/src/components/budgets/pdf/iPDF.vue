@@ -265,7 +265,7 @@ export default {
                 format: "png",
                 x: 0,
                 y: 0,
-                compression: "NONE",
+                compression: "SLOW",
             });
             pdf.setProperties({
                 title: `${this.CARRIER_PARCIAL_NAME} - Orçamento Digital`,
