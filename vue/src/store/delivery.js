@@ -67,32 +67,32 @@ export default {
     actions: {
         async createFull(ctx, data) {
             const response = await api("/deliveries/full", methods.POST, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             router.push(endpoints.routes.DELIVERY_LIST);
         },
 
         async createPartial(ctx, data) {
             const response = await api("/deliveries/partial/" + data.id , methods.PUT, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             router.push(endpoints.routes.DELIVERY_VIEW_FULL.replace(":id", data.id));
         },
 
         async editFull(ctx, data) {
             const response = await api("/deliveries/full/" + data.id, methods.PATCH, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.commit("storeDelivery", response);
             router.push(endpoints.routes.DELIVERY_LIST);
         },
 
         async finishFull(ctx, id) {
             const response = await api("/deliveries/full/finish/" + id, methods.PATCH);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.dispatch("storeFull");
         },
 
         async finishPartial(ctx, id) {
             const response = await api("/deliveries/partial/finish/" + id, methods.PATCH);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.dispatch("storePartials", ctx.state.delivery.id);
         },
 
@@ -142,13 +142,13 @@ export default {
 
         async delFull(ctx, id) {
             const response = await api("/deliveries/full/" + id, methods.DELETE);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.dispatch("storeFull");
         },
 
         async delPartial(ctx, id) {
             const response = await api("/deliveries/partial/" + id, methods.DELETE);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.dispatch("storePartials", ctx.state.delivery.id);
         },
     }

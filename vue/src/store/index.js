@@ -9,6 +9,15 @@ import maintenanceMod from "./maintenance";
 import driverMod from "./driver";
 
 export default createStore({
+    state: {
+        iChoice: {}
+    },
+
+    mutations: {
+        setChoice(ctx, payload) {
+            ctx.iChoice = payload;
+        }
+    },
     modules: {
         userMod,
         clientMod,

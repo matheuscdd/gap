@@ -35,6 +35,16 @@ const routes = [
         component: () => import("@/views/users/UsersCreate.vue")
     },
     {
+        path: endpoints.routes.USER_PASSWORD_LOST,
+        name: endpoints.names.USER_PASSWORD_LOST,
+        component: () => import("@/views/users/UsersPasswordLost.vue")
+    },
+    {
+        path: endpoints.routes.USER_PASSWORD_RESET,
+        name: endpoints.names.USER_PASSWORD_RESET,
+        component: () => import("@/views/users/UsersPasswordReset.vue")
+    },
+    {
         path: endpoints.routes.CLIENT_CREATE,
         name: endpoints.names.CLIENT_CREATE,
         component: () => import("@/views/clients/ClientsCreate.vue")
@@ -163,22 +173,25 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
     const token = localStorage.getItem(consts.TOKEN);
-    const isLogin = to.path === endpoints.routes.LOGIN;
+    const userId = localStorage.getItem(consts.USER_ID);
+    const isLogin = to.name === endpoints.names.LOGIN;
     const path = !isLogin ? endpoints.routes.LOGIN : undefined;
+    const publicRoutes = [endpoints.names.USER_PASSWORD_LOST, endpoints.names.USER_PASSWORD_RESET];
+    
+    if (!token && publicRoutes.includes(to.name)) return next();
+
     if (!token) return next(path);
 
-    if (from.fullPath === endpoints.routes.DELIVERY_CREATE_FULL) {
+    if (from.name === endpoints.names.DELIVERY_CREATE_FULL) {
         store.commit("deliveryMod/storeBudget", {});
     }
 
     await refreshToken();
-    if (!localStorage.getItem(consts.TOKEN)) return next(path);
-    
     if (isLogin) return next(endpoints.routes.HOME);
 
-    const protectedRoutes = [endpoints.routes.USER_LIST, endpoints.routes.USER_EDIT, endpoints.routes.USER_CREATE];
-    if (!protectedRoutes.includes(to.path)) return next();
-    const userId = localStorage.getItem(consts.USER_ID);
+    const protectedRoutes = [endpoints.names.USER_LIST, endpoints.names.USER_EDIT, endpoints.names.USER_CREATE];
+    if (!protectedRoutes.includes(to.name)) return next();
+
     await store.dispatch("userMod/storeLogged", userId);
     if (store.state.userMod.logged.type !== cUser.keys.TYPE.ADMIN) return next(endpoints.routes.HOME);
     return next();

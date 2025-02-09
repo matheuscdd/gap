@@ -40,8 +40,8 @@ export default {
         iCard, 
     },
     methods: {
-        del(id) {
-            const continues = confirm("Tem certeza que deseja excluir?");
+        async del(id) {
+            const continues = await this.$store.state.iChoice.open("Tem certeza que deseja excluir?");
             if (!continues) return;
             this.$store.dispatch("driverMod/delDriver", id);
         },

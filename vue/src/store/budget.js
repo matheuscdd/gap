@@ -25,13 +25,13 @@ export default {
     actions: {
         async createBudget(ctx, data) {
             const response = await api("/budgets", methods.POST, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             router.push(endpoints.routes.BUDGET_LIST);
         },
 
         async editBudget(ctx, data) {
             const response = await api("/budgets/" + data.id, methods.PATCH, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.commit("storeBudget", response);
             router.push(endpoints.routes.BUDGET_LIST);
         },
@@ -56,7 +56,7 @@ export default {
 
         async delBudget(ctx, id) {
             const response = await api("/budgets/" + id, methods.DELETE);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.dispatch("storeBudgets");
         },
     }

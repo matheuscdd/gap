@@ -41,20 +41,20 @@ export default {
 
         async createTruck(ctx, data) {
             const response = await api("/trucks", methods.POST, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             router.push(endpoints.routes.GARAGE_LIST);
         },
 
         async editTruck(ctx, data) {
             const response = await api("/trucks/" + data.id, methods.PATCH, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.commit("storeTruck", response);
             router.push(endpoints.routes.GARAGE_LIST);
         },
 
         async delTruck(ctx, id) {
             const response = await api("/trucks/" + id, methods.DELETE);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.dispatch("storeTrucks");
         },
     }

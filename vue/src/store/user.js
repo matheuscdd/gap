@@ -36,23 +36,23 @@ export default {
     },
     actions: {
         async delUser(ctx, id) {
-            if (ctx.state.user.id === id) return alert("O usuário não pode excluir a si mesmo");
+            if (ctx.state.user.id === id) return ctx.rootState.iChoice.open("O usuário não pode excluir a si mesmo", true);
             const response = await api("/users/" + id, methods.DELETE);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.commit("storeUser", response);
             await ctx.dispatch("storeUsers");
         },
 
         async editUser(ctx, data) {
             const response = await api("/users/" + data.id, methods.PATCH, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.commit("storeUser", response);
             router.push(endpoints.routes.USER_LIST);
         },
 
         async createUser(ctx, data) {
             const response = await api("/users", methods.POST, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             router.push(endpoints.routes.USER_LIST);
         },
 
@@ -79,12 +79,26 @@ export default {
 
         async storeLogin(ctx, data) {
             const response = await api("/auth/login", methods.POST, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             const userId = jwtDecode(response.token).sub;
             localStorage.setItem(consts.TOKEN, response.token);
             localStorage.setItem(consts.USER_ID, userId);
             ctx.dispatch("storeLogged", userId);
             router.push(endpoints.routes.HOME);
-        }
+        },
+
+        async lostPassword(ctx, data) {
+            ctx.rootState.iChoice.open("Por favor aguarde enquanto o email é enviado", true);
+            const response = await api("/users/password/lost", methods.POST, data);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
+            await ctx.rootState.iChoice.open(response.msg, true);
+            router.push(endpoints.routes.LOGIN);
+        },
+
+        async resetPassword(ctx, data) {
+            const response = await api("/users/password/reset", methods.PUT, data);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
+            ctx.dispatch("storeLogin", { ...data, email: response.email });
+        },
     }
 };

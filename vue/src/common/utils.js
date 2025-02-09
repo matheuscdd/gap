@@ -41,11 +41,6 @@ export function formatCellphone(cellphone) {
     return cellphone.replace(/(\d{2})(\d)(\d{4})/,"($1) $2$3-");
 }
 
-export function setup() {
-    const iChoice = inject("iChoice");
-    return { iChoice };
-}
-
 async function _api(url, method = methods.GET, body = null) {
     const token = localStorage.getItem(consts.TOKEN);
     const request = {
@@ -185,8 +180,9 @@ export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
         )
     );
     await sleep(100);
-    if (errors.flat().filter(Boolean).length) return alert("Verifique os campos marcados e tente novamente");
-    if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
+    if (errors.flat().filter(Boolean).length) return this.$store.state.iChoice.open("Verifique os campos marcados e tente novamente", true);
+    const continues = await ctx.$store.state.iChoice.open("Esta operação não poderá ser desfeita. Deseja continuar?");
+    if (!continues) return;
     ctx.$store.dispatch(`budgetMod/${action}Budget`, {...data, ...extra});
 }
 
@@ -251,8 +247,9 @@ export async function prepareDataDelivery(ctx, action, verifyDelivery, extra = {
         )
     );
     await sleep(100);
-    if (errors.flat().filter(Boolean).length) return alert("Verifique os campos marcados e tente novamente");
-    if (!confirm("Esta operação não poderá ser desfeita. Deseja continuar?")) return;
+    if (errors.flat().filter(Boolean).length) return ctx.$store.state.iChoice.open("Verifique os campos marcados e tente novamente", true);
+    const continues = await ctx.$store.state.iChoice.open("Esta operação não poderá ser desfeita. Deseja continuar?");
+    if (!continues) return;
     await ctx.$store.dispatch(`deliveryMod/${action}`, {...data, ...extra});
     ctx.$store.commit("deliveryMod/storeBudget", {});
 }

@@ -1,18 +1,7 @@
 <template>
-    <h1>Login</h1>
-    <form @submit.prevent="login">
+    <h1>Redefinição de senha</h1>
+    <form @submit.prevent="reset">
         <section>
-            <iInput 
-                :label="userForm.EMAIL.LABEL"
-                :placeholder="userForm.EMAIL.PLACEHOLDER"
-                :icon="userForm.EMAIL.ICON"
-                :type="userForm.EMAIL.TYPE"
-                :name="userForm.EMAIL.NAME"
-                :errors="email.errors"
-                :maxlength="limits.user.email.max"
-                v-model="email.value"
-                @validate="verifyUser"
-            />
             <iInput 
                 :label="userForm.PASSWORD.LABEL"
                 :placeholder="userForm.PASSWORD.PLACEHOLDER"
@@ -24,18 +13,24 @@
                 v-model="password.value"
                 @validate="verifyUser"
             />
-            <div class="btns">
-                <RouterLink 
-                    class="bButton"
-                    :style="{backgroundColor: 'var(--gray-1)'}"
-                    :to="endpoints.routes.USER_PASSWORD_LOST"
-                >Recuperar senha</RouterLink> 
+            <iInput 
+                :label="userForm.CONFIRM_PASSWORD.LABEL"
+                :placeholder="userForm.CONFIRM_PASSWORD.PLACEHOLDER"
+                :icon="userForm.CONFIRM_PASSWORD.ICON"
+                :type="userForm.CONFIRM_PASSWORD.TYPE"
+                :name="userForm.CONFIRM_PASSWORD.NAME"
+                :errors="confirmPassword.errors"
+                :maxlength="limits.user.password.max"
+                v-model="confirmPassword.value"
+                @validate="verifyUser"
+            />
+            <div class="btn">
                 <button 
                     class="bButton"
                     type="submit"
-                    :style="{backgroundColor: 'var(--green-2)'}"
+                    :style="{backgroundColor: 'var(--yellow-1)'}"
                 >
-                    Entrar
+                    Resetar
                 </button>
             </div>
         </section>
@@ -48,37 +43,38 @@ import iInput from "@/components/common/iInput.vue";
 import { verifyUser } from "@/common/validators";
 import mixins from "@/common/mixins";
 import { getValues } from "@/common/utils";
-import { endpoints } from "@/common/consts";
-import { RouterLink } from "vue-router";
+import { consts } from "@/common/consts";
+
 
 
 export default {
     mixins: [mixins],
     components: {
         iInput,
-        RouterLink,
     },
     data: () => ({
-        endpoints,
-        [mixins.data().cUser.keys.EMAIL]: {
-            value: "",
-            errors: []
-        },
         [mixins.data().cUser.keys.PASSWORD]: {
-            value: "",
-            errors: []
+            errors: [],
+            value: ""
+        },
+        [mixins.data().cUser.keys.CONFIRM_PASSWORD]: {
+            errors: [],
+            value: ""
         },
     }),
     methods: {
-        login() {
-            const { email, password } = this;
-            const data = { email, password };
+        reset() {
+            const { password, confirmPassword } = this;
+            const data = { password, confirmPassword };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyUser(key, this)));
             if (errors.flat().filter(Boolean).length) return this.$store.state.iChoice.open("Ajuste os erros antes de continuar", true);
-            this.$store.dispatch("userMod/storeLogin", getValues(data));
+            this.$store.dispatch("userMod/resetPassword", {...getValues(data), key: this.$route.params.key});
         },
         verifyUser
+    },
+    mounted() {
+        console.log(this.$route.query.key);
     },
     beforeCreate() {
         window.scrollTo(0,0);
@@ -98,14 +94,9 @@ form {
     justify-content: center;
 }
 
-.btns {
+.btn {
     margin-top: 25px;
     display: flex;
     justify-content: center;
-    gap: 10px;
-}
-
-a {
-    text-decoration: none;
 }
 </style>

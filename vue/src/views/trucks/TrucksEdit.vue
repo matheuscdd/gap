@@ -77,14 +77,14 @@ export default {
         iInput
     },
     methods: {
-        edit() {
+        async edit() {
             const { plate, axis, photo } = this;
             const rawData = { plate, axis, photo };
             const errors = [];
             rawData.plate.value = rawData.plate.value.toUpperCase();
             Object.keys(rawData).forEach(key => errors.push(verifyTruck(key, this)));
-            if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
-            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (errors.flat().filter(Boolean).length) return this.$store.state.iChoice.open("Ajuste os erros antes de continuar", true);
+            const continues = await this.$store.state.iChoice.open("Esta operação não poderá ser desfeita. Deseja continuar?");
             if (!continues) return;
             const handleData = getValues(rawData);
             handleData.photo = handleData.photo || null;

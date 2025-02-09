@@ -83,7 +83,7 @@ class BudgetService {
     }
 
     private static function getStocks(int $id) {
-        $budgetStocks = BudgetStock::where(StocksKeysConstraints::BUDGET, $id)->get();
+        $budgetStocks = BudgetStock::where(StocksKeysConstraints::BUDGET, '=', $id)->get();
         $stocksIds = [];
         foreach ($budgetStocks as $el) {
             $stocksIds[] = $el->stock;

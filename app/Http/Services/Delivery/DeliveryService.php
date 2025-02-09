@@ -64,7 +64,7 @@ class DeliveryService {
     }
 
     public static function editFull(int $id, array $data) {
-        $hasPartials = Delivery::where(Keys::REF, $id)->count();
+        $hasPartials = Delivery::where(Keys::REF, '=', $id)->count();
         if ($hasPartials) {
             throw new AppError('Entregas que já possuem parciais não podem ser editadas', 403);
         }
@@ -162,7 +162,7 @@ class DeliveryService {
     }
 
     public static function listPartial(int $ref) {
-        $rawPartials = Delivery::where(Keys::REF, $ref);
+        $rawPartials = Delivery::where(Keys::REF, '=', $ref);
         if (!$rawPartials->count()) {
             throw new AppError('Não foram encontradas entregas parciais para essa entrega', 404);
         }
@@ -182,7 +182,7 @@ class DeliveryService {
         $delivery->updated_by = auth()->user()->id;
         $delivery->save();
 
-        $partials = Delivery::where(Keys::REF, $id)->get();
+        $partials = Delivery::where(Keys::REF, '=', $id)->get();
         foreach($partials as $partial) {
             $partial->finished = true;
             $partial->updated_by = auth()->user()->id;
@@ -271,7 +271,7 @@ class DeliveryService {
     }
 
     private static function getStocks(int $id) {
-        $deliveryStocks = DeliveryStock::where(Keys::DELIVERY, $id)->get();
+        $deliveryStocks = DeliveryStock::where(Keys::DELIVERY, '=', $id)->get();
         $stocksIds = [];
         foreach ($deliveryStocks as $el) {
             $stocksIds[] = $el->stock;
@@ -400,7 +400,7 @@ class DeliveryService {
         $startDate = date(Schema::DATE_SCHEMA, strtotime($request->query('start_date')));
         $endDate = date(Schema::DATE_SCHEMA, strtotime($request->query('end_date')));
         $deliveries = Delivery
-            ::where(Keys::FINISHED, true)
+            ::where(Keys::FINISHED, '=', true)
             ->where(Keys::REF, null)
             ->where(Keys::DELIVERY_DATE, '>=', $startDate)
             ->where(Keys::DELIVERY_DATE, '<=', $endDate)
@@ -573,7 +573,7 @@ class DeliveryService {
             throw new AppError("O tempo máximo para realizar a deleção após a criação é de $maxMinTime minutos", 423);
         }
 
-        $partials = Delivery::where(Keys::REF, $id)->get();
+        $partials = Delivery::where(Keys::REF, '=', $id)->get();
         if (count($partials)) {
             throw new AppError('Entregas com parciais associadas não podem ser deletadas', 409);
         }

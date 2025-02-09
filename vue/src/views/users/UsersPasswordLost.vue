@@ -1,18 +1,7 @@
 <template>
-    <h1>Editar Usuário</h1>
-    <form @submit.prevent="edit">
+    <h1>Recuperar senha</h1>
+    <form @submit.prevent="lost">
         <section>
-            <iInput 
-                :label="userForm.NAME.LABEL"
-                :placeholder="userForm.NAME.PLACEHOLDER"
-                :icon="userForm.NAME.ICON"
-                :type="userForm.NAME.TYPE"
-                :name="userForm.NAME.NAME"
-                :errors="name.errors"
-                :maxlength="limits.user.name.max"
-                v-model="name.value"
-                @validate="verifyUser"
-            />
             <iInput 
                 :label="userForm.EMAIL.LABEL"
                 :placeholder="userForm.EMAIL.PLACEHOLDER"
@@ -25,71 +14,50 @@
                 @validate="verifyUser"
             />
             <div class="btn">
+                
                 <button 
-                    class="bButton" 
+                    class="bButton"
                     type="submit"
                     :style="{backgroundColor: 'var(--green-2)'}"
                 >
-                Salvar
+                    Enviar
                 </button>
             </div>
         </section>
     </form>
+
 </template>
 
 <script>
-import mixins from "@/common/mixins";
 import iInput from "@/components/common/iInput.vue";
 import { verifyUser } from "@/common/validators";
+import mixins from "@/common/mixins";
 import { getValues } from "@/common/utils";
 
 
 export default {
     mixins: [mixins],
+    components: {
+        iInput,
+    },
     data: () => ({
         [mixins.data().cUser.keys.EMAIL]: {
-            errors: [],
-            value: ""
-        },
-        [mixins.data().cUser.keys.NAME]: {
-            errors: [],
-            value: ""
+            value: "",
+            errors: []
         },
     }),
-
-    components: { iInput },
-
-    mounted() {
-        this.fill();
-    },
-
     methods: {
-        async fill() {
-            const id = this.$route.params.id;
-            await this.$store.dispatch("userMod/storeUser", id);
-            const user = this.$store.state.userMod.user;
-            this.name.value = user.name;
-            this.email.value = user.email;
-        },
-
-        async edit() {
-            const { name, email } = this;
-            const data = { name, email };
+        lost() {
+            const data = { email: this.email };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyUser(key, this)));
             if (errors.flat().filter(Boolean).length) return this.$store.state.iChoice.open("Ajuste os erros antes de continuar", true);
-            const continues = await this.$store.state.iChoice.open("Esta operação não poderá ser desfeita. Deseja continuar?");
-            if (!continues) return;
-            this.$store.dispatch("userMod/editUser", {
-                ...getValues(data), 
-                id: this.$route.params.id
-            });
+            this.$store.dispatch("userMod/lostPassword", getValues(data));
         },
         verifyUser
     },
     beforeCreate() {
         window.scrollTo(0,0);
-        this.$store.dispatch("userMod/storeUsers");
     }
 };
 </script>

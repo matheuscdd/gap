@@ -110,13 +110,13 @@ export default {
     }),
     components: { iInput, iSelect },
     methods: {
-        create() {
+        async create() {
             const { type, email, name, password, confirmPassword } = this;
             const data = { type, email, name, password, confirmPassword };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyUser(key, this)));
-            if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
-            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (errors.flat().filter(Boolean).length) return this.$store.state.iChoice.open("Ajuste os erros antes de continuar", true);
+            const continues = await this.$store.state.iChoice.open("Esta operação não poderá ser desfeita. Deseja continuar?");
             if (!continues) return;
             this.$store.dispatch("userMod/createUser", getValues(data));
         },

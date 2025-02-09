@@ -3,7 +3,7 @@
         <img src="@/assets/common/brazil-white.png"/>
         <h6>{{ CARRIER_COMPLETE_NAME }} <span style="color: yellow; font-weight: 600;">(AMBIENTE DE TESTES)</span></h6>
         <span>{{ $store.state.userMod.logged.name }}</span>
-        <button @click="clean" v-show="this.$route.path !== endpoints.routes.LOGIN">
+        <button @click="clean" v-show="![endpoints.names.LOGIN, endpoints.names.USER_PASSWORD_LOST, endpoints.names.USER_PASSWORD_RESET ].includes(this.$route.name)">
             <iSvg 
                 :src="require('@/assets/icons/right-from-bracket-solid.svg')"
                 width="16" 

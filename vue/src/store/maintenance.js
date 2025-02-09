@@ -45,20 +45,20 @@ export default {
 
         async createMaintenance(ctx, data) {
             const response = await api("/maintenances", methods.POST, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             router.push(endpoints.routes.GARAGE_LIST);
         },
 
         async editMaintenance(ctx, data) {
             const response = await api("/maintenances/" + data.id, methods.PATCH, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.commit("storeMaintenance", response);
             router.push(endpoints.routes.GARAGE_LIST);
         },
 
         async delMaintenance(ctx, id) {
             const response = await api("/maintenances/" + id, methods.DELETE);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.dispatch("storeMaintenances");
         },
 
