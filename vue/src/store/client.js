@@ -41,20 +41,20 @@ export default {
 
         async createClient(ctx, data) {
             const response = await api("/clients", methods.POST, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.iChoice.open(response.error, true);
             router.push(endpoints.routes.CLIENT_LIST);
         },
 
         async editClient(ctx, data) {
             const response = await api("/clients/" + data.id, methods.PATCH, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.iChoice.open(response.error, true);
             ctx.commit("storeClient", response);
             router.push(endpoints.routes.CLIENT_LIST);
         },
 
         async delClient(ctx, id) {
             const response = await api("/clients/" + id, methods.DELETE);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.iChoice.open(response.error, true);
             ctx.dispatch("storeClients");
         },
     }

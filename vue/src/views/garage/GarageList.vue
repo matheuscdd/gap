@@ -95,13 +95,13 @@ export default {
         RouterLink,
     },
     methods: {
-        delTruck(id) {
-            const continues = confirm("Tem certeza que deseja excluir?");
+        async delTruck(id) {
+            const continues = await this.$store.state.iChoice.open("Tem certeza que deseja excluir?");
             if (!continues) return;
             this.$store.dispatch("truckMod/delTruck", id);
         },
-        delMaintenance(id) {
-            const continues = confirm("Tem certeza que deseja excluir?");
+        async delMaintenance(id) {
+            const continues = await this.$store.state.iChoice.open("Tem certeza que deseja excluir?");
             if (!continues) return;
             this.$store.dispatch("maintenanceMod/delMaintenance", id);
             

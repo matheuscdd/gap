@@ -1,6 +1,6 @@
 <template>
-    <div class="aside-space" v-show="this.$route.name !== endpoints.names.LOGIN"></div>
-    <aside v-show="this.$route.name !== endpoints.names.LOGIN">
+    <div class="aside-space" v-show="showAside()"></div>
+    <aside v-show="showAside()">
         <div class="container">
             <h2>Índice</h2>
             <ul>
@@ -138,10 +138,11 @@ import { RouterLink } from "vue-router";
 export default {
     data: () => ({
         endpoints,
-        user
+        user,
+        
     }),
     components: {
-        RouterLink
+        RouterLink,
     },
     methods: {
         setColor(name) {
@@ -149,6 +150,9 @@ export default {
         },
         isInPage(name) {
             return this.$route.name === name;
+        },
+        showAside() {
+            return ![endpoints.names.LOGIN, endpoints.names.USER_PASSWORD_LOST, endpoints.names.USER_PASSWORD_RESET ].includes(this.$route.name);
         }
     }
 };

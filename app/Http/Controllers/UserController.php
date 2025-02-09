@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Request;
-use App\Http\Requests\User\{CreateUserRequest, DelUserRequest, EditUserRequest, ListUserRequest};
+use App\Http\Requests\User\{CreateUserRequest, DelUserRequest, EditUserRequest, ListUserRequest, ResetPasswordRequest, LostPasswordRequest};
 use App\Http\Services\User\UserService;
 
 class UserController extends Controller {
@@ -25,5 +25,13 @@ class UserController extends Controller {
 
     public function list(ListUserRequest $request) {
         return UserService::list();
+    }
+
+    public function lostPassword(LostPasswordRequest $request) {
+        return UserService::lostPassword($request->all());
+    }
+
+    public function resetPassword(ResetPasswordRequest $request) {
+        return UserService::resetPassword($request->validated());
     }
 }

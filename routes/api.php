@@ -24,80 +24,84 @@ use \App\Http\Middlewares\{
     DriverMiddleware,
 };
 
-Route::group([
-    'prefix' => 'auth'
-], function() {
+Route::prefix('auth')->group(function() {
     Route::post('/login', [AuthController::class, 'login']);
     Route::put('/refresh', [AuthController::class, 'refresh']);
 });
 
-Route::middleware([JWTMiddleware::class, UserMiddleware::class])->group(function() {
-    Route::post('/users', [UserController::class, 'create']);
-    Route::get('/users', [UserController::class, 'list']);
-    Route::get('/users/{id}', [UserController::class, 'find']);
-    Route::patch('/users/{id}', [UserController::class, 'edit']);
-    Route::delete('/users/{id}', [UserController::class, 'del']);
+Route::prefix('users')->group(function() {
+    Route::post('/password/lost', [UserController::class, 'lostPassword']);
+    Route::put('/password/reset', [UserController::class, 'resetPassword']);
 });
 
-Route::middleware([JWTMiddleware::class, ClientMiddleware::class])->group(function() {
-    Route::post('/clients', [ClientController::class, 'create']);
-    Route::get('/clients', [ClientController::class, 'list']);
-    Route::get('/clients/{id}', [ClientController::class, 'find']);
-    Route::patch('/clients/{id}', [ClientController::class, 'edit']);
-    Route::delete('/clients/{id}', [ClientController::class, 'del']);
+Route::prefix('users')->middleware([JWTMiddleware::class, UserMiddleware::class])->group(
+    function() {
+    Route::post('/', [UserController::class, 'create']);
+    Route::get('/', [UserController::class, 'list']);
+    Route::get('/{id}', [UserController::class, 'find']);
+    Route::patch('/{id}', [UserController::class, 'edit']);
+    Route::delete('/{id}', [UserController::class, 'del']);
 });
 
-Route::middleware([JWTMiddleware::class, StockTypeMiddleware::class])->group(function() {
-    Route::post('/stock_type', [StockTypeController::class, 'create']);
-    Route::get('/stock_type', [StockTypeController::class, 'list']);
-    Route::patch('/stock_type/{id}', [StockTypeController::class, 'edit']);
+Route::prefix('clients')->middleware([JWTMiddleware::class, ClientMiddleware::class])->group(function() {
+    Route::post('/', [ClientController::class, 'create']);
+    Route::get('/', [ClientController::class, 'list']);
+    Route::get('/{id}', [ClientController::class, 'find']);
+    Route::patch('/{id}', [ClientController::class, 'edit']);
+    Route::delete('/{id}', [ClientController::class, 'del']);
 });
 
-Route::middleware([JWTMiddleware::class, BudgetMiddleware::class])->group(function() {
-    Route::post('/budgets', [BudgetController::class, 'create']);
-    Route::get('/budgets', [BudgetController::class, 'list']);
-    Route::get('/budgets/{id}', [BudgetController::class, 'find']);
-    Route::patch('/budgets/{id}', [BudgetController::class, 'edit']);
-    Route::delete('/budgets/{id}', [BudgetController::class, 'del']);
+Route::prefix('stock_type')->middleware([JWTMiddleware::class, StockTypeMiddleware::class])->group(function() {
+    Route::post('/', [StockTypeController::class, 'create']);
+    Route::get('/', [StockTypeController::class, 'list']);
+    Route::patch('/{id}', [StockTypeController::class, 'edit']);
 });
 
-Route::middleware([JWTMiddleware::class, DeliveryMiddleware::class])->group(function() {
-    Route::post('/deliveries/full', [DeliveryController::class, 'createFull']);
-    Route::get('/deliveries/full', [DeliveryController::class, 'listFull']);
-    Route::get('/deliveries/full/{id}', [DeliveryController::class, 'findFull']);
-    Route::delete('/deliveries/full/{id}', [DeliveryController::class, 'delFull']);
-    Route::patch('/deliveries/full/finish/{id}', [DeliveryController::class, 'finishFull']);
-    Route::patch('/deliveries/full/{id}', [DeliveryController::class, 'editFull']);
-    Route::put('/deliveries/partial/{id}', [DeliveryController::class, 'createPartial']);
-    Route::get('/deliveries/partial/{id}', [DeliveryController::class, 'listPartial']);
-    Route::delete('/deliveries/partial/{id}', [DeliveryController::class, 'delPartial']);
-    Route::patch('/deliveries/partial/finish/{id}', [DeliveryController::class, 'finishPartial']);
-    Route::get('/deliveries/calendar', [DeliveryController::class, 'calendar']);
-    Route::get('/deliveries/charts/treemap', [DeliveryController::class, 'chartsTreemap']);
-    Route::get('/deliveries/charts/scatter', [DeliveryController::class, 'chartsScatter']);
+Route::prefix('budgets')->middleware([JWTMiddleware::class, BudgetMiddleware::class])->group(function() {
+    Route::post('/', [BudgetController::class, 'create']);
+    Route::get('/', [BudgetController::class, 'list']);
+    Route::get('/{id}', [BudgetController::class, 'find']);
+    Route::patch('/{id}', [BudgetController::class, 'edit']);
+    Route::delete('/{id}', [BudgetController::class, 'del']);
 });
 
-Route::middleware([JWTMiddleware::class, TruckMiddleware::class])->group(function() {
-    Route::post('/trucks', [TruckController::class, 'create']);
-    Route::get('/trucks', [TruckController::class, 'list']);
-    Route::patch('/trucks/{id}', [TruckController::class, 'edit']);
-    Route::get('/trucks/{id}', [TruckController::class, 'find']);
-    Route::delete('/trucks/{id}', [TruckController::class, 'del']);
+Route::prefix('deliveries')->middleware([JWTMiddleware::class, DeliveryMiddleware::class])->group(function() {
+    Route::post('/full', [DeliveryController::class, 'createFull']);
+    Route::get('/full', [DeliveryController::class, 'listFull']);
+    Route::get('/full/{id}', [DeliveryController::class, 'findFull']);
+    Route::delete('/full/{id}', [DeliveryController::class, 'delFull']);
+    Route::patch('/full/finish/{id}', [DeliveryController::class, 'finishFull']);
+    Route::patch('/full/{id}', [DeliveryController::class, 'editFull']);
+    Route::put('/partial/{id}', [DeliveryController::class, 'createPartial']);
+    Route::get('/partial/{id}', [DeliveryController::class, 'listPartial']);
+    Route::delete('/partial/{id}', [DeliveryController::class, 'delPartial']);
+    Route::patch('/partial/finish/{id}', [DeliveryController::class, 'finishPartial']);
+    Route::get('/calendar', [DeliveryController::class, 'calendar']);
+    Route::get('/charts/treemap', [DeliveryController::class, 'chartsTreemap']);
+    Route::get('/charts/scatter', [DeliveryController::class, 'chartsScatter']);
 });
 
-Route::middleware([JWTMiddleware::class, MaintenanceMiddleware::class])->group(function() {
-    Route::post('/maintenances', [MaintenanceController::class, 'create']);
-    Route::get('/maintenances', [MaintenanceController::class, 'list']);
-    Route::patch('/maintenances/{id}', [MaintenanceController::class, 'edit']);
-    Route::get('/maintenances/{id}', [MaintenanceController::class, 'find']);
-    Route::delete('/maintenances/{id}', [MaintenanceController::class, 'del']);
-    Route::get('/maintenances/charts/scatter', [MaintenanceController::class, 'chartsScatter']);
+Route::prefix('trucks')->middleware([JWTMiddleware::class, TruckMiddleware::class])->group(function() {
+    Route::post('/', [TruckController::class, 'create']);
+    Route::get('/', [TruckController::class, 'list']);
+    Route::patch('/{id}', [TruckController::class, 'edit']);
+    Route::get('/{id}', [TruckController::class, 'find']);
+    Route::delete('/{id}', [TruckController::class, 'del']);
 });
 
-Route::middleware([JWTMiddleware::class, DriverMiddleware::class])->group(function() {
-    Route::post('/drivers', [DriverController::class, 'create']);
-    Route::get('/drivers', [DriverController::class, 'list']);
-    Route::patch('/drivers/{id}', [DriverController::class, 'edit']);
-    Route::get('/drivers/{id}', [DriverController::class, 'find']);
-    Route::delete('/drivers/{id}', [DriverController::class, 'del']);
+Route::prefix('maintenances')->middleware([JWTMiddleware::class, MaintenanceMiddleware::class])->group(function() {
+    Route::post('/', [MaintenanceController::class, 'create']);
+    Route::get('/', [MaintenanceController::class, 'list']);
+    Route::patch('/{id}', [MaintenanceController::class, 'edit']);
+    Route::get('/{id}', [MaintenanceController::class, 'find']);
+    Route::delete('/{id}', [MaintenanceController::class, 'del']);
+    Route::get('/charts/scatter', [MaintenanceController::class, 'chartsScatter']);
+});
+
+Route::prefix('drivers')->middleware([JWTMiddleware::class, DriverMiddleware::class])->group(function() {
+    Route::post('/', [DriverController::class, 'create']);
+    Route::get('/', [DriverController::class, 'list']);
+    Route::patch('/{id}', [DriverController::class, 'edit']);
+    Route::get('/{id}', [DriverController::class, 'find']);
+    Route::delete('/{id}', [DriverController::class, 'del']);
 });

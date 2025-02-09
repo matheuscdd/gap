@@ -28,7 +28,6 @@ import iCard from "@/components/users/iCard.vue";
 import mixins from "@/common/mixins";
 import { endpoints } from "@/common/consts";
 
-
 export default {
     mixins: [mixins],
     beforeCreate() {
@@ -39,8 +38,8 @@ export default {
         iCard, 
     },
     methods: {
-        del(id) {
-            const continues = confirm("Tem certeza que deseja excluir?");
+        async del(id) {
+            const continues = await this.$store.state.iChoice.open("Tem certeza que deseja excluir?");
             if (!continues) return;
             this.$store.dispatch("userMod/delUser", id);
         },

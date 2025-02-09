@@ -61,7 +61,7 @@ class LoadDatabase extends Command {
         $hmac = substr($rawData, $ivlen, $sha2len=32);
         $encryptedContent = substr($rawData, $ivlen+$sha2len);
         $decryptedContent = openssl_decrypt($encryptedContent, $cipher, $key, OPENSSL_RAW_DATA, $iv);
-        $calcmac = hash_hmac('sha256', $encryptedContent, $key, true);
+        $calcmac = hash_hmac('sha256', $decryptedContent, $key, true);
         if (!hash_equals($hmac, $calcmac)) return null;
         return $decryptedContent;
     }

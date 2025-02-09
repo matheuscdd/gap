@@ -30,8 +30,8 @@ class DumpDatabase extends Command {
             array_map([$this, 'encryptRSA'], str_split($content, 50))
         );
         $rsaStep = "$integrityCode1%$contents";
+        $integrityCode2 = $this->getHashSha256($rsaStep);
         $rawDataAES256CBC = $this->encryptAES256CBC($rsaStep);
-        $integrityCode2 = $this->getHashSha256($rawDataAES256CBC['content']);
         $AES256CBCStep = base64_encode($rawDataAES256CBC['iv'].$integrityCode2.$rawDataAES256CBC['content']);
         return $AES256CBCStep;
     }

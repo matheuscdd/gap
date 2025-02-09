@@ -269,6 +269,10 @@ import { handleDate } from "@/common/utils";
 // TODO - fazer função global para as conversões de moeda e data
 export default {
     data: () => ({
+        editor: {},
+        creator: {},
+        driver: {},
+        client: {},
         delivery: {},
         partials: [],
         focus: null,
@@ -287,13 +291,13 @@ export default {
         focused(id) {
             this.focus = id;
         },
-        del(id) {
-            const continues = confirm("Tem certeza que deseja excluir essa entrega?");
+        async del(id) {
+            const continues = await this.$store.state.iChoice.open("Tem certeza que deseja excluir essa entrega?");
             if (!continues) return;
             this.$store.dispatch("deliveryMod/delPartial", id);
         },
         async finish(id) {
-            const continues = confirm(`Tem certeza qud deseja finalizar essa entrega parcial de número ${id}? Essa ação não poderá ser desfeita`);
+            const continues = await this.$store.state.iChoice.open(`Tem certeza qud deseja finalizar essa entrega parcial de número ${id}? Essa ação não poderá ser desfeita`);
             if (!continues) return;
             await this.$store.dispatch("deliveryMod/finishPartial", id);
         },

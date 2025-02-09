@@ -42,8 +42,8 @@ export default {
     },
 
     methods: {
-        del(id) {
-            const continues = confirm("Tem certeza que deseja tentar excluir esse cliente? Caso ele já esteja sendo utilizado no sistema não será possível");
+        async del(id) {
+            const continues = await this.$store.state.iChoice.open("Tem certeza que deseja tentar excluir esse cliente? Caso ele já esteja sendo utilizado no sistema não será possível");
             if (!continues) return;
             this.$store.dispatch("clientMod/delClient", id);
         },

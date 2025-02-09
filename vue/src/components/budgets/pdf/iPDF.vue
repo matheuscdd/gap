@@ -204,97 +204,35 @@
 </template>
 <script>
 import mixins from "@/common/mixins";
-import { jsPDF } from "jspdf";
 import iField from "./iField.vue";
-import { formatCellphone, formatCEP, formatCNPJ, handleDate, itemgetter, renderFileReader, sleep, setup } from "@/common/utils";
+import { formatCellphone, formatCEP, formatCNPJ, handleDate, itemgetter } from "@/common/utils";
 import iStock from "./iStock.vue";
 
 export default {
-    data: () => ({
-        budget: {},
-        client: {},
-        logo: "",
-        generating: false,
-        CARRIER_CEP: process.env.VUE_APP_CARRIER_CEP,
-        CARRIER_TELEPHONE: process.env.VUE_APP_CARRIER_TELEPHONE,
-        CARRIER_CELLPHONE: process.env.VUE_APP_CARRIER_CELLPHONE,
-        CARRIER_ADDRESS: process.env.VUE_APP_CARRIER_ADDRESS,
-        CARRIER_CNPJ: process.env.VUE_APP_CARRIER_CNPJ,
-        CARRIER_COMPLETE_NAME: process.env.VUE_APP_CARRIER_COMPLETE_NAME,
-        CARRIER_PARCIAL_NAME: process.env.VUE_APP_CARRIER_PARCIAL_NAME,
-    }),
     components: {
         iField,
         iStock,
     },
     props: [
+        "logo",
+        "generating",
+        "CARRIER_CEP",
+        "CARRIER_TELEPHONE",
+        "CARRIER_CELLPHONE",
+        "CARRIER_ADDRESS",
+        "CARRIER_CNPJ",
+        "CARRIER_COMPLETE_NAME",
+        "CARRIER_PARCIAL_NAME",
     ],
     mixins: [mixins],
-    setup,
     methods: {
-        async generate() {
-            this.iChoice.open(
-                "Seu PDF está sendo gerado. Por favor, aguarde...",
-                true,
-            );
-            this.generating = true;
-            const container = this.$refs.container;
-            const dimensions = {
-                width: 1240,
-                height: 1840,
-                page: "a4",
-                unit: "px",
-                orientation: "p",
-            };
-            const img = await this.$html2canvas(container, { 
-                width: dimensions.width,
-                height: dimensions.height,
-                type: "dataURL",  
-                scale: 2
-            });
-
-            const pdf = new jsPDF(
-                dimensions.orientation,
-                dimensions.unit,
-                dimensions.page,
-            );
-            pdf.addImage({
-                imageData: img,
-                width: 1240 / 2.78,
-                height: 1840 / 2.9,
-                format: "png",
-                x: 0,
-                y: 0,
-                compression: "SLOW",
-            });
-            pdf.setProperties({
-                title: `${this.CARRIER_PARCIAL_NAME} - Orçamento Digital`,
-                author: this.CARRIER_PARCIAL_NAME,
-                subject: `Orçamento Nº ${this.$route.params.id}`,
-                keywords: `PDF, orçamento, ${this.CARRIER_PARCIAL_NAME}`,
-                creator: this.CARRIER_PARCIAL_NAME,
-                producer: "jsPDF",
-                creationDate: this.$store.state.budgetMod.budget.created_at.toLocaleString("pt-BR"),
-            });
-            pdf.save(`orçamento_${this.$store.state.budgetMod.budget.id}.pdf`);
-            this.generating = false;
-            this.iChoice.update("Seu PDF já está disponível!");
-            await sleep(1000);
-            this.iChoice.cancel();
-        },
+        
         handleDate,
         itemgetter,
         formatCellphone,
         formatCNPJ,
         formatCEP,
     },
-    async beforeCreate() {
-        const path = require("@/assets/common/brazil-green.png");
-        const response = await fetch(path);
-        const bin = await response.blob();
-        const img = await renderFileReader(bin);
-        this.logo = img;
-    }
 };
 </script>
 <style scoped>

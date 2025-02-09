@@ -32,7 +32,6 @@
 import { endpoints } from "@/common/consts";
 
 
-
 export default {
     data: () => ({
 

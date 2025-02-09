@@ -90,8 +90,8 @@ export default {
         view(id) {
             this.$router.push(endpoints.routes.BUDGET_VIEW.replace(":id", id));
         },
-        del(id) {
-            const continues = confirm("Tem certeza que deseja excluir esse orçamento?");
+        async del(id) {
+            const continues = await this.$store.state.iChoice.open("Tem certeza que deseja excluir esse orçamento?");
             if (!continues) return;
             this.$store.dispatch("budgetMod/delBudget", id);
         },

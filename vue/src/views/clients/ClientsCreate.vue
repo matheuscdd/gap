@@ -105,13 +105,13 @@ export default {
         iInput
     },
     methods: {
-        create() {
+        async create() {
             const { CNPJ, CEP, name, address, cellphone } = this;
             const data = { CNPJ, CEP, name, address, cellphone };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyClient(key, this)));
-            if (errors.flat().filter(Boolean).length) return alert("Ajuste os erros antes de continuar");
-            const continues = confirm("Esta operação não poderá ser desfeita. Deseja continuar?");
+            if (errors.flat().filter(Boolean).length) return this.$store.state.iChoice.open("Ajuste os erros antes de continuar", true);
+            const continues = await this.$store.state.iChoice.open("Esta operação não poderá ser desfeita. Deseja continuar?");
             if (!continues) return;
             this.$store.dispatch("clientMod/createClient", getValues(data));
         },

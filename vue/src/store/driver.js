@@ -41,20 +41,20 @@ export default {
 
         async createDriver(ctx, data) {
             const response = await api("/drivers", methods.POST, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             router.push(endpoints.routes.DRIVER_LIST);
         },
 
         async editDriver(ctx, data) {
             const response = await api("/drivers/" + data.id, methods.PATCH, data);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.commit("storeDriver", response);
             router.push(endpoints.routes.DRIVER_LIST);
         },
 
         async delDriver(ctx, id) {
             const response = await api("/drivers/" + id, methods.DELETE);
-            if (response.error) return alert(response.error);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
             ctx.dispatch("storeDrivers");
         },
     }

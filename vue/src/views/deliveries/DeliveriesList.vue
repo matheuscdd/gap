@@ -99,7 +99,6 @@ export default {
         iCard,
         iSearch,
     },
-
     async beforeCreate() {
         window.scrollTo(0,0);
         await Promise.all([
@@ -110,10 +109,9 @@ export default {
         this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, name:`${el.name} - ${el.CNPJ}`}));
         this.idsOpts = this.$store.state.deliveryMod.deliveries.map(itemgetter("id")).map(String).map(id => ({id: id, name:id}));
     },
-
     methods: {
-        del(id) {
-            const continues = confirm("Tem certeza que deseja excluir essa entrega?");
+        async del(id) {
+            const continues = await this.$store.state.iChoice.open("Tem certeza que deseja excluir essa entrega?");
             if (!continues) return;
             this.$store.dispatch("deliveryMod/delFull", id);
         },
@@ -123,7 +121,7 @@ export default {
         },
 
         async finish(id) {
-            const continues = confirm("Tem certeza qud deseja finalizar essa entrega e todas as suas parciais caso existam? Essa ação não poderá ser desfeita");
+            const continues = await this.$store.state.iChoice.open("Tem certeza qud deseja finalizar essa entrega e todas as suas parciais caso existam? Essa ação não poderá ser desfeita");
             if (!continues) return;
             await this.$store.dispatch("deliveryMod/finishFull", id);
         },
