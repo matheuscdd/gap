@@ -13,6 +13,7 @@ class DumpDatabase extends Command {
     private const FOLDER = 'backups/';
 
     public function handle() {
+        if (!is_dir(self::FOLDER)) mkdir(self::FOLDER);
         $sqlDump = $this->getSqlDump();
         if (!$sqlDump) return;
         $this->sendGitHub($sqlDump);

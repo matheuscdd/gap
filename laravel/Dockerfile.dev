@@ -1,0 +1,21 @@
+FROM php:8.3.10
+
+ARG POSTGRES_VERSION=15
+
+WORKDIR /app
+COPY . /app
+
+RUN apt-get update -y && apt-get install -y openssl zip unzip cron libpq-dev postgresql-client-$POSTGRES_VERSION \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && docker-php-ext-install pdo pdo_pgsql \
+    && php -m | grep mbstring \
+    && chmod +x docker-entrypoint.sh \
+    && echo '* * * * * /app/scheduler.sh >> /dev/null 2>&1' | crontab - 
+    
+RUN composer install \
+    && rm -rf /var/lib/apt/lists/* \
+    && service cron start 
+
+ENTRYPOINT ["./docker-entrypoint.sh"]
+
+EXPOSE 80

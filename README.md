@@ -27,7 +27,7 @@ alias gdevres="docker compose -f docker-compose.dev.yml stop && docker compose -
 alias gprodres="docker compose -f docker-compose.prod.yml stop && docker compose -f docker-compose.prod.yml up"
 ```
 
-# Atualizações no certbot
+# Atualizações de versão do certbot
 * No arquivo `nginx/Dockerfile.prod` , troque `nginx.https` por `nginx.http`, isso deve ser feito para resetar as configurações certbot
 * Instale o certbot e o certificado na mão 
 ```
@@ -50,9 +50,3 @@ docker exec -it gap-prod-nginx-1 cat /etc/nginx/nginx.conf
 ```
 
 * No arquivo `nginx/Dockerfile.prod` , agora troque `nginx.http` por `nginx.https`, isso deve ser feito para inserir as novas configurações do certbot
-
-# Crontab
-
-```
-printenv | grep -Ev "^SUPERVISOR_PHP_COMMAND|^LESSCLOSE|^LS_COLORS|^LESSOPEN" > /var/www/html/.env.cron && apt update && apt-get install cron -y && echo '* * * * * /var/www/html/scheduler.sh >> /dev/null 2>&1' | crontab - && service cron start
-```
