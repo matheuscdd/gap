@@ -1,6 +1,6 @@
 <template>
     <div class="aside-space" v-show="showAside()"></div>
-    <aside v-show="showAside()">
+    <aside v-if="showAside()">
         <div class="container">
             <h2>Índice</h2>
             <ul>

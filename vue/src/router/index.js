@@ -187,7 +187,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     await refreshToken();
-    if (isLogin) return next(endpoints.routes.HOME);
+    if (isLogin || publicRoutes.includes(to.name)) return next(endpoints.routes.HOME);
 
     const protectedRoutes = [endpoints.names.USER_LIST, endpoints.names.USER_EDIT, endpoints.names.USER_CREATE];
     if (!protectedRoutes.includes(to.name)) return next();

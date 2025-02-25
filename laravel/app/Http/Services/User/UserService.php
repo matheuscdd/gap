@@ -93,7 +93,7 @@ class UserService {
 
     private static function decryptContent($rawestData) {
         $secret = env('PRIVATE_KEY_256');
-        $isEncoded = !str_contains($rawestData, '+');
+        $isEncoded = str_contains($rawestData, '%');
         $rawData = base64_decode($isEncoded ? urldecode($rawestData) : $rawestData);
         $ivlen = openssl_cipher_iv_length($cipher='AES-256-CBC');
         $iv = substr($rawData, 0, $ivlen);
