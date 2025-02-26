@@ -1,0 +1,29 @@
+name: WorkFlow Main
+# esse on seria a mesma coisa que um gatilho para disparar
+on: pull_request
+
+# as tarefas são chamadas de  jobs
+jobs:
+  # aqui pode ser qualquer nome
+  abobrinha:
+    # versão do computador testado
+    runs-on: ubuntu-latest
+    steps:  
+      # são parte para dar instrução para a pessoa que está fazendo
+      - name: Checkout 
+        # o uses pega outros projetos do github
+        # no caso, ele está pegando uma para já fazer todas as conexões com o git
+        uses: actions/checkout@v3
+        # nome_da_organização/nome_do_repositório@nome_da_branch
+      - name: Using Node
+        # instalação do node
+        uses: actions/setup-node@v3
+        with:
+          # consigo especificar a versão
+          node-version: 18.
+      - name: Install dependencies
+        # como não vou baixar nada externo, utilizo o run
+        run: npm install
+        # aqui rodo o meu testes
+      - name: Run Tests
+        run: npm run test
