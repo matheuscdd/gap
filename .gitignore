@@ -1,6 +1,7 @@
 /.phpunit.cache
 node_modules/
 vendor/
+bootstrap/
 /public/build
 /public/hot
 /public/storage
