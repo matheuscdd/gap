@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-
+#
 # SSL requirements
 source .env
 readonly curPath=$(pwd)
