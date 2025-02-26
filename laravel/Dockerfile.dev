@@ -13,8 +13,7 @@ RUN apt-get update -y && apt-get install -y openssl zip unzip cron libpq-dev pos
     && echo '* * * * * /app/scheduler.sh >> /dev/null 2>&1' | crontab - 
     
 RUN composer install \
-    && rm -rf /var/lib/apt/lists/* \
-    && service cron start 
+    && rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
 
