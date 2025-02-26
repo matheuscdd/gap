@@ -1,0 +1,48 @@
+name: Test Production
+
+on:
+    pull_request:
+        branches: [main]
+    workflow_dispatch:
+
+jobs:
+  test-production:
+    runs-on: ubuntu-latest
+    steps:  
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create Environment File
+        run: |
+         set -e
+         content="
+            WWWGROUP='1000'
+            WWWUSER='1000'
+            DB_DATABASE='test'
+            DB_USERNAME='test'
+            DB_PASSWORD='test'
+            PWD='/app'
+            VUE_APP_TRACKER_LOCALIZATION='test'
+            VUE_APP_ROUTE_CALCULATOR='test'
+            VUE_APP_CARRIER_CNPJ='test'
+            VUE_APP_CARRIER_CEP='test'
+            VUE_APP_SITE_DESCRIPTION='test'
+            VUE_APP_API_URL='http://localhost'
+            VUE_APP_CARRIER_COMPLETE_NAME='test'
+            VUE_APP_CARRIER_PARCIAL_NAME='test'
+            VUE_APP_CARRIER_ADDRESS='test'
+            VUE_APP_CARRIER_TELEPHONE='test'
+            VUE_APP_CARRIER_CELLPHONE='test'
+          "
+          echo "$content" > .env
+          echo "$content" > laravel/.env
+
+      - name: Build Docker Compose
+        uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: "./docker-compose.dev.yml"
+
+      - name: Run Tests in Running Services
+        run: |
+          set -e
+          docker compose -f docker-compose.dev.yml exec -T laravel php artisan test
