@@ -65,7 +65,7 @@ export default {
             this.$router.push(endpoints.routes.DELIVERY_CREATE_FULL);
         },
         async generate() {
-            this.iChoice.open(
+            this.$store.state.iChoice.open(
                 "Seu PDF está sendo gerado. Por favor, aguarde...",
                 true,
             );
@@ -111,9 +111,9 @@ export default {
             });
             pdf.save(`orçamento_${this.$store.state.budgetMod.budget.id}.pdf`);
             this.generating = false;
-            this.iChoice.update("Seu PDF já está disponível!");
+            this.$store.state.iChoice.update("Seu PDF já está disponível!");
             await sleep(1000);
-            this.iChoice.cancel();
+            this.$store.state.iChoice.cancel();
         },
     },
     async beforeCreate() {
