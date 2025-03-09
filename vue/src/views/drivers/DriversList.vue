@@ -7,7 +7,7 @@
         <div>Atualização</div>
         <div>Ações</div>
     </ul>
-    <ul v-if="$store.state.driverMod.drivers.length">
+    <ul v-if="!$store.state.loading && $store.state.driverMod.drivers.length">
         <iCard
             v-for="el in $store.state.driverMod.drivers" 
             :key="el.id"
@@ -21,6 +21,8 @@
             @edit="edit"
         />
     </ul>
+    <iNoResults v-show="!$store.state.loading && !$store.state.driverMod.drivers.length"/>
+    <iLoading v-show="$store.state.loading"/>
 </template>
 
 <script>
@@ -28,16 +30,21 @@ import iCard from "@/components/drivers/iCard.vue";
 import mixins from "@/common/mixins";
 import { endpoints } from "@/common/consts";
 import { formatCPF } from "@/common/utils";
-
+import iNoResults from "@/components/common/iNoResults.vue";
+import iLoading from "@/components/common/iLoading.vue";
 
 export default {
     mixins: [mixins],
-    beforeCreate() {
+    async beforeCreate() {
         window.scrollTo(0,0);
-        this.$store.dispatch("driverMod/storeDrivers");
+        this.$store.commit("setStartLoading");
+        await this.$store.dispatch("driverMod/storeDrivers");
+        this.$store.commit("setStopLoading");
     },
     components: {
-        iCard, 
+        iCard,
+        iNoResults,
+        iLoading,
     },
     methods: {
         async del(id) {

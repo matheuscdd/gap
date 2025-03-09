@@ -45,7 +45,7 @@
         <div>Ações</div>
     </ul>
     <ul 
-        v-if="$store.state.deliveryMod.deliveries.length"
+        v-if="!$store.state.loading && $store.state.deliveryMod.deliveries.length"
         v-show="filter().length"
     >
         <iCard
@@ -71,13 +71,8 @@
             @view="view"
         />
     </ul>
-    <div 
-        class="not-found" 
-        v-show="!filter().length"
-    >
-        <legend>Não foram encontrados resultados </legend>
-        <legend>¯\_(ツ)_/¯</legend>
-    </div>
+    <iLoading v-show="$store.state.loading"/>
+    <iNoResults v-show="!$store.state.loading && !filter().length"/>
 </template>
 <script>
 import { endpoints } from "@/common/consts";
@@ -85,6 +80,8 @@ import iSearch from "@/components/common/iSearch.vue";
 import iCard from "@/components/deliveries/iFull.vue";
 import mixins from "@/common/mixins";
 import { formatField, itemgetter } from "@/common/utils";
+import iNoResults from "@/components/common/iNoResults.vue";
+import iLoading from "@/components/common/iLoading.vue";
 
 export default {
     data: () => ({
@@ -97,14 +94,18 @@ export default {
     mixins: [mixins],
     components: {
         iCard,
+        iNoResults,
         iSearch,
+        iLoading,
     },
     async beforeCreate() {
         window.scrollTo(0,0);
+        this.$store.commit("setStartLoading");
         await Promise.all([
             this.$store.dispatch("clientMod/storeClients"),
             this.$store.dispatch("deliveryMod/storeFull"),
         ]);
+        this.$store.commit("setStopLoading");
         // TODO - globalizar função
         this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, name:`${el.name} - ${el.CNPJ}`}));
         this.idsOpts = this.$store.state.deliveryMod.deliveries.map(itemgetter("id")).map(String).map(id => ({id: id, name:id}));
@@ -121,7 +122,7 @@ export default {
         },
 
         async finish(id) {
-            const continues = await this.$store.state.iChoice.open("Tem certeza qud deseja finalizar essa entrega e todas as suas parciais caso existam? Essa ação não poderá ser desfeita");
+            const continues = await this.$store.state.iChoice.open("Tem certeza que deseja finalizar essa entrega e todas as suas parciais caso existam? Essa ação não poderá ser desfeita");
             if (!continues) return;
             await this.$store.dispatch("deliveryMod/finishFull", id);
         },
@@ -161,15 +162,6 @@ export default {
     margin-bottom: 5px;
     text-align: center;
     margin-left: 20px
-}
-
-.not-found {
-    text-align: center;
-    margin-top: 50px;
-}
-
-.not-found > legend {
-    margin-bottom: 12px;
 }
 
 h1 {

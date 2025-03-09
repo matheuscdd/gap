@@ -1,28 +1,36 @@
 <template>
     <vDialog
         v-model="dialog"
-        :max-width="options.width"
+        :max-width="!$store.state.loading ? options.width : 700"
         :style="{ zIndex: options.zIndex, backdropFilter: 'blur(50px)' }"
         persistent
         color="red"
         opacity="0.1"
         ref="modal"
     >
-    <div v-show="!!message" class="container">
+    <div v-show="!!message" :class="{ container: true, loading: $store.state.loading }">
         <div class="title">{{ isAlert ? 'Alerta' : 'Confirme' }}</div>
-        <div class="body">{{ message }}</div>
+        <div class="body">
+          {{ message }}
+          <iLoading v-show="$store.state.loading"/>
+        </div>
         <div class="footer btns">
             <button v-show="!isAlert" @click="cancel" class="cancel">Cancelar</button>
-            <button @click="agree" class="agree">Ok</button>
+            <button @click="agree" class="agree" v-show="!$store.state.loading">Ok</button>
         </div>
     </div>
   </vDialog>
 </template>
 <script>
+import iLoading from "./iLoading.vue";
+
 export default {
   provide: [
     "modal"
   ],
+  components: {
+    iLoading,
+  },
   data: () => ({
       dialog: false,
       resolve: null,
@@ -73,6 +81,11 @@ export default {
         41.8px 41.8px 33.4px rgba(0, 0, 0, 0.05),
         100px 100px 80px rgba(0, 0, 0, 0.07)
     ;
+}
+
+.container.loading {
+  text-align: center;
+  width: 700px;
 }
 
 .title {

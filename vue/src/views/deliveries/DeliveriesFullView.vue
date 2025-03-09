@@ -297,7 +297,7 @@ export default {
             this.$store.dispatch("deliveryMod/delPartial", id);
         },
         async finish(id) {
-            const continues = await this.$store.state.iChoice.open(`Tem certeza qud deseja finalizar essa entrega parcial de número ${id}? Essa ação não poderá ser desfeita`);
+            const continues = await this.$store.state.iChoice.open(`Tem certeza que deseja finalizar essa entrega parcial de número ${id}? Essa ação não poderá ser desfeita`);
             if (!continues) return;
             await this.$store.dispatch("deliveryMod/finishPartial", id);
         },
