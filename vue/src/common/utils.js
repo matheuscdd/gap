@@ -180,7 +180,7 @@ export async function prepareDataBudget(ctx, action, verifyBudget, extra = {}) {
         )
     );
     await sleep(100);
-    if (errors.flat().filter(Boolean).length) return this.$store.state.iChoice.open("Verifique os campos marcados e tente novamente", true);
+    if (errors.flat().filter(Boolean).length) return ctx.$store.state.iChoice.open("Verifique os campos marcados e tente novamente", true);
     const continues = await ctx.$store.state.iChoice.open("Esta operação não poderá ser desfeita. Deseja continuar?");
     if (!continues) return;
     ctx.$store.dispatch(`budgetMod/${action}Budget`, {...data, ...extra});
