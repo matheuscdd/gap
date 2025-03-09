@@ -355,7 +355,7 @@ export const deliveryForm = Object.freeze({
     }),
     DRIVER: Object.freeze({
         PLACEHOLDER: "Indique o motorista",
-        ICON: "user-solid",
+        ICON: "steering-wheel",
         TYPE: "text",
         NAME: delivery.keys.DRIVER,
         LABEL: delivery.trans.DRIVER

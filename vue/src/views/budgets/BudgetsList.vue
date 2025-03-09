@@ -24,7 +24,7 @@
     </div>
     <section>
         <ul 
-            v-if="$store.state.budgetMod.budgets.length" 
+            v-if="!$store.state.loading && $store.state.budgetMod.budgets.length" 
             v-show="filter().length"
         >
             <iCard
@@ -44,13 +44,8 @@
                 @view="view"
             />
         </ul>
-        <div 
-            class="not-found" 
-            v-show="!filter().length"
-        >
-            <legend>Não foram encontrados resultados </legend>
-            <legend>¯\_(ツ)_/¯</legend>
-        </div>
+        <iLoading v-show="$store.state.loading"/>
+        <iNoResults v-show="!$store.state.loading && !filter().length"/>
     </section>
 </template>
 <script>
@@ -59,7 +54,8 @@ import { endpoints } from "@/common/consts";
 import mixins from "@/common/mixins";
 import iSearch from "@/components/common/iSearch.vue";
 import { itemgetter } from "@/common/utils";
-
+import iNoResults from "@/components/common/iNoResults.vue";
+import iLoading from "@/components/common/iLoading.vue";
 
 export default {
     data: () => ({
@@ -71,10 +67,12 @@ export default {
     mixins: [mixins],
     async beforeCreate() {
         window.scrollTo(0,0);
+        this.$store.commit("setStartLoading");
         await Promise.all([
             this.$store.dispatch("clientMod/storeClients"),
             this.$store.dispatch("budgetMod/storeBudgets"),
         ]);
+        this.$store.commit("setStopLoading");
         // TODO - globalizar função
         this.clientsOpts = this.$store.state.clientMod.clients.map(el => ({id: el.id, name: `${el.name} - ${el.CNPJ}`, value: `${el.name} - ${el.CNPJ}`}));
         this.idsOpts = this.$store.state.budgetMod.budgets.map(itemgetter("id")).map(String).map(id => ({id: id, name: id, value: id}));
@@ -82,6 +80,8 @@ export default {
     components: {
         iCard,
         iSearch,
+        iNoResults,
+        iLoading,
     },
     methods: {
         edit(id) {
@@ -128,14 +128,4 @@ ul {
     grid-auto-rows: 80px;
     grid-template-columns: 270px 270px;
 }
-
-.not-found {
-    text-align: center;
-    margin-top: 50px;
-}
-
-.not-found > legend {
-    margin-bottom: 12px;
-}
-
 </style>

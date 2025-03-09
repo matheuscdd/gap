@@ -10,13 +10,20 @@ import driverMod from "./driver";
 
 export default createStore({
     state: {
-        iChoice: {}
+        iChoice: {},
+        loading: false,
     },
 
     mutations: {
         setChoice(ctx, payload) {
             ctx.iChoice = payload;
-        }
+        },
+        setStartLoading(ctx) {
+            ctx.loading = true;
+        },
+        setStopLoading(ctx) {
+            ctx.loading = false;
+        },
     },
     modules: {
         userMod,

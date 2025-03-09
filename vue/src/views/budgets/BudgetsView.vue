@@ -21,14 +21,29 @@
                 {{ $store.state.budgetMod.budget.cost?.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})  }}
             </span>
         </div>
-        <button @click="edit" class="edit" type="button">
-            Editar
+        <button @click="edit" class="edit" type="button" title="Editar">
+            <iSvg 
+                :src="require('@/assets/icons/pencil-solid.svg')"
+                width="16" 
+                height="16"
+                fill="white"
+            />
         </button>
-        <button @click="approve" class="approve" type="button">
-            Aprovar
+        <button @click="approve" class="approve" type="button" title="Aprovar">
+            <iSvg 
+                :src="require('@/assets/icons/circle-check-solid.svg')"
+                width="16" 
+                height="16"
+                fill="white"
+            />
         </button>
-        <button @click="generate" class="download" type="button">
-            Baixar
+        <button @click="generate" class="download" type="button" title="Baixar">
+            <iSvg 
+                :src="require('@/assets/icons/down-long-solid.svg')"
+                width="16" 
+                height="16"
+                fill="white"
+            />
         </button>
     </div>
 </template>
@@ -39,6 +54,7 @@ import mixins from "@/common/mixins";
 import { endpoints } from "@/common/consts";
 import { jsPDF } from "jspdf";
 import { renderFileReader, sleep  } from "@/common/utils";
+import ILoading from "@/components/common/iLoading.vue";
 
 export default {
     data: () => ({
@@ -65,12 +81,13 @@ export default {
             this.$router.push(endpoints.routes.DELIVERY_CREATE_FULL);
         },
         async generate() {
+            this.$store.commit("setStartLoading");
             this.$store.state.iChoice.open(
-                "Seu PDF está sendo gerado. Por favor, aguarde...",
+                "Seu PDF está sendo gerado. Por favor, aguarde... ",
                 true,
             );
-
             this.generating = true;
+
             const container = this.$refs.ipdf.$refs.container;
             const dimensions = {
                 width: 1240,
@@ -110,6 +127,7 @@ export default {
                 creationDate: this.$store.state.budgetMod.budget.created_at.toLocaleString("pt-BR"),
             });
             pdf.save(`orçamento_${this.$store.state.budgetMod.budget.id}.pdf`);
+            this.$store.commit("setStopLoading");
             this.generating = false;
             this.$store.state.iChoice.update("Seu PDF já está disponível!");
             await sleep(1000);
@@ -179,7 +197,7 @@ form section {
 .btns div {
     text-transform: capitalize;
     flex-direction: column;
-    background-color: var(--red-2);
+    background-color: var(--gray-1);
     padding: 9px 10px;
     font-size: 12px;
 }

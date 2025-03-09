@@ -23,7 +23,8 @@
                     />
                 </RouterLink>
             </div>
-            <ul v-if="$store.state.truckMod.trucks.length">
+            <iNoResults v-show="!$store.state.loading && !$store.state.truckMod.trucks.length"/>
+            <ul v-if="!$store.state.loading && $store.state.truckMod.trucks.length">
                 <iTruck
                     v-for="el in $store.state.truckMod.trucks" 
                     :key="el.id"
@@ -49,7 +50,8 @@
                 <div>Caminhão</div>
                 <div>Ações</div>
             </div>
-            <ul v-if="$store.state.maintenanceMod.maintenances.length">
+            <iNoResults v-show="!$store.state.loading && !$store.state.maintenanceMod.maintenances.length"/>
+            <ul v-if="!$store.state.loading && $store.state.maintenanceMod.maintenances.length">
                 <iMaintenance
                     v-for="el in $store.state.maintenanceMod.maintenances" 
                     :key="el.id"
@@ -65,6 +67,7 @@
             </ul>
         </section>
     </main>
+    <iLoading v-show="$store.state.loading"/>
 </template>
 
 <script>
@@ -73,8 +76,8 @@ import { endpoints } from "@/common/consts";
 import iTruck from "@/components/garage/iTruck.vue";
 import iMaintenance from "@/components/garage/iMaintenance.vue";
 import { RouterLink } from "vue-router";
-
-console.log(process.env.VUE_APP_TRACKER_LOCALIZATION);
+import iNoResults from "@/components/common/iNoResults.vue";
+import iLoading from "@/components/common/iLoading.vue";
 
 export default {
     data: () => ({
@@ -84,15 +87,19 @@ export default {
     mixins: [mixins],
     async beforeCreate() {
         window.scrollTo(0,0);
+        this.$store.commit("setStartLoading");
         await Promise.all([
             this.$store.dispatch("truckMod/storeTrucks"),
             this.$store.dispatch("maintenanceMod/storeMaintenances"),
         ]);
+        this.$store.commit("setStopLoading");
     },
     components: {
         iTruck, 
         iMaintenance,
         RouterLink,
+        iNoResults,
+        iLoading,
     },
     methods: {
         async delTruck(id) {

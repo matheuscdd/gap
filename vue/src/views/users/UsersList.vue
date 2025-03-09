@@ -7,7 +7,7 @@
         <div>Tipo</div>
         <div>Ações</div>
     </ul>
-    <ul v-if="$store.state.userMod.users.length">
+    <ul v-if="!$store.state.loading && $store.state.userMod.users.length">
         <iCard
             v-for="el in $store.state.userMod.users" 
             :key="el.id"
@@ -21,21 +21,26 @@
             @edit="edit"
         />
     </ul>
+    <iLoading v-show="$store.state.loading"/>
 </template>
 
 <script>
 import iCard from "@/components/users/iCard.vue";
 import mixins from "@/common/mixins";
 import { endpoints } from "@/common/consts";
+import iLoading from "@/components/common/iLoading.vue";
 
 export default {
     mixins: [mixins],
-    beforeCreate() {
+    async beforeCreate() {
         window.scrollTo(0,0);
-        this.$store.dispatch("userMod/storeUsers");
+        this.$store.commit("setStartLoading");
+        await this.$store.dispatch("userMod/storeUsers");
+        this.$store.commit("setStopLoading");
     },
     components: {
         iCard, 
+        iLoading,
     },
     methods: {
         async del(id) {

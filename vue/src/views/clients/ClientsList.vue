@@ -7,7 +7,7 @@
         <div>Celular</div>
         <div>Ações</div>
     </ul>
-    <ul v-if="$store.state.clientMod.clients.length">
+    <ul v-if="!$store.state.loading && $store.state.clientMod.clients.length">
         <iCard
             v-for="el in $store.state.clientMod.clients" 
             :key="el.id"
@@ -22,6 +22,8 @@
             @del="del"
         />
     </ul>
+    <iLoading v-show="$store.state.loading"/>
+    <iNoResults v-show="!$store.state.loading && !$store.state.clientMod.clients.length"/>
 </template>
 
 <script>
@@ -29,16 +31,21 @@ import iCard from "@/components/clients/iCard.vue";
 import mixins from "@/common/mixins";
 import { endpoints } from "@/common/consts";
 import { formatCEP, formatCNPJ, formatCellphone, formatField } from "@/common/utils";
-
+import iNoResults from "@/components/common/iNoResults.vue";
+import iLoading from "@/components/common/iLoading.vue";
 
 export default {
     mixins: [mixins],
-    beforeCreate() {
+    async beforeCreate() {
         window.scrollTo(0,0);
-        this.$store.dispatch("clientMod/storeClients");
+        this.$store.commit("setStartLoading");
+        await this.$store.dispatch("clientMod/storeClients");
+        this.$store.commit("setStopLoading");
     },
     components: {
         iCard, 
+        iNoResults,
+        iLoading,
     },
 
     methods: {
