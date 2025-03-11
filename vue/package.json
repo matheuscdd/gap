@@ -11,7 +11,7 @@
     "@aurium/vue-plotly": "^2.0.0-rc5",
     "@mdi/font": "^7.4.47",
     "core-js": "^3.39.0",
-    "jspdf": "^2.5.2",
+    "jspdf": "^3.0.0",
     "jwt-decode": "^4.0.0",
     "vue": "^3.5.13",
     "vue-html2canvas": "^0.0.4",
