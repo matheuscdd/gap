@@ -15,6 +15,7 @@ services:
         env_file:
             - .env
         environment:
+            APP_DEBUG: 'true'
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
@@ -30,16 +31,20 @@ services:
             PRIVATE_KEY_GITHUB: '${PRIVATE_KEY_GITHUB}'
             GITHUB_BUCKET_USER: '${GITHUB_BUCKET_USER}'
             GITHUB_BUCKET_REP: '${GITHUB_BUCKET_REP}'
+            MINIO_ROOT_USER: '${MINIO_ROOT_USER}'
+            MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD}'
+            MINIO_REGION: '${MINIO_REGION}'
+            S3_BUCKET: '${S3_BUCKET}'
+            S3_HOST: 'http://s3:9000'
             EMAIL_SUPPORT: '${EMAIL_SUPPORT}'
             APP_ENV: 'dev'
         volumes:
             - './laravel:/app'
             - /app/vendor
         networks:
-            - sail
+            - net
         depends_on:
             - pgsql
-            - mailpit
     pgsql:
         image: 'postgres:15'
         ports:
@@ -50,10 +55,10 @@ services:
             POSTGRES_USER: '${DB_USERNAME}'
             POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
         volumes:
-            - 'sail-pgsql:/var/lib/postgresql/data'
+            - 'storage-pgsql:/var/lib/postgresql/data'
             - './laravel/vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
         networks:
-            - sail
+            - net
         healthcheck:
             test:
                 - CMD
@@ -90,17 +95,37 @@ services:
             VUE_APP_SITE_DESCRIPTION: '${VUE_APP_SITE_DESCRIPTION}'
         tty: true
         networks:
-            - sail
-    mailpit:
-        image: 'axllent/mailpit:latest'
+            - net
+    s3:
+        build:
+            context: ./s3
+            dockerfile: Dockerfile
+            args: 
+                MINIO_ROOT_USER: '${MINIO_ROOT_USER}'
+                MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD}'
+                MINIO_REGION: '${MINIO_REGION}'
+                S3_BUCKET: '${S3_BUCKET}'
+        env_file:
+            - .env
+        image: s3
+        restart: always
+        environment:
+            MINIO_ROOT_USER: '${MINIO_ROOT_USER}'
+            MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD}'
+            MINIO_REGION: '${MINIO_REGION}'
+            S3_BUCKET: '${S3_BUCKET}'
         ports:
-            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
-            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+            - '9000:9000'
+            - '9090:9090'
+        volumes:
+            - 'storage-s3:/data'
         networks:
-            - sail
+            - net
 networks:
-    sail:
+    net:
         driver: bridge
 volumes:
-    sail-pgsql:
+    storage-pgsql:
         driver: local
+    storage-s3:
+        driver: local 

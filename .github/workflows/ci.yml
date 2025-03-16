@@ -22,6 +22,7 @@ jobs:
             DB_USERNAME='test'
             DB_PASSWORD='test'
             PWD='/app'
+            EMAIL_SUPPORT='example@mail.com'
             VUE_APP_TRACKER_LOCALIZATION='test'
             VUE_APP_ROUTE_CALCULATOR='test'
             VUE_APP_CARRIER_CNPJ='test'
