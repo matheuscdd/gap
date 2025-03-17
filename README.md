@@ -5,7 +5,7 @@
 ```
 
 ## Atualizações de versão do certbot
-* No arquivo `nginx/Dockerfile.prod` , troque `nginx.https` por `nginx.http`, isso deve ser feito para resetar as configurações certbot
+* No arquivo `docker-compose.prod.yml`, no serviço `nginx`, na parte de selecionar o Dockerfile, escolha `Dockerfile.dev`, isso deve ser feito para resetar as configurações certbot
 * Instale o certbot e o certificado na mão 
 ```
 docker exec -it gap-prod-nginx-1 apt update 
@@ -26,7 +26,13 @@ docker exec -it gap-prod-nginx-1 cat /etc/nginx/nginx.conf
 - ssl-dhparams.pem
 ```
 
-* No arquivo `nginx/Dockerfile.prod` , agora troque `nginx.http` por `nginx.https`, isso deve ser feito para inserir as novas configurações do certbot
+* No arquivo `docker-compose.prod.yml`, volte a apontar para o `Dockerfile.prod` no serviço do `nginx`, isso deve ser feito para inserir as novas configurações do certbot
+
+# Configurações para o acesso ao S3 de desenvolvimento
+Você precisa redirecionar o nome do serviço docker pro localhost, adicionando as informações abaixo no seu `/etc/hosts`. Caso esteja rodando no Windows, independente de ser via WSL, você precisa inserir a mesma linha em `C:\Windows\System32\drivers\etc\hosts.ics`, algumas limitações do sistema exigem que copie o arquivo pra algum lugar e depois substitua pelo original
+```
+127.0.0.1	s3
+```
 
 # Comandos úteis
 ### Acessa o artisan do container
@@ -68,5 +74,3 @@ alias gproddown="docker compose -f docker-compose.prod.yml down"
 alias gdevres="docker compose -f docker-compose.dev.yml stop && docker compose -f docker-compose.dev.yml up"
 alias gprodres="docker compose -f docker-compose.prod.yml stop && docker compose -f docker-compose.prod.yml up"
 ```
-
-
