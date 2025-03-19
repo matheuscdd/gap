@@ -1,7 +1,7 @@
 # SSL
 ## Instalar certificado SSL no HOST e configura certbot
 ```
-./build.sh
+./ssl.sh
 ```
 
 ## Atualizações de versão do certbot
