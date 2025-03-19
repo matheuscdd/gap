@@ -1,7 +1,6 @@
 import { consts, endpoints, methods } from "@/common/consts";
-import { api, handleDate } from "@/common/utils";
+import { api, handleDate, jwtDecode } from "@/common/utils";
 import router from "@/router";
-import { jwtDecode } from "jwt-decode";
 
 const getDefaultState = () => ({
     logged: {},
