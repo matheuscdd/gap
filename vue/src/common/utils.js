@@ -1,7 +1,9 @@
 import router from "@/router";
 import { methods, consts, endpoints } from "./consts";
-import { jwtDecode } from "jwt-decode";
-import { inject } from "vue";
+
+export function jwtDecode(token) {
+    return JSON.parse(atob(token.split(".")[1]));
+}
 
 export function getUUID() {
     const id =
