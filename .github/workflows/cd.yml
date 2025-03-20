@@ -32,13 +32,13 @@ jobs:
                     cd ${{ secrets.TARGET }} && \
                     git fetch origin main && \
                     git reset --hard origin/main && \
-                    docker compose -f docker-compose.prod.yml up -d --build
+                    docker compose -f docker-compose.prod.https.yml up -d --build
                 '
 
             - name: Run Database Migrations
               run: |
                 set -e
-                ssh ${{ secrets.REMOTE_USER }}@${{ secrets.SERVER_IP_PUBLIC }} 'docker compose -f ${{ secrets.TARGET }}/docker-compose.prod.yml exec -T laravel php artisan migrate'
+                ssh ${{ secrets.REMOTE_USER }}@${{ secrets.SERVER_IP_PUBLIC }} 'docker compose -f ${{ secrets.TARGET }}/docker-compose.prod.https.yml exec -T laravel php artisan migrate'
                 
             - name: Perform Health Check
               run: |

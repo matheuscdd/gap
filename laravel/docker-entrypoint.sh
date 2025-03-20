@@ -16,5 +16,6 @@ for var in "${envsRaw[@]}"; do
   echo "$key='$val'" >> "$filename"
 done
 
+rm bootstrap/cache/*.php &
 service cron start
 php artisan serve --host=0.0.0.0 --port=80 

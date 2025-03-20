@@ -41,9 +41,18 @@ jobs:
       - name: Build docker compose
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
-          compose-file: "./docker-compose.dev.yml"
+          compose-file: "./docker-compose.prod.http.yml"
+
+      - name: Teste
+        run : |
+          docker logs gap-prod-http-laravel-1
+      
+      - name: Run Database Migrations
+        run: |
+          set -e
+          docker compose -f docker-compose.prod.http.yml exec -T laravel php artisan migrate
 
       - name: Execute tests in the running services
         run: |
           set -e
-          docker compose -f docker-compose.dev.yml exec -T laravel php artisan test
+          docker compose -f docker-compose.prod.http.yml exec -T laravel php artisan test
