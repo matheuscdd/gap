@@ -1,0 +1,151 @@
+name: 'gap-prod-https'
+services:
+    laravel:
+        restart: always
+        build:
+            context: ./laravel
+            dockerfile: Dockerfile.prod
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: laravel
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        env_file:
+            - .env
+        environment:
+            APP_DEBUG: 'false'
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            WWWGROUP: '${WWWGROUP:-1000}'
+            PWD: '${PWD:-/var/www/html}'
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            FORWARD_DB_PORT: '${FORWARD_DB_PORT:-5432}'
+            PRIVATE_KEY_256: '${PRIVATE_KEY_256:-secret}'
+            PUBLIC_KEY_RSA_B64: '${PUBLIC_KEY_RSA_B64}'
+            PRIVATE_KEY_GITHUB: '${PRIVATE_KEY_GITHUB}'
+            GITHUB_BUCKET_USER: '${GITHUB_BUCKET_USER}'
+            GITHUB_BUCKET_REP: '${GITHUB_BUCKET_REP}'
+            MINIO_ROOT_USER: '${MINIO_ROOT_USER}'
+            MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD}'
+            MINIO_REGION: '${MINIO_REGION}'
+            S3_BUCKET: '${S3_BUCKET}'
+            S3_HOST: 'https://${DOMAIN}/s3/storage'
+            EMAIL_SUPPORT: '${EMAIL_SUPPORT}'
+            APP_ENV: 'prod'
+        volumes:
+            - './laravel:/app'
+            - /app/vendor
+        networks:
+            - net
+        depends_on:
+            - pgsql
+    pgsql:
+        restart: always
+        image: 'postgres:15'
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+        volumes:
+            - 'storage-pgsql:/var/lib/postgresql/data'
+        networks:
+            - net
+        healthcheck:
+            test:
+                - CMD
+                - pg_isready
+                - '-q'
+                - '-d'
+                - '${DB_DATABASE}'
+                - '-U'
+                - '${DB_USERNAME}'
+            retries: 3
+            timeout: 5s
+    vue:
+        restart: always
+        build:
+            context: ./vue
+            dockerfile: Dockerfile.prod
+            args: 
+                CHOKIDAR_USEPOLLING: 'true'
+                VUE_APP_API_URL: '${VUE_APP_API_URL}'
+                VUE_APP_TRACKER_LOCALIZATION: '${VUE_APP_TRACKER_LOCALIZATION}'
+                VUE_APP_ROUTE_CALCULATOR: '${VUE_APP_ROUTE_CALCULATOR}'
+                VUE_APP_CARRIER_COMPLETE_NAME: '${VUE_APP_CARRIER_COMPLETE_NAME}'
+                VUE_APP_CARRIER_PARCIAL_NAME: '${VUE_APP_CARRIER_PARCIAL_NAME}'
+                VUE_APP_CARRIER_CNPJ: '${VUE_APP_CARRIER_CNPJ}'
+                VUE_APP_CARRIER_ADDRESS: '${VUE_APP_CARRIER_ADDRESS}'
+                VUE_APP_CARRIER_CEP: '${VUE_APP_CARRIER_CEP}'
+                VUE_APP_CARRIER_TELEPHONE: '${VUE_APP_CARRIER_TELEPHONE}'
+                VUE_APP_CARRIER_CELLPHONE: '${VUE_APP_CARRIER_CELLPHONE}'
+                VUE_APP_SITE_DESCRIPTION: '${VUE_APP_SITE_DESCRIPTION}'
+        image: vue
+        volumes:
+            - './vue:/app'
+            - /app/node_modules
+        networks:
+            - net
+    s3:
+        build:
+            context: ./s3
+            dockerfile: Dockerfile
+            args: 
+                MINIO_ROOT_USER: '${MINIO_ROOT_USER}'
+                MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD}'
+                MINIO_REGION: '${MINIO_REGION}'
+                MINIO_BROWSER_REDIRECT_URL: 'http://localhost:9090/s3/admin'
+                S3_BUCKET: '${S3_BUCKET}'
+        env_file:
+            - .env
+        image: s3
+        restart: always
+        environment:
+            MINIO_ROOT_USER: '${MINIO_ROOT_USER}'
+            MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD}'
+            MINIO_REGION: '${MINIO_REGION}'
+            MINIO_BROWSER_REDIRECT_URL: 'http://localhost:9090/s3/admin'
+            S3_BUCKET: '${S3_BUCKET}'
+        volumes:
+            - 'storage-s3:/data'
+        networks:
+            - net
+    nginx:
+        restart: always
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile.prod
+        image: nginx
+        ports:
+            - '80:80'
+            - '443:443'
+        environment:
+            DOMAIN: '${DOMAIN}'
+            EMAIL_SUPPORT: '${EMAIL_SUPPORT}'
+            STAGING_URL: '${STAGING_URL}'
+        volumes:
+            - /etc/letsencrypt/live/${DOMAIN}/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
+            - /etc/letsencrypt/live/${DOMAIN}/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
+            - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:ro
+            - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem:ro
+        depends_on:
+            - laravel
+            - vue
+            - s3
+        networks:
+            - net
+networks:
+    net:
+        driver: bridge
+volumes:
+    storage-pgsql:
+        driver: local
+    storage-s3:
+        driver: local 
