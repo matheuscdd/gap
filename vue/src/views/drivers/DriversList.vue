@@ -1,18 +1,12 @@
 <template>
     <h1>Motoristas</h1>
-    <ul class="header">
-        <div>Nome</div>
-        <div>CPF</div>
-        <div>Entregas realizadas</div>
-        <div>Atualização</div>
-        <div>Ações</div>
-    </ul>
     <ul v-if="!$store.state.loading && $store.state.driverMod.drivers.length">
         <iCard
             v-for="el in $store.state.driverMod.drivers" 
             :key="el.id"
             :id="el.id"
             :name="el.name"
+            :photo="el.photo"
             :CPF="formatCPF(el.CPF)"
             :deliveries="el.deliveries"
             :createdAt="el.created_at"
@@ -67,13 +61,10 @@ h1 {
     margin-top: 20px;
 }
 
-.header {
-    display: grid;
-    grid-template-columns: 25% 25% 10% 20% 20%;
-    grid-auto-rows: 30px;
-    grid-gap: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-    padding: 0 20px;
+ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
 }
 </style>
