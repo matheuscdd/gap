@@ -1,10 +1,10 @@
 <template>
-    <li>
-        <div class="name" :title="name">{{ formatField(name, 20) }}</div>
-        <div>{{ CNPJ }}</div>
-        <div class="address" :title="`${address} - ${CEP}`">{{ formatField(address, 30) }}</div>
-        <div class="cellphone">{{ cellphone }}</div>
-        <div>
+    <tr>
+        <td class="name" :title="name">{{ formatField(name, 20) }}</td>
+        <td>{{ CNPJ }}</td>
+        <td class="address" :title="`${address} - ${CEP}`">{{ formatField(address, 30) }}</td>
+        <td class="cellphone">{{ cellphone }}</td>
+        <td>
             <div class="btns">
                 <button 
                     @click="edit" 
@@ -30,8 +30,8 @@
                     />
                 </button>
             </div>
-        </div>
-    </li>
+        </td>
+    </tr>
 </template>
 
 <script>
@@ -63,21 +63,8 @@ export default {
 </script>
 
 <style scoped>
-li {
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 25% 25% 25% 15% 10%;
-    grid-auto-rows: 30px;
-    grid-gap: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-    border-radius: 12px;
-    border: 2px solid var(--gray-1);
-    background-color: var(--gray-5);
-}
-
-li > div {
-    line-height: 2;
+tr, .btns {
+    padding-top: 13px;
 }
 
 .name {
@@ -90,7 +77,6 @@ li > div {
     padding: 5px;
     border-radius: 5px;
     display: flex;
-    align-items: center;
     color: white;
 }
 
@@ -112,7 +98,6 @@ li > div {
 
 .btns {
     display: flex;
-    justify-content: center;
     gap: 10px;
 }
 

@@ -120,7 +120,6 @@ ul {
     grid-template-columns: repeat(3, 400px);
     grid-auto-rows: 360px;
     row-gap: 10px;
-    column-gap: 10px;
 }
 
 .filters {
