@@ -5,16 +5,16 @@
 ```
 
 ## Atualizações de versão do certbot
-* No arquivo `docker-compose.prod.https.yml`, no serviço `nginx`, na parte de selecionar o Dockerfile, escolha `Dockerfile.dev`, isso deve ser feito para resetar as configurações certbot
+* Ao invés de subir com o arquivo o `docker-compose.prod.https.yml`, suba `docker-compose.prod.http.yml`
 * Instale o certbot e o certificado na mão 
 ```
-docker exec -it gap-prod-nginx-1 apt update 
-docker exec -it gap-prod-nginx-1 apt install certbot python3-certbot-nginx -y
-docker exec -it gap-prod-nginx-1 certbot certonly --nginx -n --agree-tos -d "${DOMAIN}" --email "${EMAIL_SUPPORT}"
+docker exec -it gap-prod-http-nginx-1 apt update 
+docker exec -it gap-prod-http-nginx-1 apt install certbot python3-certbot-nginx -y
+docker exec -it gap-prod-http-nginx-1 certbot certonly --nginx -n --agree-tos -d "${DOMAIN}" --email "${EMAIL_SUPPORT}"
 ```
 * Copie as configurações realizadas automaticamente pelo certbot
 ```
-docker exec -it gap-prod-nginx-1 cat /etc/nginx/nginx.conf
+docker exec -it gap-prod-http-nginx-1 cat /etc/nginx/nginx.conf
 ```
 
 * Faça os ajustes para funcionar com as variáveis de ambiente modificadas no docker compose
@@ -26,7 +26,7 @@ docker exec -it gap-prod-nginx-1 cat /etc/nginx/nginx.conf
 - ssl-dhparams.pem
 ```
 
-* No arquivo `docker-compose.prod.https.yml`, volte a apontar para o `Dockerfile.prod` no serviço do `nginx`, isso deve ser feito para inserir as novas configurações do certbot
+* Agora é só subir o arquivo normalmente `docker-compose.prod.https.yml`
 
 # Configurações para o acesso ao S3 de desenvolvimento
 Você precisa redirecionar o nome do serviço docker pro localhost, adicionando as informações abaixo no seu `/etc/hosts`. Caso esteja rodando no Windows, independente de ser via WSL, você precisa inserir a mesma linha em `C:\Windows\System32\drivers\etc\hosts.ics`, algumas limitações do sistema exigem que copie o arquivo pra algum lugar e depois substitua pelo original

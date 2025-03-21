@@ -103,8 +103,6 @@ services:
                 MINIO_REGION: '${MINIO_REGION}'
                 MINIO_BROWSER_REDIRECT_URL: 'http://localhost:9090/s3/admin'
                 S3_BUCKET: '${S3_BUCKET}'
-        env_file:
-            - .env
         image: s3
         restart: always
         environment:
