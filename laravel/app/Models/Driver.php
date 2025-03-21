@@ -14,6 +14,7 @@ class Driver extends Model {
     protected $fillable = [
         Keys::NAME,
         Keys::CPF,
+        Keys::PHOTO,
         Keys::CREATED_BY,
         Keys::UPDATED_BY,
     ];

@@ -306,12 +306,10 @@ export function verifyBudget(name, obj) {
         [COST]: z
             .number({ message: msgs.required(cBudget.trans.COST) })
             .positive(msgs.positive(cBudget.trans.COST))
-            // .regex(twoCases, msgs.twoCases(cBudget.trans.COST))
             .lte(handleFields[REVENUE], "O custo não pode ser maior que o faturamento"),
         [REVENUE]: z
             .number({ message: msgs.required(cBudget.trans.REVENUE) })
             .positive(msgs.positive(cBudget.trans.REVENUE))
-            // .regex(twoCases, msgs.twoCases(cBudget.trans.REVENUE))
             .gte(handleFields[COST], "O faturamento não pode ser menor que o custo"),
         [CLIENT]: z
             .number({ message: msgs.valid(cBudget.trans.CLIENT) })
@@ -368,13 +366,11 @@ export function verifyDelivery(name, obj) {
         [UNLOADING_COST]: z
             .number({ message: msgs.required(cDelivery.trans.UNLOADING_COST) })
             .gte(-1),
-            // .regex(twoCases, msgs.twoCases(cDelivery.trans.COST))
         [DRIVER]: z
             .number({ message: msgs.valid(cDelivery.trans.DRIVER) })
             .refine(includes(drivers), { message: msgs.valid(cDelivery.trans.DRIVER) }),
     };
     if (isNotPartial) {
-        // schema[UNLOADING_COST] = schema[UNLOADING_COST].lte(handleFields[REVENUE], "O custo de descarga não pode ser maior que o faturamento");
         schema = {
             ...schema,
             [RECEIPT_DATE]: z
@@ -399,12 +395,10 @@ export function verifyDelivery(name, obj) {
             [TRAVEL_COST]: z
                 .number({ message: msgs.required(cDelivery.trans.TRAVEL_COST) })
                 .positive(msgs.positive(cDelivery.trans.TRAVEL_COST))
-                // .regex(twoCases, msgs.twoCases(cDelivery.trans.COST))
                 .lte(handleFields[REVENUE], "O custo de viagem não pode ser maior que o faturamento"),
             [REVENUE]: z
                 .number({ message: msgs.required(cDelivery.trans.REVENUE) })
                 .positive(msgs.positive(cDelivery.trans.REVENUE))
-                // .regex(twoCases, msgs.twoCases(cDelivery.trans.REVENUE))
                 .gte(handleFields[COST], "O faturamento não pode ser menor que o custo"),
             [CLIENT]: z
                 .number({ message: msgs.valid(cDelivery.trans.CLIENT) })
@@ -473,7 +467,7 @@ export function verifyMaintenance(name, obj) {
 export function verifyDriver(name, obj) {
     const sel = obj || this;
     const handleFields = {};
-    [NAME, CPF]
+    [NAME, CPF, PHOTO]
         .forEach(key => handleFields[key] = sel[key]?.value);
     
     const driver = z.object({
@@ -486,7 +480,10 @@ export function verifyDriver(name, obj) {
             .string()
             .regex(nonEmpty, msgs.required(cDriver.trans.CPF))
             .regex(onlyNumbers, msgs.onlyNumbers)
-            .length(base.driver[CPF].size, msgs.size(cDriver.trans.CPF, base.driver[CPF].size)),    
+            .length(base.driver[CPF].size, msgs.size(cDriver.trans.CPF, base.driver[CPF].size)),
+        [PHOTO]: z
+            .string()
+            .optional()
     });
     return verify(driver, name, sel[name], handleFields);
 }

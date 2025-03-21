@@ -14,6 +14,7 @@ return new class extends Migration
             $table->id('id');
             $table->string('name', 64);
             $table->string('CPF', 11)->unique();
+            $table->string('photo', 512)->nullable();
             $table->timestamps();
             $table->foreignId('created_by')->references('id')->on('users')->constrained();
             $table->foreignId('updated_by')->references('id')->on('users')->constrained();

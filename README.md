@@ -63,6 +63,12 @@ gapsh admin:create
 gapsh jwt:secret
 ```
 
+### Gera as chaves rsa
+```
+gapsh rsa:gen
+```
+
+
 ### Outros comandos
 ```
 alias gdevup="docker compose -f docker-compose.dev.http.yml up" 
