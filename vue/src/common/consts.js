@@ -90,6 +90,7 @@ export const user = Object.freeze({
         CONFIRM_PASSWORD: "confirmPassword",
         CREATED_AT: "createdAt",
         UPDATED_AT: "updatedAt",
+        PHOTO: "photo",
         TYPE: Object.freeze({
             THIS: "type",
             ADMIN: "admin",
@@ -100,7 +101,8 @@ export const user = Object.freeze({
         NAME: "nome",
         EMAIL: "email",
         PASSWORD: "senha",
-        TYPE: "tipo"
+        TYPE: "tipo",
+        PHOTO: "foto",
     }),
 });
 
@@ -137,7 +139,15 @@ export const userForm = Object.freeze({
         PLACEHOLDER: "Selecione o tipo de usuário",
         NAME: user.keys.TYPE.THIS,
         LABEL: "Tipo de usuário",
-    })
+    }),
+    PHOTO: Object.freeze({
+        PLACEHOLDER: "Foto do usuário",
+        ICON: "camera-solid",
+        TYPE: "file",
+        NAME: user.keys.PHOTO,
+        LABEL: user.trans.PHOTO,
+        ACCEPT: "image/png, image/jpeg",
+    }),
 });
 
 export const client = Object.freeze({
@@ -498,7 +508,7 @@ export const driverForm = Object.freeze({
         LABEL: driver.trans.CPF
     }),
     PHOTO: Object.freeze({
-        PLACEHOLDER: "Foto do veículo",
+        PLACEHOLDER: "Foto do motorista",
         ICON: "camera-solid",
         TYPE: "file",
         NAME: driver.keys.PHOTO,

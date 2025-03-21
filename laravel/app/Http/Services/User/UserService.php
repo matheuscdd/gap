@@ -5,6 +5,7 @@ namespace App\Http\Services\User;
 use App\Models\User;
 use App\Constraints\UserKeysConstraints as Keys;
 use App\Exceptions\AppError;
+use App\Utils\S3;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -13,21 +14,49 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class UserService {
     public static function create(array $data) {
         $data[Keys::EMAIL] = strtolower($data[Keys::EMAIL]);
-        return response(User::create($data), 201);
+
+        if (array_key_exists(Keys::PHOTO, $data) && !is_null($data[Keys::PHOTO])) {
+            $data[Keys::PHOTO] = S3::insertImage(Keys::TABLE, $data[Keys::PHOTO]);
+        } else {
+            $data[Keys::PHOTO] = null;
+        }
+
+        $user = json_decode(json_encode(User::create($data)), true);
+        if (!is_null($user[Keys::PHOTO])) {
+            $user[Keys::PHOTO] = S3::mountPathImage($user[Keys::PHOTO]);
+        }
+
+        return response()->json($user, 201, [], JSON_UNESCAPED_SLASHES);
     }
 
     public static function find(int $id) {
-        return User::find($id);
+        $user = json_decode(json_encode(User::find($id)), true);
+        if (!is_null($user[Keys::PHOTO])) {
+            $user[Keys::PHOTO] = S3::mountPathImage($user[Keys::PHOTO]);
+        }
+        return response()->json($user, 200, [], JSON_UNESCAPED_SLASHES);
     }
 
     public static function edit(int $id, array $data) {
+        $user = User::find($id);
         if (array_key_exists(Keys::EMAIL, $data)) {
             $data[Keys::EMAIL] = strtolower($data[Keys::EMAIL]);
         }
+        if (array_key_exists(Keys::PHOTO, $data) && $user->photo) {
+            S3::deleteImage($user->photo);
+        }
 
-        $user = User::find($id);
+        if (array_key_exists(Keys::PHOTO, $data) && !is_null($data[Keys::PHOTO])) {
+            $data[Keys::PHOTO] = S3::insertImage(Keys::TABLE, $data[Keys::PHOTO]);
+        } 
+
         $user->update($data);
-        return $user;
+        $user = json_decode(json_encode($user), true);
+        if (!is_null($user[Keys::PHOTO])) {
+            $user[Keys::PHOTO] = S3::mountPathImage($user[Keys::PHOTO]);
+        }
+        
+        return response()->json($user, 200, [], JSON_UNESCAPED_SLASHES);
     }
 
     public static function del(int $id) {
@@ -35,13 +64,26 @@ class UserService {
             throw new AppError("O usuário não pode excluir a si mesmo", 403);
         }
         $user = User::find($id);
+
+        if (!is_null($user->photo)) {
+            S3::deleteImage($user->photo);
+        }
+
         $user->active = false;
         $user->save();
         return response(null, 204);
     }
 
     public static function list() {
-        return User::where(Keys::ACTIVE, '=', true)->get();
+        $users = json_decode(json_encode(User::where(Keys::ACTIVE, '=', true)->get()), true);
+        foreach($users as &$user) {
+            if (!is_null($user[Keys::PHOTO])) {
+                $user[Keys::PHOTO] = S3::mountPathImage($user[Keys::PHOTO]);
+            }
+        }
+        unset($user);
+
+        return response()->json($users, 200, [], JSON_UNESCAPED_SLASHES);
     }
 
     public static function lostPassword($request) {

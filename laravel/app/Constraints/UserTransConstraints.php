@@ -9,4 +9,5 @@ class UserTransConstraints {
     public const ACTIVE = 'ativo';
     public const TYPE = 'tipo do usuário';
     public const TOKEN = 'token';
+    public const PHOTO = 'foto';
 }
