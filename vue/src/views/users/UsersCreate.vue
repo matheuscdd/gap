@@ -55,7 +55,7 @@
                 :accept="userForm.PHOTO.ACCEPT"
                 :errors="photo.errors"
                 v-model="photo.fakeValue"
-                @validate="verifyTruck"
+                @validate="verifyUser"
                 @loadFile="loadFile"
             />
             <iSelect

@@ -85,6 +85,7 @@ export default {
     background-color: #e2e2e284;
     border: 2px solid #a4a6aa;
     border-radius: 5px;
+    object-fit: cover;
     width: 50px;
     height: 30px;
 }

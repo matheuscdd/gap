@@ -1,7 +1,7 @@
 <template>
     <li>
         <div class="container-img photo">
-            <img :src="photo || require('@/assets/common/user_placeholder.png')" alt="Foto de um caminhão"/>
+            <img :src="photo || require('@/assets/common/user_placeholder.png')" alt="Foto de um motorista"/>
         </div>
         <iInternal class="name" legend="nome" :value="formatField(name, 28)"/>
         <iInternal class="CPF" legend="CPF" :value="CPF"/>
@@ -98,12 +98,12 @@ li {
     display: flex;
     width: 200px;
     height: 250px;
-
 }
 
 .container-img > img {
     background-color: #e2e2e284;
     border-radius: 5px;
+    object-fit: cover;
     width: 200px;
     height: 237px;
 }

@@ -34,7 +34,7 @@
                 :errors="photo.errors"
                 :savedFilename="photo.value"
                 v-model="photo.fakeValue"
-                @validate="verifyTruck"
+                @validate="verifyUser"
                 @loadFile="loadFile"
             />
             <div class="btn">
@@ -78,19 +78,7 @@ export default {
 
     components: { iInput },
 
-    mounted() {
-        this.fill();
-    },
-
     methods: {
-        async fill() {
-            const id = this.$route.params.id;
-            await this.$store.dispatch("userMod/storeUser", id);
-            const user = this.$store.state.userMod.user;
-            this.name.value = user.name;
-            this.email.value = user.email;
-        },
-
         async edit() {
             const { name, email, photo } = this;
             const data = { name, email, photo };
@@ -101,6 +89,9 @@ export default {
             if (!continues) return;
             const handleData = getValues(data);
             handleData.photo = handleData.photo || null;
+            if (this.$store.state.userMod.user.photo === handleData.photo) {
+                delete handleData.photo;
+            }
             this.$store.dispatch("userMod/editUser", {
                 ...handleData, 
                 id: this.$route.params.id
@@ -111,9 +102,15 @@ export default {
         },
         verifyUser
     },
-    beforeCreate() {
+    async beforeCreate() {
         window.scrollTo(0,0);
-        this.$store.dispatch("userMod/storeUsers");
+        const id = this.$route.params.id;
+        await this.$store.dispatch("userMod/storeUser", id);
+        const { user } = this.$store.state.userMod;
+        for (const key in user) {
+            if (!this[key]) continue;
+            this[key].value = user[key];
+        }
     }
 };
 </script>

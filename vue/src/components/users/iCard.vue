@@ -1,9 +1,18 @@
 <template>
     <li>
+        <div class="container-img photo">
+            <img :src="photo || require('@/assets/common/user_placeholder.png')" alt="Foto de um motorista"/>
+        </div>
         <div class="name" :title=name>{{ formatField(name, 20) }}</div>
-        <div>{{ email }}</div>
-        <div>{{ updatedAt.toLocaleString("pt-BR") }}</div>
-        <div>{{ isAdmin ? 'Admin' : 'Comum' }}</div>
+        <div class="email">{{ email }}</div>
+        <div class="created_at">Criado em {{ createdAt.toLocaleString("pt-BR") }}</div>
+        <div class="updated_at">Atualizado em {{ updatedAt.toLocaleString("pt-BR") }}</div>
+        <div 
+            class="type" 
+            :style="{backgroundColor: isAdmin ? 'var(--yellow-2)' : 'var(--green-2)'}"
+        >
+            {{ isAdmin ? 'Admin' : 'Comum' }}
+        </div>
         <div class="btns">
             <button
                 class="edit"
@@ -42,6 +51,7 @@ export default {
         "id",
         "name",
         "email",
+        "photo",
         "createdAt",
         "updatedAt",
         "isAdmin",
@@ -62,24 +72,59 @@ export default {
 
 <style scoped>
 li {
-    padding: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: var(--gray-2);
     display: grid;
-    grid-template-columns: 25% 25% 20% 10% 20%;
-    grid-auto-rows: 30px;
-    grid-gap: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-    border-radius: 12px;
-    border: 2px solid var(--gray-1);
-    background-color: var(--gray-5);
-}
+    grid-template-rows: 30px 15px 10px 10px 50px 62px;
+    grid-template-columns: 200px 1fr 100px;
+    row-gap: 12px;
+    column-gap: 15px;
+    grid-template-areas: 
+        'photo_____ name______ type______'
+        'photo_____ email_____ .'
+        'photo_____ created_at .'
+        'photo_____ updated_at .'
+        'photo_____ . .'
+        'photo_____ . btns______'
+    ;
+    box-shadow: 
+        0px 0px 0px rgba(3, 7, 18, 0.02),
+        0px 0px 2px rgba(3, 7, 18, 0.03),
+        0px 0px 4px rgba(3, 7, 18, 0.05),
+        0px 0px 6px rgba(3, 7, 18, 0.06),
+        0px 0px 16px rgba(3, 7, 18, 0.08)
+    ;
 
-li > div {
-    line-height: 2;
 }
 
 .name {
     font-weight: 500;
+    font-size: 30px;
+}
+
+.type {
+    /* align-self: end; */
+    color: white;
+    height: max-content;
+    width: max-content;
+    justify-self: end;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.container-img {
+    display: flex;
+    width: 200px;
+    height: 250px;
+}
+
+.container-img > img {
+    background-color: #e2e2e284;
+    border-radius: 5px;
+    object-fit: cover;
+    width: 200px;
+    height: 237px;
 }
 
 button {
@@ -87,7 +132,11 @@ button {
     cursor: pointer;
     padding: 5px;
     border-radius: 5px;
+    width: 40px;
+    height: 40px;
     display: flex;
+    align-items: center;
+    justify-content: center;
     align-items: center;
     color: white;
 }
@@ -102,8 +151,9 @@ button {
 
 .btns {
     display: flex;
-    justify-content: center;
+    justify-content: end;
     gap: 10px;
+    align-items: end;
 }
 
 button:hover:not(:disabled), button:active:not(:disabled) {
@@ -118,5 +168,33 @@ button:disabled {
 
 button:disabled svg {
     fill: var(--gray-3);
+}
+
+.name {
+    grid-area: name______;
+}
+
+.photo {
+    grid-area: photo_____;
+}
+
+.email {
+    grid-area: email_____;
+}
+
+.type {
+    grid-area: type______;
+}
+
+.btns {
+    grid-area: btns______;
+}
+
+.updated_at {
+    grid-area: updated_at;
+}
+
+.created_at {
+    grid-area: created_at;
 }
 </style>

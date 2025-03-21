@@ -88,6 +88,9 @@ export default {
             if (!continues) return;
             const handleData = getValues(rawData);
             handleData.photo = handleData.photo || null;
+            if (this.$store.state.truckMod.truck.photo === handleData.photo) {
+                delete handleData.photo;
+            }
             this.$store.dispatch("truckMod/editTruck", {
                 ...handleData,
                 id: this.$route.params.id

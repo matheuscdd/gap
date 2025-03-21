@@ -22,6 +22,7 @@ fieldset {
 
 legend {
     color: var(--green-3);
+    font-size: 12px;
     padding: 0 5px;
 }
 </style>

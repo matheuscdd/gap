@@ -40,13 +40,6 @@ export default {
 
 <style scoped>
 main {
-  background-image: url('@/assets/common/waves.svg');
-  background-position-x: center;
-  background-position-y: bottom;
-  background-attachment: fixed;
-  background-size: 100%;
-  min-height: 100vh;
-  background-repeat: no-repeat;
   margin-top: 80px;
   padding-bottom: 100px;
 }
