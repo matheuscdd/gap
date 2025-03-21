@@ -172,7 +172,7 @@ export function verifyUser(name, obj) {
         .map(({email}) => email);
 
     const handleFields = {};
-    [NAME, EMAIL, PASSWORD, CONFIRM_PASSWORD, cUser.keys.TYPE.THIS]
+    [NAME, EMAIL, PASSWORD, CONFIRM_PASSWORD, PHOTO, cUser.keys.TYPE.THIS]
         .forEach(key => handleFields[key] = sel[key]?.value);
     const user = z.object({
         [EMAIL]: z
@@ -202,6 +202,9 @@ export function verifyUser(name, obj) {
         [CONFIRM_PASSWORD]: z.literal(handleFields[PASSWORD], {
             errorMap: () => ({ message: msgs.diff(cUser.trans.PASSWORD) }),
         }),
+        [PHOTO]: z
+            .string()
+            .optional(),
     
         [cUser.keys.TYPE.THIS]: z.enum([cUser.keys.TYPE.ADMIN, cUser.keys.TYPE.COMMON]) 
     });

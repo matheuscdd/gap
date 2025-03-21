@@ -23,6 +23,7 @@ class User extends Authenticatable implements JWTSubject {
         Keys::NAME,
         Keys::EMAIL,
         Keys::PASSWORD,
+        Keys::PHOTO,
         Keys::TYPE,
     ];
 

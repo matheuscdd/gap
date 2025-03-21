@@ -46,6 +46,18 @@
                 v-model="confirmPassword.value"
                 @validate="verifyUser"
             />
+            <iInput 
+                :label="userForm.PHOTO.LABEL"
+                :placeholder="userForm.PHOTO.PLACEHOLDER"
+                :icon="userForm.PHOTO.ICON"
+                :type="userForm.PHOTO.TYPE"
+                :name="userForm.PHOTO.NAME"
+                :accept="userForm.PHOTO.ACCEPT"
+                :errors="photo.errors"
+                v-model="photo.fakeValue"
+                @validate="verifyTruck"
+                @loadFile="loadFile"
+            />
             <iSelect
                 :opts="opts"
                 :label="userForm.TYPE.LABEL"
@@ -107,18 +119,28 @@ export default {
             errors: [],
             value: "common",
         },
+        [mixins.data().cUser.keys.PHOTO]: {
+            errors: [],
+            value: "",
+            fakeValue: "",
+        },
     }),
     components: { iInput, iSelect },
     methods: {
         async create() {
-            const { type, email, name, password, confirmPassword } = this;
-            const data = { type, email, name, password, confirmPassword };
+            const { type, email, name, password, confirmPassword, photo } = this;
+            const data = { type, email, name, password, confirmPassword, photo };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyUser(key, this)));
             if (errors.flat().filter(Boolean).length) return this.$store.state.iChoice.open("Ajuste os erros antes de continuar", true);
             const continues = await this.$store.state.iChoice.open("Esta operação não poderá ser desfeita. Deseja continuar?");
             if (!continues) return;
-            this.$store.dispatch("userMod/createUser", getValues(data));
+            const handleData = getValues(data);
+            handleData.photo = handleData.photo || null;
+            this.$store.dispatch("userMod/createUser", handleData);
+        },
+        loadFile(b64) {
+            this.photo.value = b64;
         },
         verifyUser
     },

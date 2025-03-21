@@ -18,6 +18,7 @@ class UserRequest extends Request {
     protected const NAME_MAX = 64;
     protected const PASSWD_MIN = 8;
     protected const PASSWD_MAX = 64;
+    protected const PHOTO_MIN = 5;
     
     public function getRules($partial, $keepRequired, ...$keys): array {
         $ref = [
@@ -40,6 +41,10 @@ class UserRequest extends Request {
             ],
             Keys::TYPE  => [
                 Schema::REQUIRED, new Enum(TypeUser::class)
+            ],
+            Keys::PHOTO => [
+                Schema::cMin(self::PHOTO_MIN),
+                Schema::NULLABLE,
             ],
         ];
         $rules = self::retrieveRules($partial, $ref, $keys, $keepRequired);

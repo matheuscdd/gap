@@ -10,5 +10,6 @@ class UserKeysConstraints {
     public const TYPE = 'type';
     public const TOKEN = 'token';
     public const TABLE = 'users';
-    public const ALL = [self::NAME, self::EMAIL, self::PASSWORD, self::TYPE];
+    public const PHOTO = 'photo';
+    public const ALL = [self::NAME, self::EMAIL, self::PASSWORD, self::TYPE, self::PHOTO];
 }

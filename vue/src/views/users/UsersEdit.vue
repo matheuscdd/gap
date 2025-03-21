@@ -24,6 +24,19 @@
                 v-model="email.value"
                 @validate="verifyUser"
             />
+            <iInput 
+                :label="userForm.PHOTO.LABEL"
+                :placeholder="userForm.PHOTO.PLACEHOLDER"
+                :icon="userForm.PHOTO.ICON"
+                :type="userForm.PHOTO.TYPE"
+                :name="userForm.PHOTO.NAME"
+                :accept="userForm.PHOTO.ACCEPT"
+                :errors="photo.errors"
+                :savedFilename="photo.value"
+                v-model="photo.fakeValue"
+                @validate="verifyTruck"
+                @loadFile="loadFile"
+            />
             <div class="btn">
                 <button 
                     class="bButton" 
@@ -42,6 +55,7 @@ import mixins from "@/common/mixins";
 import iInput from "@/components/common/iInput.vue";
 import { verifyUser } from "@/common/validators";
 import { getValues } from "@/common/utils";
+import { userForm } from "@/common/consts";
 
 
 export default {
@@ -54,6 +68,11 @@ export default {
         [mixins.data().cUser.keys.NAME]: {
             errors: [],
             value: ""
+        },
+        [mixins.data().cUser.keys.PHOTO]: {
+            errors: [],
+            value: "",
+            fakeValue: "",
         },
     }),
 
@@ -73,17 +92,22 @@ export default {
         },
 
         async edit() {
-            const { name, email } = this;
-            const data = { name, email };
+            const { name, email, photo } = this;
+            const data = { name, email, photo };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyUser(key, this)));
             if (errors.flat().filter(Boolean).length) return this.$store.state.iChoice.open("Ajuste os erros antes de continuar", true);
             const continues = await this.$store.state.iChoice.open("Esta operação não poderá ser desfeita. Deseja continuar?");
             if (!continues) return;
+            const handleData = getValues(data);
+            handleData.photo = handleData.photo || null;
             this.$store.dispatch("userMod/editUser", {
-                ...getValues(data), 
+                ...handleData, 
                 id: this.$route.params.id
             });
+        },
+        loadFile(b64) {
+            this.photo.value = b64;
         },
         verifyUser
     },
