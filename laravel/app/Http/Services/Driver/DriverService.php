@@ -14,6 +14,8 @@ class DriverService {
 
         if (array_key_exists(Keys::PHOTO, $data) && !is_null($data[Keys::PHOTO])) {
             $data[Keys::PHOTO] = S3::insertImage(Keys::TABLE, $data[Keys::PHOTO]);
+        } else {
+            $data[Keys::PHOTO] = null;
         }
 
         $driver = json_decode(json_encode(Driver::create($data)), true);
