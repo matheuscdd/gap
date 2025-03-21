@@ -12,6 +12,7 @@ class DriverRequest extends Request {
     protected const CPF_SIZE = 11;
     protected const NAME_MIN = 3;
     protected const NAME_MAX = 64;
+    protected const PHOTO_MIN = 5;
 
     public function getRules($partial, $keepRequired, ...$keys): array {
         $ref = [
@@ -26,6 +27,10 @@ class DriverRequest extends Request {
                 Schema::cMin(self::CPF_SIZE),
                 Schema::cMax(self::CPF_SIZE),
                 Schema::unique(Keys::TABLE, $this->route('id')),
+            ],
+            Keys::PHOTO => [
+                Schema::cMin(self::PHOTO_MIN),
+                Schema::NULLABLE,
             ],
         ];
 

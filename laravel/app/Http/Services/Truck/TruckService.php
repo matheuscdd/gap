@@ -6,10 +6,10 @@ use App\Constraints\TruckKeysConstraints as Keys;
 use App\Constraints\MaintenanceKeysConstraints as MaintenanceKeys;
 use App\Models\{Truck, Maintenance};
 use App\Exceptions\AppError;
+use App\Utils\S3;
 use Illuminate\Support\Facades\Log;
 use DateTime;
-use Aws\S3\S3Client;
-use Aws\S3\Exception\S3Exception;
+
 
 class TruckService {
     public static function create(array $data) {
@@ -18,12 +18,12 @@ class TruckService {
         $data[Keys::PLATE] = strtoupper($data[Keys::PLATE]);
 
         if (array_key_exists(Keys::PHOTO, $data) && !is_null($data[Keys::PHOTO])) {
-            $data[Keys::PHOTO] = self::insertImage($data[Keys::PHOTO]);
+            $data[Keys::PHOTO] = S3::insertImage(Keys::TABLE, $data[Keys::PHOTO]);
         }
 
         $truck = json_decode(json_encode(Truck::create($data)), true);
         if (!is_null($truck[Keys::PHOTO])) {
-            $truck[Keys::PHOTO] = self::mountPathImage($truck[Keys::PHOTO]);
+            $truck[Keys::PHOTO] = S3::mountPathImage($truck[Keys::PHOTO]);
         }
 
         return response()->json($truck, 201, [], JSON_UNESCAPED_SLASHES);
@@ -37,18 +37,18 @@ class TruckService {
         }
 
         if (array_key_exists(Keys::PHOTO, $data) && $truck->photo) {
-            self::deleteImage($truck->photo);
+            S3::deleteImage($truck->photo);
         }
 
         if (array_key_exists(Keys::PHOTO, $data) && !is_null($data[Keys::PHOTO])) {
-            $data[Keys::PHOTO] = self::insertImage($data[Keys::PHOTO]);
+            $data[Keys::PHOTO] = S3::insertImage(Keys::TABLE, $data[Keys::PHOTO]);
         } 
 
         $data[Keys::UPDATED_BY] = auth()->user()->id;
         $truck->update($data);
         $truck = json_decode(json_encode($truck), true);
         if (!is_null($truck[Keys::PHOTO])) {
-            $truck[Keys::PHOTO] = self::mountPathImage($truck[Keys::PHOTO]);
+            $truck[Keys::PHOTO] = S3::mountPathImage($truck[Keys::PHOTO]);
         }
         
         return response()->json($truck, 200, [], JSON_UNESCAPED_SLASHES);
@@ -59,7 +59,7 @@ class TruckService {
         foreach($trucks as &$truck) {
             $truck['maintenances'] = count($truck['maintenances']);
             if (!is_null($truck[Keys::PHOTO])) {
-                $truck[Keys::PHOTO] = self::mountPathImage($truck[Keys::PHOTO]);
+                $truck[Keys::PHOTO] = S3::mountPathImage($truck[Keys::PHOTO]);
             }
         }
         unset($truck);
@@ -69,8 +69,8 @@ class TruckService {
 
     public static function find(int $id) {
         $truck = json_decode(json_encode(Truck::find($id)), true);
-        if ($truck[Keys::PHOTO]) {
-            $truck[Keys::PHOTO] = self::mountPathImage($truck[Keys::PHOTO]);
+        if (!is_null($truck[Keys::PHOTO])) {
+            $truck[Keys::PHOTO] = S3::mountPathImage($truck[Keys::PHOTO]);
         }
         return response()->json($truck, 200, [], JSON_UNESCAPED_SLASHES);
     }
@@ -90,61 +90,10 @@ class TruckService {
         }
 
         if (!is_null($truck->photo)) {
-            self::deleteImage($truck->photo);
+            S3::deleteImage($truck->photo);
         }
 
         $truck->delete();
         return response(null, 204); 
-    }
-
-    private static function getS3Client(): S3Client {
-        return new S3Client([
-            'version' => 'latest',
-            'region'  => env('MINIO_REGION'),
-            'endpoint' => 'http://s3:9000',
-            'use_path_style_endpoint' => true, 
-            'credentials' => [
-                'key'    => env('MINIO_ROOT_USER'),
-                'secret' => env('MINIO_ROOT_PASSWORD'),
-            ],
-        ]);
-    }
-
-    private static function mountPathImage(string $file): string {
-        return implode('/', [env('S3_HOST'), env('S3_BUCKET'), $file]);
-    }
-
-    private static function insertImage(string $file): string {
-        $s3 = self::getS3Client();
-        $type = str_contains($file, 'image/png') ? 'png' : 'jpeg';
-        $path = 'trucks/' . uniqid() . '.' . $type;
-        $bin = base64_decode(explode(',', $file)[1]);
-
-        try {
-            $s3->putObject([
-                'Bucket' => env('S3_BUCKET'),
-                'Key'    => $path,
-                'Body'   => $bin,
-                'ACL'    => 'public-read',
-            ]);
-        } catch (S3Exception $err) {
-            Log::error($err->getAwsErrorMessage());
-            throw new AppError('Erro ao inserir imagem', 500);
-        }
-
-        return $path;
-    }
-
-    private static function deleteImage(string $file) {
-        $s3 = self::getS3Client();
-        try {
-            $s3->deleteObject([
-                'Bucket' => env('S3_BUCKET'),
-                'Key'    => $file,
-            ]);
-        } catch (S3Exception $err) {
-            Log::error($err);
-            throw new AppError('Não foi possível apagar a imagem', 500);
-        } 
     }
 }

@@ -24,6 +24,18 @@
                 v-model="CPF.value"
                 @validate="verifyDriver"
             />
+            <iInput 
+                :label="driverForm.PHOTO.LABEL"
+                :placeholder="driverForm.PHOTO.PLACEHOLDER"
+                :icon="driverForm.PHOTO.ICON"
+                :type="driverForm.PHOTO.TYPE"
+                :name="driverForm.PHOTO.NAME"
+                :accept="driverForm.PHOTO.ACCEPT"
+                :errors="photo.errors"
+                v-model="photo.fakeValue"
+                @validate="verifyTruck"
+                @loadFile="loadFile"
+            />
             <div class="btn">
                 <button 
                     class="bButton" 
@@ -53,6 +65,11 @@ export default {
             errors: [],
             value: ""
         },
+        [mixins.data().cDriver.keys.PHOTO]: {
+            errors: [],
+            value: "",
+            fakeValue: "",
+        },
     }),
     mixins: [mixins],
     components: {
@@ -60,14 +77,19 @@ export default {
     },
     methods: {
         async create() {
-            const { name, CPF } = this;
-            const data = { name, CPF };
+            const { name, CPF, photo } = this;
+            const data = { name, CPF, photo };
             const errors = [];
             Object.keys(data).forEach(key => errors.push(verifyDriver(key, this)));
             if (errors.flat().filter(Boolean).length) return this.$store.state.iChoice.open("Ajuste os erros antes de continuar", true);
             const continues = await this.$store.state.iChoice.open("Esta operação não poderá ser desfeita. Deseja continuar?");
             if (!continues) return;
-            this.$store.dispatch("driverMod/createDriver", getValues(data));
+            const handleData = getValues(data);
+            handleData.photo = handleData.photo || null;
+            this.$store.dispatch("driverMod/createDriver", handleData);
+        },
+        loadFile(b64) {
+            this.photo.value = b64;
         },
         verifyDriver
     },

@@ -473,10 +473,12 @@ export const driver = Object.freeze({
     keys: Object.freeze({
         NAME: "name",
         CPF: "CPF",
+        PHOTO: "photo"
     }),
     trans: Object.freeze({
         NAME: "nome",
         CPF: "CPF",
+        PHOTO: "foto"
     }),
 });
 
@@ -494,5 +496,13 @@ export const driverForm = Object.freeze({
         TYPE: "number",
         NAME: driver.keys.CPF,
         LABEL: driver.trans.CPF
+    }),
+    PHOTO: Object.freeze({
+        PLACEHOLDER: "Foto do veículo",
+        ICON: "camera-solid",
+        TYPE: "file",
+        NAME: driver.keys.PHOTO,
+        LABEL: driver.trans.PHOTO,
+        ACCEPT: "image/png, image/jpeg",
     }),
 });
