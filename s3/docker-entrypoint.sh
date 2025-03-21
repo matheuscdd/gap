@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 until nc -z -v -w30 localhost 9000; do
   echo "Waiting MinIO..."
   sleep 2
