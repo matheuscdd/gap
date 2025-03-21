@@ -27,6 +27,12 @@
 
 body {
     font-family: 'Jost', 'Arial', sans-serif;
+    background-image: url('@/assets/common/waves.svg');
+    background-position-x: center;
+    background-position-y: bottom;
+    background-attachment: fixed;
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
 
 h1 {

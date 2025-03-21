@@ -34,7 +34,7 @@
                 :errors="photo.errors"
                 :savedFilename="photo.value"
                 v-model="photo.fakeValue"
-                @validate="verifyTruck"
+                @validate="verifyDriver"
                 @loadFile="loadFile"
             />
             <div class="btn">
@@ -87,6 +87,9 @@ export default {
             if (!continues) return;
             const handleData = getValues(data);
             handleData.photo = handleData.photo || null;
+            if (this.$store.state.driverMod.driver.photo === handleData.photo) {
+                delete handleData.photo;
+            }
             this.$store.dispatch("driverMod/editDriver", {
                 ...handleData,
                 id: this.$route.params.id,

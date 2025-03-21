@@ -33,7 +33,7 @@
                 :accept="driverForm.PHOTO.ACCEPT"
                 :errors="photo.errors"
                 v-model="photo.fakeValue"
-                @validate="verifyTruck"
+                @validate="verifyDriver"
                 @loadFile="loadFile"
             />
             <div class="btn">

@@ -1,12 +1,5 @@
 <template>
     <h1>Usuários</h1>
-    <ul class="header">
-        <div>Nome</div>
-        <div>Email</div>
-        <div>Atualização</div>
-        <div>Tipo</div>
-        <div>Ações</div>
-    </ul>
     <ul v-if="!$store.state.loading && $store.state.userMod.users.length">
         <iCard
             v-for="el in $store.state.userMod.users" 
@@ -14,6 +7,7 @@
             :id="el.id"
             :name="el.name"
             :email="el.email"
+            :photo="el.photo"
             :createdAt="el.created_at"
             :updatedAt="el.updated_at"
             :isAdmin="el.type === 'admin'"
@@ -62,13 +56,9 @@ h1 {
     margin-top: 20px;
 }
 
-.header {
-    display: grid;
-    grid-template-columns: 25% 25% 20% 10% 20%;
-    grid-auto-rows: 30px;
-    grid-gap: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-    padding: 0 20px;
+ul {
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
 }
 </style>
