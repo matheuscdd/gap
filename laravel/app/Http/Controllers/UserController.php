@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Request;
-use App\Http\Requests\User\{CreateUserRequest, DelUserRequest, EditUserRequest, ListUserRequest, ResetPasswordRequest, LostPasswordRequest};
+use App\Http\Requests\User\{CreateUserRequest, DelUserRequest, EditUserRequest, ListUserRequest, ResetPasswordRequest, LostPasswordRequest, UserRequest};
 use App\Http\Services\User\UserService;
 
 class UserController extends Controller {
@@ -23,7 +23,7 @@ class UserController extends Controller {
         return UserService::del($request->route('id'));
     }
 
-    public function list(ListUserRequest $request) {
+    public function list(UserRequest $request) {
         return UserService::list();
     }
 

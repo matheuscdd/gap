@@ -37,10 +37,14 @@ Route::prefix('users')->group(function() {
 Route::prefix('users')->middleware([JWTMiddleware::class, UserMiddleware::class])->group(
     function() {
     Route::post('/', [UserController::class, 'create']);
-    Route::get('/', [UserController::class, 'list']);
-    Route::get('/{id}', [UserController::class, 'find']);
     Route::patch('/{id}', [UserController::class, 'edit']);
     Route::delete('/{id}', [UserController::class, 'del']);
+});
+
+Route::prefix('users')->middleware([UserMiddleware::class])->group(
+    function() {
+    Route::get('/', [UserController::class, 'list']);
+    Route::get('/{id}', [UserController::class, 'find']);
 });
 
 Route::prefix('clients')->middleware([JWTMiddleware::class, ClientMiddleware::class])->group(function() {
