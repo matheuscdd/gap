@@ -16,7 +16,7 @@
             <iSearch
                 name="id"
                 icon="file-contract-solid"
-                label="Id"
+                label="Número"
                 :errors="[]"
                 v-model="id"
                 :opts="idsOpts"
