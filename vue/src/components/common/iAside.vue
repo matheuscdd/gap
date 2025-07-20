@@ -132,6 +132,7 @@
 </template>
 <script>
 import { endpoints, user } from "@/common/consts";
+import { jwtDecode } from "@/common/utils";
 import { RouterLink } from "vue-router";
 
 
@@ -152,7 +153,11 @@ export default {
             return this.$route.name === name;
         },
         showAside() {
-            return ![endpoints.names.LOGIN, endpoints.names.USER_PASSWORD_LOST, endpoints.names.USER_PASSWORD_RESET ].includes(this.$route.name);
+            const now = new Date().getTime() / 1000;
+            const canPage = ![endpoints.names.LOGIN, endpoints.names.USER_PASSWORD_LOST, endpoints.names.USER_PASSWORD_RESET ].includes(this.$route.name);
+            const token = localStorage.getItem("token");
+            const canToken = token ? now < jwtDecode(token).exp : false;
+            return canToken && canPage;
         }
     }
 };

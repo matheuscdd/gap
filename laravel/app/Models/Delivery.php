@@ -30,6 +30,8 @@ class Delivery extends Model {
         Keys::REVENUE,
         Keys::CREATED_BY,
         Keys::UPDATED_BY,
+        Keys::FINISHED,
+        Keys::RECEIVED,
     ];
 
     protected $casts = [

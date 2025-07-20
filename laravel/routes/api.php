@@ -75,6 +75,7 @@ Route::prefix('deliveries')->middleware([JWTMiddleware::class, DeliveryMiddlewar
     Route::get('/full/{id}', [DeliveryController::class, 'findFull']);
     Route::delete('/full/{id}', [DeliveryController::class, 'delFull']);
     Route::patch('/full/finish/{id}', [DeliveryController::class, 'finishFull']);
+    Route::patch('/full/receive/{id}', [DeliveryController::class, 'receiveFull']);
     Route::patch('/full/{id}', [DeliveryController::class, 'editFull']);
     Route::put('/partial/{id}', [DeliveryController::class, 'createPartial']);
     Route::get('/partial/{id}', [DeliveryController::class, 'listPartial']);

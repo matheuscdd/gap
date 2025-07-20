@@ -27,6 +27,7 @@ return new class extends Migration
             $table->decimal('revenue', 10, 2)->nullable();
             $table->decimal('travel_cost', 10, 2)->nullable();
             $table->decimal('unloading_cost', 10, 2);
+            $table->boolean('received')->default(false);
             $table->boolean('finished')->default(false);
             $table->foreignId('ref')->nullable()->references('id')->on('deliveries')->constrained();
             $table->timestamps();

@@ -27,6 +27,7 @@ class DeliveryKeysConstraints {
     public const DELIVERY = 'delivery';
     public const STOCK = 'stock';
     public const REF = 'ref';
+    public const RECEIVED = 'received';
     public const FINISHED = 'finished';
     public const TABLE = 'deliveries';
     public const ALL = [

@@ -90,6 +90,12 @@ export default {
             ctx.dispatch("storeFull");
         },
 
+        async receiveFull(ctx, id) {
+            const response = await api("/deliveries/full/receive/" + id, methods.PATCH);
+            if (response.error) return ctx.rootState.iChoice.open(response.error, true);
+            ctx.dispatch("storeFull");
+        },
+
         async finishPartial(ctx, id) {
             const response = await api("/deliveries/partial/finish/" + id, methods.PATCH);
             if (response.error) return ctx.rootState.iChoice.open(response.error, true);
