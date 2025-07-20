@@ -63,8 +63,10 @@
             :completed="el.completed"
             :has_partials="el.has_partials"
             :finished="el.finished"
+            :received="el.received"
             :total="el.total"
             @del="del"
+            @receive="receive"
             @edit="edit"
             @createPartial="createPartial"
             @finish="finish"
@@ -117,6 +119,12 @@ export default {
             this.$store.dispatch("deliveryMod/delFull", id);
         },
 
+        async receive(id) {
+            const continues = await this.$store.state.iChoice.open("Ao assegurar a chegada dessa entrega na transportadora, você confirma que a data de chegada está correta e que já está no estoque?");
+            if (!continues) return; 
+            this.$store.dispatch("deliveryMod/receiveFull", id);
+        },
+
         edit(id) {
             this.$router.push(endpoints.routes.DELIVERY_EDIT_FULL_FULL.replace(":id", id));
         },
@@ -156,7 +164,7 @@ export default {
 .header {
     font-size: 12px;
     display: grid;
-    grid-template-columns: 5% 10% 18% 8% 8% 8% 12% 15% 6%;
+    grid-template-columns: 5% 10% 11% 8% 8% 8% 10% 10% 20%;
     grid-auto-rows: 30px;
     grid-gap: 10px;
     margin-bottom: 5px;

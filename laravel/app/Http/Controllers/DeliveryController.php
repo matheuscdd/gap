@@ -42,6 +42,10 @@ class DeliveryController extends Controller {
         return DeliveryService::finishFull($request->route('id'));
     }
 
+    public function receiveFull(Request $request) {
+        return DeliveryService::receiveFull($request->route('id'));
+    }
+
     public function finishPartial(Request $request) {
         return DeliveryService::finishPartial($request->route('id'));
     }

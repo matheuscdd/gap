@@ -23,6 +23,7 @@
                     <button
                         @click="view"
                         class="view"
+                        title="Detalhes"
                     >
                         <iSvg
                             :src="require('@/assets/icons/eye-solid.svg')"
@@ -34,7 +35,8 @@
                     <button
                         @click="edit"
                         class="edit"
-                        :disabled="finished || has_partials"
+                        title="Editar"
+                        :disabled="received || finished || has_partials"
                     >
                         <iSvg
                             :src="require('@/assets/icons/pencil-solid.svg')"
@@ -46,7 +48,8 @@
                     <button
                         @click="del"
                         class="del"
-                        :disabled="finished || has_partials || ((getNow() - createdAt) / (1000 * 60)) > 30"
+                        title="Remover"
+                        :disabled="received || finished || has_partials || ((getNow() - createdAt) / (1000 * 60)) > 30"
                     >
                         <iSvg
                             :src="require('@/assets/icons/trash-solid.svg')"
@@ -56,8 +59,22 @@
                         />
                     </button>
                     <button
+                        @click="receive"
+                        class="received"
+                        title="Receber"
+                        :disabled="received || finished" 
+                    >
+                        <iSvg
+                            :src="require('@/assets/icons/house-solid.svg')"
+                            width="16"
+                            height="16"
+                            fill="white"
+                        />
+                    </button>
+                    <button
                         @click="createPartial"
                         :disabled="finished"
+                        title="Criar Parcial"
                         class="createPartial"
                     >
                         <iSvg
@@ -71,8 +88,9 @@
                     </button>
                     <button
                         @click="finish"
-                        :disabled="finished"
+                        :disabled="!received || finished"
                         class="finish"
+                        title="Finalizar"
                     >
                         <iSvg
                             :src="require('@/assets/icons/truck-solid.svg')"
@@ -101,6 +119,7 @@ export default {
         "delivery_date",
         "receipt_date",
         "finished",
+        "received",
         "has_partials",
         "completed",
         "total",
@@ -129,6 +148,9 @@ export default {
         }
     },
     methods: {
+        receive() {
+            this.$emit("receive", this.id);
+        },
         edit() {
             this.$emit("edit", this.id);
         },
@@ -200,7 +222,7 @@ li {
     display: grid;
     grid-auto-rows: 20px;
     text-align: center;
-    grid-template-columns: 5% 10% 18% 8% 8% 8% 12% 15% 6%;
+    grid-template-columns: 5% 10% 11% 8% 8% 8% 10% 10% 20%;
 }
 
 button {
@@ -242,6 +264,11 @@ button {
 .btns .del {
     background-color: var(--red-1);
 }
+
+.btns .received {
+    background-color: var(--purple-1);
+}
+
 
 
 .btns button:disabled {

@@ -45,7 +45,6 @@ class DeliveryService {
         $data[Keys::UPDATED_BY] = auth()->user()->id;
         $data[Keys::STOCKS] = Utils::groupStocks($data[Keys::STOCKS]);
 
-        # TODO - validar com calma essa verificação
         $valid = self::validatePartialStocksExists($parent[Keys::STOCKS], $data[Keys::STOCKS]);
         if (!$valid) {
             throw new AppError('Estoque não encontrado', 404);
@@ -71,6 +70,10 @@ class DeliveryService {
         $delivery = Delivery::find($id);
         if ($delivery->ref) {
             throw new AppError('Entregas parciais não podem ser editadas', 403);
+        }
+
+        if ($delivery->received) {
+            throw new AppError('Entregas que já foram recebidas não podem ser editadas', 403);
         }
 
         if ($delivery->finished) {
@@ -172,9 +175,43 @@ class DeliveryService {
         }
         return $handlePartials;
     }
+    
+    public static function receiveFull(int $id) {
+        $delivery = Delivery::find($id);
+        if ($delivery->received) {
+            throw new AppError('Essa entrega já foi recebida', 409);
+        }
+
+        if ($delivery->finished) {
+            throw new AppError('Entregas finalizadas não podem ser recebidas, pois já foram entregues', 403);
+        }
+
+        if ($delivery->ref) {
+            throw new AppError('Entregas parciais não podem ser finalizadas nesse endpoint', 403);
+        }
+        $delivery->received = true;
+        $delivery->updated_by = auth()->user()->id;
+        $delivery->save();
+
+        $partials = Delivery::where(Keys::REF, '=', $id)->get();
+        foreach($partials as $partial) {
+            $partial->received = true;
+            $partial->updated_by = auth()->user()->id;
+            $partial->save();
+        }
+        return response()->noContent();
+    }
 
     public static function finishFull(int $id) {
         $delivery = Delivery::find($id);
+        if (!$delivery->received) {
+            throw new AppError('Entregas que não foram recebidas não poder sem entregas', 403);
+        }
+
+        if ($delivery->finished) {
+            throw new AppError('Essa entrega já foi finalizada', 409);
+        }
+
         if ($delivery->ref) {
             throw new AppError('Entregas parciais não podem ser finalizadas nesse endpoint', 403);
         }
@@ -196,6 +233,12 @@ class DeliveryService {
         if (!$delivery->ref) {
             throw new AppError('Entregas completas não podem ser finalizadas nesse endpoint', 403);
         }
+
+        if ($delivery->finished) {
+            throw new AppError('Essa entrega já foi finalizada', 409);
+        }
+
+
         $delivery->finished = true;
         $delivery->updated_by = auth()->user()->id;
         $delivery->save();
@@ -307,10 +350,12 @@ class DeliveryService {
             ->join('deliveries_stocks', 'deliveries_stocks.stock', '=', 'stocks.id')
             ->join('deliveries', 'deliveries.id', '=', 'deliveries_stocks.delivery')
             ->join('stock_type', 'stock_type.id', '=', 'stocks.type')
+            ->where('deliveries.received', '=', true)
             ->whereNotNull('deliveries.ref')
             ->orWhere(function ($query) {
                 $query->whereNull('deliveries.ref')
-                      ->where('deliveries.finished', '=', false);
+                      ->where('deliveries.finished', '=', false)
+                      ->where('deliveries.received', '=', true);
             })
             ->select(
                 'deliveries.id as delivery_id', 
@@ -563,8 +608,12 @@ class DeliveryService {
             throw new AppError('Entregas parciais não podem ser deletadas nesse endpoint', 403);
         }
 
+        if ($delivery->received) {
+            throw new AppError('Entregas já recebidas não podem ser removidas', 403);
+        }
+
         if ($delivery->finished) {
-            throw new AppError('Entregas finalizadas não podem ser editadas', 403);
+            throw new AppError('Entregas finalizadas não podem ser removidas', 403);
         }
         
         $maxMinTime = 30;
